@@ -1,8 +1,8 @@
 <p align="center">
   <a href="https://undominated.ai/">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/lockup-dark.svg">
-      <img src="docs/brand/lockup-light.svg" alt="Undominated.ai" height="56">
+      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/lockup-dark.png">
+      <img src="docs/brand/lockup-light.png" alt="Undominated.ai" height="64">
     </picture>
   </a>
 </p>
@@ -21,7 +21,7 @@
 
 <p align="center">
   <a href="https://undominated.ai/">
-    <img src="docs/brand/banner.svg" alt="11 undominated · 97 of 108 rated models dominated · 410 in the catalogue · 63% unrated · 15,000× price spread" width="100%">
+    <img src="docs/brand/banner.png" alt="11 undominated · 97 of 108 rated models dominated · 410 in the catalogue · 63% unrated · 15,000× price spread" width="100%">
   </a>
 </p>
 
@@ -195,8 +195,8 @@ Vendor prices are facts the vendor published. Every live row is supposed to carr
 <p align="center">
   <a href="https://undominated.ai/">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/mark-dark.svg">
-      <img src="docs/brand/mark-light.svg" alt="" height="48">
+      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/raster/mark-dark-on-dark-128.png">
+      <img src="docs/brand/raster/mark-light-on-paper-128.png" alt="Undominated.ai Dual Witness mark" height="56">
     </picture>
   </a>
   <br>

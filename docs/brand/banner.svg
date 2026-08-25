@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Undominated.ai — Best first. Then price.">
+  <title>Undominated.ai — Best first. Then price.</title>
+  <rect width="1200" height="420" fill="#0F0E0B"/>
+  <!-- Hairline frame -->
+  <rect x="24" y="24" width="1152" height="372" fill="none" stroke="#2A2823" stroke-width="1"/>
+  <!-- Step-field mark: graphite mass with the two-rung cut. Chartreuse only in the void. -->
+  <g transform="translate(56 86)">
+    <path fill="#FBFAF8" d="M0 248 V124 H124 V0 H248 V248 Z"/>
+    <rect x="132" y="8" width="108" height="108" fill="#83B81D"/>
+  </g>
+  <text x="348" y="168" fill="#FBFAF8" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="54" font-weight="700" letter-spacing="-1.4">Undominated.ai</text>
+  <text x="348" y="214" fill="#FBFAF8" opacity="0.72" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="26" font-weight="500" letter-spacing="-0.3">Best first. Then price.</text>
+  <text x="348" y="252" fill="#A39E93" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="16" letter-spacing="0.08em">THE INDEPENDENT AI INFERENCE PRICE INDEX</text>
+
+  <!-- Proof strip -->
+  <line x1="56" y1="318" x2="1144" y2="318" stroke="#2A2823" stroke-width="1"/>
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" text-anchor="start">
+    <text x="56" y="350" fill="#A39E93" font-size="11" letter-spacing="0.08em">UNDOMINATED</text>
+    <text x="56" y="378" fill="#83B81D" font-size="28" font-weight="700">11</text>
+    <text x="250" y="350" fill="#A39E93" font-size="11" letter-spacing="0.08em">DOMINATED OF RATED</text>
+    <text x="250" y="378" fill="#FBFAF8" font-size="28" font-weight="700">97 / 108</text>
+    <text x="500" y="350" fill="#A39E93" font-size="11" letter-spacing="0.08em">CATALOGUE</text>
+    <text x="500" y="378" fill="#FBFAF8" font-size="28" font-weight="700">410</text>
+    <text x="700" y="350" fill="#A39E93" font-size="11" letter-spacing="0.08em">UNRATED</text>
+    <text x="700" y="378" fill="#FBFAF8" font-size="28" font-weight="700">63%</text>
+    <text x="900" y="350" fill="#A39E93" font-size="11" letter-spacing="0.08em">PRICE SPREAD</text>
+    <text x="900" y="378" fill="#FBFAF8" font-size="28" font-weight="700">15,000×</text>
+  </g>
+</svg>

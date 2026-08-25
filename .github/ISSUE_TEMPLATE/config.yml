@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Open the live index
+    url: https://undominated.ai/
+    about: Rankings, prices, plans, and methodology live on the site. This repository is the public tracker, not the product.
+  - name: Methodology
+    url: https://undominated.ai/methodology/
+    about: How ranking works, what is derived, and what Artificial Analysis figures are not licensed to redistribute.
+  - name: Independence
+    url: https://undominated.ai/independence/
+    about: No cut of inference. No affiliate. No paid placement.

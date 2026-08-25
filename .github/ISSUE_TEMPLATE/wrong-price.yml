@@ -1,0 +1,47 @@
+name: Wrong figure
+description: A published price, score, or rank on undominated.ai does not match a primary source.
+title: 'Wrong figure: '
+labels: ['data']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A correction needs five things. Issues without a primary source stay open until they have one.
+
+        The live page is [undominated.ai](https://undominated.ai/). Do not attach scraped dumps.
+  - type: input
+    id: model
+    attributes:
+      label: Model
+      description: Display name or slug as it appears on undominated.ai.
+      placeholder: openai/gpt-5.4
+    validations:
+      required: true
+  - type: input
+    id: observed
+    attributes:
+      label: What the page shows
+      placeholder: '$5.00 / $25.00 per million'
+    validations:
+      required: true
+  - type: input
+    id: proposed
+    attributes:
+      label: What it should be
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Primary source URL
+      description: Vendor price page, official docs, or the dataset you are citing. Not a screenshot of our own site.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date you checked
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true

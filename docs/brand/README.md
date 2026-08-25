@@ -13,4 +13,6 @@ Production identity for [Undominated.ai](https://undominated.ai/). Two independe
 | `vector/` | Full vector family including on-dark / on-paper plates and reveal variants |
 | `raster/` | 64–512px transparent and backed rasters |
 
+In lockups, banners, and OG cards the stem reads graphite or paper; **`.ai` is darker green** — `#334C00` on paper, `#608A05` on dark ground. That is darker than the shard (`#83B81D`) and still a contrast pass.
+
 Do not recolour the shard. Do not use it as a page boundary on paper. The live product is the website, not this folder.

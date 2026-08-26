@@ -127,9 +127,12 @@ Every route answers a decision, not a document type.
 | Compare subscription plans to API | [Plans](https://undominated.ai/plans/) |
 | Find the cheapest model above a quality floor | [Cheapest at](https://undominated.ai/cheapest-at/) |
 | See whether shopping around is worth it | [Providers](https://undominated.ai/providers/) · [Spreads](https://undominated.ai/spreads/) |
+| See context-tier step functions | [Cliffs](https://undominated.ai/cliffs/) |
+| See which adjacent ranks the benchmark cannot separate | [Significance](https://undominated.ai/significance/) |
+| Browse every publishable model | [All models](https://undominated.ai/models/) |
 | Ask whether you can self-host | [Self-host](https://undominated.ai/self-host/) |
 | Scan agentic coding tools | [Tools](https://undominated.ai/tools/) |
-| Run a usage export through dominance | [Audit](https://undominated.ai/audit/) |
+| Run a usage export through dominance (client-side; no upload) | [Audit](https://undominated.ai/audit/) |
 | Read how ranking is computed | [Methodology](https://undominated.ai/methodology/) |
 | Hold the commercial boundaries | [Independence](https://undominated.ai/independence/) |
 | See applied corrections | [Corrections](https://undominated.ai/corrections/) |
@@ -141,10 +144,13 @@ flowchart LR
   L --> F["Frontier"]
   L --> C["Check my model"]
   L --> N["Now · dated stamp"]
+  L --> A["Audit · bill CSV"]
+  L --> S["Spreads · Cliffs · Significance"]
   L --> T["Tools"]
   C --> M["Methodology"]
   F --> M
   N --> M
+  A --> M
   M --> R["Report a wrong figure"]
 ```
 

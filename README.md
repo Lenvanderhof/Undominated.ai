@@ -15,13 +15,13 @@
 <p align="center">
   <a href="https://undominated.ai/"><img src="https://img.shields.io/badge/live-undominated.ai-83B81D?style=flat-square&labelColor=191814" alt="Live site"></a>
   <a href="https://undominated.ai/frontier/"><img src="https://img.shields.io/badge/frontier-11_undominated-83B81D?style=flat-square&labelColor=191814" alt="11 undominated models"></a>
-  <a href="https://undominated.ai/methodology/"><img src="https://img.shields.io/badge/method-quality_then_price-0072DA?style=flat-square&labelColor=191814" alt="Methodology"></a>
+  <a href="https://undominated.ai/check/"><img src="https://img.shields.io/badge/check-the_model_you_pay_for-0072DA?style=flat-square&labelColor=191814" alt="Check a model"></a>
   <a href="https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml"><img src="https://img.shields.io/badge/corrections-open_an_issue-FBFAF8?style=flat-square&labelColor=191814" alt="Report a wrong figure"></a>
 </p>
 
 <p align="center">
   <a href="https://undominated.ai/">
-    <img src="docs/brand/banner.png" alt="11 undominated · 97 of 108 rated models dominated · 410 in the catalogue · 63% unrated · 15,000× price spread" width="100%">
+    <img src="docs/brand/banner.png" alt="11 undominated · 97 of 108 rated models dominated · 409 in the catalogue · 63% unrated · 15,000× price spread" width="100%">
   </a>
 </p>
 
@@ -34,34 +34,58 @@ Undominated.ai does the opposite. It ranks on **independently measured capabilit
 > **97 of 108** rated, priced models are beaten on quality *and* undercut on price by something else on the board.<br>
 > **11** are not. That set is the value frontier.
 
-The numbers above are a snapshot from 24 August 2026. They move. The live board is the source, not this README.
+Snapshot from the live catalogue on **25 August 2026** (`stats.updatedAt`, 409 models, 50 providers). Counts move. **[The live board is the source](https://undominated.ai/), not this README.**
 
 <p align="center">
   <a href="https://undominated.ai/"><strong>Open the index →</strong></a>
   &nbsp;·&nbsp;
-  <a href="https://undominated.ai/frontier/">The 11 that survive</a>
-  &nbsp;·&nbsp;
   <a href="https://undominated.ai/check/">Check the model you already pay for</a>
+  &nbsp;·&nbsp;
+  <a href="https://undominated.ai/now/">Dated stamp</a>
 </p>
 
 <p align="center">
   <a href="https://undominated.ai/">
-    <img src="docs/shots/board.png" alt="The Undominated.ai leaderboard. Claude Opus 5 on the value frontier. Significance ranks, effective price, and the models that strictly beat each row." width="100%">
+    <img src="docs/shots/board.png" alt="Live leaderboard: quality first, then effective price. Claude Opus 5 on the value frontier; rows name what strictly beats them." width="100%">
   </a>
   <br>
-  <sub>Live board · quality first · chartreuse is frontier membership, not decoration</sub>
+  <sub>Live board · Dual Witness lockup · chartreuse is frontier membership, not decoration</sub>
 </p>
 
 <table>
   <tr>
-    <td width="42%" valign="top">
-      <a href="https://undominated.ai/"><img src="docs/shots/mobile.png" alt="Mobile board: first ranked result above the fold, Advanced filters collapsed." width="100%"></a>
+    <td width="38%" valign="top">
+      <a href="https://undominated.ai/"><img src="docs/shots/mobile.png" alt="Mobile board: Dual Witness mark, no truncated search, ranked cards with price, score, beaten-by, and context." width="100%"></a>
+      <br>
+      <sub>Phone · first cards, including who beats the row</sub>
     </td>
-    <td width="58%" valign="top">
-      <a href="https://undominated.ai/frontier/"><img src="docs/shots/frontier.png" alt="The value frontier: models nothing both beats and undercuts." width="100%"></a>
+    <td width="62%" valign="top">
+      <a href="https://undominated.ai/frontier/"><img src="docs/shots/frontier.png" alt="Value frontier scatter and ladder: models nothing both beats and undercuts, with the price you actually pay." width="100%"></a>
+      <br>
+      <sub>Frontier · staircase is the argument</sub>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <a href="https://undominated.ai/check/"><img src="docs/shots/check.png" alt="Check a model: GLM 5.3 is undominated — nothing in the catalogue is both better and cheaper." width="100%"></a>
+      <br>
+      <sub><a href="https://undominated.ai/check/">Check</a> · paste what you already pay for</sub>
+    </td>
+    <td valign="top">
+      <a href="https://undominated.ai/tools/"><img src="docs/shots/tools.png" alt="Agentic coding tools: documented features only. Unknown is never a win. Not a SWE-bench." width="100%"></a>
+      <br>
+      <sub><a href="https://undominated.ai/tools/">Tools</a> · coverage, not a quality score</sub>
     </td>
   </tr>
 </table>
+
+<p align="center">
+  <a href="https://undominated.ai/now/">
+    <img src="docs/shots/now.png" alt="Now: dated stamp of the value frontier as of 2026-08-25. Eleven undominated models. 90% of the rated, priced set is a worse deal." width="100%">
+  </a>
+  <br>
+  <sub><a href="https://undominated.ai/now/">Now</a> · a stamp with a date and a hash, not a blended index</sub>
+</p>
 
 ---
 
@@ -74,8 +98,8 @@ Undominated.ai publishes the uncomfortable version:
 | Claim the market likes | What this index actually does |
 | --- | --- |
 | A blended “value” rank | Capability first, effective price second. Never mixed into one score. |
-| Unrated at the bottom | Unrated is not zero. **63%** of the catalogue has no independent quality score. Those rows are listed by price and excluded from quality order. |
-| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank**. 108 rated positions collapse to **52** genuinely distinct ranks. |
+| Unrated at the bottom | Unrated is not zero. **63%** of the catalogue (259 of 409) has no independent quality score. Those rows are listed by price and excluded from quality order. |
+| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank**. On the live board, **106** models occupy **51** genuinely distinct ranks. |
 | “Cheaper is better” | Cheaper is cheaper. A strict upgrade is a capability *superset* that also costs less: same context, same modalities, same tools. |
 | Headline $/M | **55** models change rate past a context threshold. The board reprices the row when your prompt crosses it. |
 | Affiliate “best” lists | **No cut of inference. No affiliate. No paid placement. No gateway.** |
@@ -84,7 +108,7 @@ The method, the hedges, and the licensing limits: [undominated.ai/methodology](h
 
 <p align="center">
   <a href="https://undominated.ai/methodology/">
-    <img src="docs/shots/methodology.png" alt="Methodology: ranking, licensing, and the correction policy." width="100%">
+    <img src="docs/shots/methodology.png" alt="Methodology: 63% unrated, two sources never blended, significance ranks, correction policy." width="100%">
   </a>
 </p>
 
@@ -99,24 +123,28 @@ Every route answers a decision, not a document type.
 | See what is actually worth buying | [Leaderboard](https://undominated.ai/) |
 | See the 11 nothing beats on both axes | [Frontier](https://undominated.ai/frontier/) |
 | Test the model you already use | [Check](https://undominated.ai/check/) |
+| Cite a dated stamp | [Now](https://undominated.ai/now/) |
 | Compare subscription plans to API | [Plans](https://undominated.ai/plans/) |
 | Find the cheapest model above a quality floor | [Cheapest at](https://undominated.ai/cheapest-at/) |
+| See whether shopping around is worth it | [Providers](https://undominated.ai/providers/) · [Spreads](https://undominated.ai/spreads/) |
 | Ask whether you can self-host | [Self-host](https://undominated.ai/self-host/) |
 | Scan agentic coding tools | [Tools](https://undominated.ai/tools/) |
+| Run a usage export through dominance | [Audit](https://undominated.ai/audit/) |
 | Read how ranking is computed | [Methodology](https://undominated.ai/methodology/) |
 | Hold the commercial boundaries | [Independence](https://undominated.ai/independence/) |
 | See applied corrections | [Corrections](https://undominated.ai/corrections/) |
+| File a wrong figure | [Report](https://undominated.ai/report/) |
 
 ```mermaid
 flowchart LR
   Q["What am I buying?"] --> L["Leaderboard"]
-  L --> F["Frontier · 11"]
+  L --> F["Frontier"]
   L --> C["Check my model"]
-  L --> P["Plans vs API"]
-  L --> S["Self-host"]
+  L --> N["Now · dated stamp"]
   L --> T["Tools"]
-  F --> M["Methodology"]
-  C --> M
+  C --> M["Methodology"]
+  F --> M
+  N --> M
   M --> R["Report a wrong figure"]
 ```
 
@@ -154,6 +182,7 @@ Machine-readable surfaces stay on the origin, where they can carry provenance:
 - [`/llms.txt`](https://undominated.ai/llms.txt) — facts for agents
 - [`/data/catalogue.json`](https://undominated.ai/data/catalogue.json) — the public catalogue
 - [`/?format=md`](https://undominated.ai/?format=md) — any page as Markdown
+- [`/now/`](https://undominated.ai/now/) — dated frontier stamp (hash on the page)
 
 ---
 
@@ -163,7 +192,7 @@ If a live price, score, or rank disagrees with a primary source, file it here. T
 
 <p align="center">
   <a href="https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml"><strong>Open a correction issue →</strong></a><br>
-  <sub>Same form as <a href="https://undominated.ai/report/">undominated.ai/report</a>. Corrections with a primary source are applied on the site.</sub>
+  <sub>Same form as <a href="https://undominated.ai/report/">undominated.ai/report</a>. Corrections with a primary source are applied on the site. Public log: <a href="https://undominated.ai/corrections/">/corrections/</a>.</sub>
 </p>
 
 Security reports: [open an advisory on this repository](https://github.com/Lenvanderhof/Undominated.ai/security/advisories/new). Do not use a public issue for anything that would let someone alter rankings.

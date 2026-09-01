@@ -13,8 +13,11 @@ version: '2026-08-31'
 date-released: '2026-08-31'
 identifiers:
   - type: url
+    value: https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing
+    description: 2026-Q3 licence-gated dump on Hugging Face (no Artificial Analysis fields)
+  - type: url
     value: https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-08-31
-    description: 2026-Q3 licence-gated dump (no Artificial Analysis fields)
+    description: 2026-Q3 licence-gated dump as a GitHub Release (no Artificial Analysis fields)
 keywords:
   - LLM
   - pricing

@@ -16,6 +16,7 @@
   <a href="https://undominated.ai/"><img src="https://img.shields.io/badge/live-undominated.ai-83B81D?style=flat-square&labelColor=191814" alt="Live site"></a>
   <a href="https://undominated.ai/frontier/"><img src="https://img.shields.io/badge/frontier-11_undominated-83B81D?style=flat-square&labelColor=191814" alt="11 undominated models"></a>
   <a href="https://undominated.ai/check/"><img src="https://img.shields.io/badge/check-the_model_you_pay_for-0072DA?style=flat-square&labelColor=191814" alt="Check a model"></a>
+  <a href="https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing"><img src="https://img.shields.io/badge/dataset-Hugging_Face-FFD21E?style=flat-square&labelColor=191814" alt="Licence-gated dump on Hugging Face"></a>
   <a href="https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml"><img src="https://img.shields.io/badge/corrections-open_an_issue-FBFAF8?style=flat-square&labelColor=191814" alt="Report a wrong figure"></a>
 </p>
 
@@ -173,6 +174,7 @@ Every route answers a decision, not a document type.
 | See the 11 nothing beats on both axes | [Frontier](https://undominated.ai/frontier/) |
 | Test the model you already use | [Check](https://undominated.ai/check/) |
 | Cite a dated stamp | [Now](https://undominated.ai/now/) |
+| Cite the licence-gated dump | [Hugging Face dataset](https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing) · [GitHub Release](https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-08-31) · [`CITATION.cff`](CITATION.cff) |
 | Compare subscription plans to API | [Plans](https://undominated.ai/plans/) |
 | Find the cheapest model above a quality floor | [Cheapest at](https://undominated.ai/cheapest-at/) |
 | See whether shopping around is worth it | [Providers](https://undominated.ai/providers/) · [Spreads](https://undominated.ai/spreads/) |

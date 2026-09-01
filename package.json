@@ -1,0 +1,25 @@
+{
+  "name": "undominated-check",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Read-only CLI: is a model beaten by something both better and cheaper? Fetches published JSON from undominated.ai.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "undominated-check": "packages/undominated-check/bin/undominated-check.mjs"
+  },
+  "files": [
+    "packages/undominated-check/bin",
+    "packages/undominated-check/src",
+    "packages/undominated-check/README.md",
+    "packages/undominated-check/LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lenvanderhof/Undominated.ai.git"
+  },
+  "homepage": "https://undominated.ai/check/",
+  "engines": {
+    "node": ">=22.12"
+  }
+}

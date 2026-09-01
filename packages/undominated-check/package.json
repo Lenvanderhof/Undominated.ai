@@ -1,0 +1,46 @@
+{
+  "name": "undominated-check",
+  "version": "0.1.0",
+  "description": "Read-only CLI: is a model beaten by something both better and cheaper? Prints the published Undominated.ai verdict with its lens, workload and snapshot date.",
+  "keywords": [
+    "llm",
+    "pricing",
+    "inference",
+    "openrouter",
+    "cost-optimisation",
+    "pareto"
+  ],
+  "homepage": "https://undominated.ai/check/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lenvanderhof/Undominated.ai.git",
+    "directory": "packages/undominated-check"
+  },
+  "bugs": "https://github.com/Lenvanderhof/Undominated.ai/issues",
+  "license": "MIT",
+  "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "bin": {
+    "undominated-check": "bin/undominated-check.mjs"
+  },
+  "exports": {
+    ".": "./src/verdict.mjs",
+    "./cli": "./src/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "node --test ../../scripts/undominated-check.test.mjs"
+  }
+}

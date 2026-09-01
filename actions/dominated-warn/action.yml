@@ -1,0 +1,25 @@
+name: 'Undominated dominated-warn'
+description: 'Warn on pull requests when a declared model is strictly dominated. Warns, never fails.'
+branding:
+  icon: alert-triangle
+  color: yellow
+inputs:
+  origin:
+    description: 'Origin that serves /data/frontier.json and /data/dominance/*.json'
+    required: false
+    default: 'https://undominated.ai'
+runs:
+  using: composite
+  steps:
+    # continue-on-error: a missing node, a throw, or api.github.com 5xx must not
+    # be a failed required check. The script also exits 0; this is the belt.
+    - name: Warn if declared models are strictly dominated
+      shell: bash
+      continue-on-error: true
+      env:
+        UNDOMINATED_ORIGIN: ${{ inputs.origin }}
+        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_EVENT_PATH: ${{ github.event_path }}
+        GITHUB_WORKSPACE: ${{ github.workspace }}
+      run: node "${{ github.action_path }}/index.mjs" || true

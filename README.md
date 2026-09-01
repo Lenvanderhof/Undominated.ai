@@ -40,12 +40,31 @@ The SVG is the published verdict. Swap the slug for the model you ship.
 ## Check a model
 
 ```sh
-npx undominated-check google/gemini-3.7-flash
+npx --yes github:Lenvanderhof/Undominated.ai google/gemini-3.7-flash
 ```
 
-Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key.
+Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key. Registry publish of `undominated-check` is still pending 2FA; this repository is the installable source until then.
 
-The CLI lives in `packages/undominated-check`; npm publish is pending. Until it is on the registry, that `npx` line will not resolve. This tracker repository is not the package source.
+## Warn on a dominated model (GitHub Action)
+
+```yaml
+# .github/workflows/undominated-warn.yml
+name: undominated-warn
+on:
+  pull_request:
+jobs:
+  warn:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Lenvanderhof/Undominated.ai/actions/dominated-warn@main
+        continue-on-error: true
+```
+
+Warns. Never fails the job. Do not add it to required checks.
 
 ---
 

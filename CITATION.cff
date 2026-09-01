@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+title: Undominated AI model pricing and Arena scores
+message: If you use this catalogue, cite the dated dump, not a screenshot of the live board.
+type: dataset
+authors:
+  - family-names: van der Hof
+    given-names: Len
+    affiliation: Undominated.ai
+url: https://undominated.ai/
+repository-code: https://github.com/Lenvanderhof/Undominated.ai
+license: CC-BY-4.0
+version: '2026-08-31'
+date-released: '2026-08-31'
+identifiers:
+  - type: url
+    value: https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-08-31
+    description: 2026-Q3 licence-gated dump (no Artificial Analysis fields)
+keywords:
+  - LLM
+  - pricing
+  - LMArena
+  - OpenRouter
+  - inference
+abstract: >
+  405 model listings from 50 providers with list prices, context-tier ladders,
+  time-of-day price windows and LMArena Elo with confidence bounds. Produced
+  by https://undominated.ai. LMArena fields are CC BY 4.0 from the official
+  Hugging Face dataset. OpenRouter prices are vendor list rates. No Artificial
+  Analysis field is included.

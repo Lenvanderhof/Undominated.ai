@@ -11,6 +11,7 @@
   "files": [
     "packages/undominated-check/bin",
     "packages/undominated-check/src",
+    "packages/undominated-check/package.json",
     "packages/undominated-check/README.md",
     "packages/undominated-check/LICENSE"
   ],

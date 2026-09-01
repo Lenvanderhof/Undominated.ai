@@ -9,9 +9,17 @@ import { fileURLToPath } from 'node:url'
 
 import { main } from '../src/cli.mjs'
 
-const pkg = JSON.parse(
-  readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'),
-)
+function readPkg() {
+  for (const rel of ['../package.json', '../../package.json']) {
+    try {
+      return JSON.parse(readFileSync(fileURLToPath(new URL(rel, import.meta.url)), 'utf8'))
+    } catch {
+      /* next */
+    }
+  }
+  return { version: '0.1.0' }
+}
+const pkg = readPkg()
 
 const { code, out, err } = await main(process.argv.slice(2), { version: pkg.version })
 if (out) process.stdout.write(out)

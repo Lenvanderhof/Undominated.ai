@@ -16,6 +16,7 @@
   <a href="https://undominated.ai/"><img src="https://img.shields.io/badge/live-undominated.ai-83B81D?style=flat-square&labelColor=191814" alt="Live site"></a>
   <a href="https://undominated.ai/frontier/"><img src="https://img.shields.io/badge/frontier-11_undominated-83B81D?style=flat-square&labelColor=191814" alt="11 undominated models"></a>
   <a href="https://undominated.ai/check/"><img src="https://img.shields.io/badge/check-the_model_you_pay_for-0072DA?style=flat-square&labelColor=191814" alt="Check a model"></a>
+  <a href="https://www.npmjs.com/package/undominated-check"><img src="https://img.shields.io/npm/v/undominated-check?style=flat-square&labelColor=191814&color=83B81D" alt="undominated-check on npm"></a>
   <a href="https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing"><img src="https://img.shields.io/badge/dataset-Hugging_Face-FFD21E?style=flat-square&labelColor=191814" alt="Licence-gated dump on Hugging Face"></a>
   <a href="https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml"><img src="https://img.shields.io/badge/corrections-open_an_issue-FBFAF8?style=flat-square&labelColor=191814" alt="Report a wrong figure"></a>
 </p>
@@ -41,10 +42,10 @@ The SVG is the published verdict. Swap the slug for the model you ship.
 ## Check a model
 
 ```sh
-npx --yes github:Lenvanderhof/Undominated.ai google/gemini-3.7-flash
+npx --yes undominated-check google/gemini-3.7-flash
 ```
 
-Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key. Registry publish of `undominated-check` is still pending 2FA; this repository is the installable source until then.
+Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key. Package: [`undominated-check@0.1.0`](https://www.npmjs.com/package/undominated-check) (MIT, 2026-09-01). GitHub remains an installable source: `npx --yes github:Lenvanderhof/Undominated.ai google/gemini-3.7-flash`.
 
 ## Warn on a dominated model (GitHub Action)
 

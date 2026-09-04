@@ -14,7 +14,7 @@
 
 <p align="center">
   <a href="https://undominated.ai/"><img src="https://img.shields.io/badge/live-undominated.ai-83B81D?style=flat-square&labelColor=191814" alt="Live site"></a>
-  <a href="https://undominated.ai/frontier/"><img src="https://img.shields.io/badge/frontier-11_undominated-83B81D?style=flat-square&labelColor=191814" alt="11 undominated models"></a>
+  <a href="https://undominated.ai/frontier/"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fundominated.ai%2Fdata%2Fcatalogue.json&query=%24.stats.frontierSize&label=frontier&suffix=%20undominated&style=flat-square&labelColor=191814&color=83B81D" alt="Models on the value frontier, read live from the published catalogue"></a>
   <a href="https://undominated.ai/check/"><img src="https://img.shields.io/badge/check-the_model_you_pay_for-0072DA?style=flat-square&labelColor=191814" alt="Check a model"></a>
   <a href="https://www.npmjs.com/package/undominated-check"><img src="https://img.shields.io/npm/v/undominated-check?style=flat-square&labelColor=191814&color=83B81D" alt="undominated-check on npm"></a>
   <a href="https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing"><img src="https://img.shields.io/badge/dataset-Hugging_Face-FFD21E?style=flat-square&labelColor=191814" alt="Licence-gated dump on Hugging Face"></a>
@@ -71,9 +71,13 @@ Warns. Never fails the job. Do not add it to required checks.
 ---
 
 <p align="center">
-  <a href="https://undominated.ai/">
-    <img src="docs/brand/banner.png" alt="11 undominated · 97 of 108 rated models dominated · 409 in the catalogue · 63% unrated · 15,000× price spread" width="100%">
+  <a href="https://undominated.ai/frontier/">
+    <img src="docs/brand/hero.svg" alt="Every rated, priced model plotted by quality against effective price. The value frontier is the staircase; everything below and to the right of it is beaten on quality and undercut on price at the same time." width="100%">
   </a>
+</p>
+
+<p align="center">
+  <sub>Every dot is a published price. Generated from the live board by <code>scripts/build-hero.mjs</code> — no figure on this page is typed by hand.</sub>
 </p>
 
 ---
@@ -82,10 +86,10 @@ Most AI “value” tables invent a score, then sort by it.
 
 Undominated.ai does the opposite. It ranks on **independently measured capability first**. Price breaks ties. A model that is both worse and dearer is named as such. A model that has not been measured is **unrated**, never zero.
 
-> **97 of 108** rated, priced models are beaten on quality *and* undercut on price by something else on the board.<br>
-> **11** are not. That set is the value frontier.
+> **<!--fig:dominatedOfRated-->123 of 133<!--/fig-->** rated, priced models are beaten on quality *and* undercut on price by something else on the board.<br>
+> **<!--fig:frontier-->10<!--/fig-->** are not. That set is the value frontier.
 
-Snapshot from the live catalogue on **25 August 2026** (`stats.updatedAt`, 409 models, 50 providers). Counts move. **[The live board is the source](https://undominated.ai/), not this README.**
+Every figure on this page is generated from the live catalogue by `scripts/refresh-readme.mjs`, last on **<!--fig:asOf-->2026-09-03<!--/fig-->** (<!--fig:models-->412<!--/fig--> models, <!--fig:providers-->49<!--/fig--> providers). It is checked in CI, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
 
 <p align="center">
   <a href="https://undominated.ai/"><strong>Open the index →</strong></a>
@@ -132,7 +136,7 @@ Snapshot from the live catalogue on **25 August 2026** (`stats.updatedAt`, 409 m
 
 <p align="center">
   <a href="https://undominated.ai/now/">
-    <img src="docs/shots/now.png" alt="Now: dated stamp of the value frontier as of 2026-08-25. Eleven undominated models. 90% of the rated, priced set is a worse deal." width="100%">
+    <img src="docs/shots/now.png" alt="Now: a dated, hashed stamp of the value frontier. Every stamp keeps its date and its content hash, so a figure quoted from one can be checked against it later." width="100%">
   </a>
   <br>
   <sub><a href="https://undominated.ai/now/">Now</a> · a stamp with a date and a hash, not a blended index</sub>
@@ -142,17 +146,17 @@ Snapshot from the live catalogue on **25 August 2026** (`stats.updatedAt`, 409 m
 
 ## Why a price index that refuses to average
 
-The spread between the cheapest and the dearest model in the catalogue is about **15,000×**. That is not a rounding error. It is the reason a “value score” is a marketing instrument: it can hide a worse-and-dearer row behind a single attractive number.
+The spread between the cheapest and the dearest input price in the catalogue is about **<!--fig:spread-->8,824×<!--/fig-->**. That is not a rounding error. It is the reason a “value score” is a marketing instrument: it can hide a worse-and-dearer row behind a single attractive number.
 
 Undominated.ai publishes the uncomfortable version:
 
 | Claim the market likes | What this index actually does |
 | --- | --- |
 | A blended “value” rank | Capability first, effective price second. Never mixed into one score. |
-| Unrated at the bottom | Unrated is not zero. **63%** of the catalogue (259 of 409) has no independent quality score. Those rows are listed by price and excluded from quality order. |
-| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank**. On the live board, **106** models occupy **51** genuinely distinct ranks. |
+| Unrated at the bottom | Unrated is not zero. **<!--fig:unratedPct-->68%<!--/fig-->** of the catalogue (<!--fig:unrated-->279<!--/fig--> of <!--fig:models-->412<!--/fig-->) has no independent quality score. Those rows are listed by price and excluded from quality order. |
+| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank** — roughly half the ranked board collapses into shared positions once the published confidence intervals are drawn. [The live board states the exact split](https://undominated.ai/); it moves whenever a score does, so it is not repeated here. |
 | “Cheaper is better” | Cheaper is cheaper. A strict upgrade is a capability *superset* that also costs less: same context, same modalities, same tools. |
-| Headline $/M | **55** models change rate past a context threshold. The board reprices the row when your prompt crosses it. |
+| Headline $/M | **<!--fig:tiered-->55<!--/fig-->** models change rate past a context threshold. The board reprices the row when your prompt crosses it. |
 | Affiliate “best” lists | **No cut of inference. No affiliate. No paid placement. No gateway.** |
 
 The method, the hedges, and the licensing limits: [undominated.ai/methodology](https://undominated.ai/methodology/).
@@ -270,11 +274,57 @@ The charter: [undominated.ai/independence](https://undominated.ai/independence/)
 
 ---
 
+## Is capability actually getting cheaper?
+
+Everyone publishes today's prices. Nobody publishes what the **cheapest model clearing a fixed quality bar** costs, tracked across dated snapshots — and that is the only series that answers the question, because a discount on one SKU is not the same as capability getting cheaper.
+
+<!--floors-->
+
+| Capability floor (LMArena) | 2026-08-24 | 2026-09-03 | Move | Cheapest today |
+|:---|---:|---:|---:|:---|
+| **≥ 1200** | $0.0525 | $0.0525 | unchanged | `upstage/solar-pro4` |
+| **≥ 1350** | $0.0525 | $0.0525 | unchanged | `upstage/solar-pro4` |
+| **≥ 1400** | $0.0611 | $0.0992 | +62% | `deepseek/deepseek-v4-flash` |
+| **≥ 1450** | $0.4961 | $0.5437 | +10% | `xiaomi/mimo-v2.5-pro` |
+
+<sub>Effective $/M on the balanced workload, from 8 dated snapshots. Generated by `scripts/build-floor-table.mjs`. The floors are append-only — a threshold is never edited in place, because a moved goalpost turns a series into marketing.</sub>
+
+<!--/floors-->
+
+The floors are defined once and never moved. Every point comes from a dated, hashed snapshot that is [published and citable](https://undominated.ai/data/citation.json); the archive only grows, so this series cannot be back-filled by anyone starting tomorrow.
+
+---
+
+## The campaign stills
+
+Three families, shot around the Dual Witness mark. They are scene treatments, **not a second logo**: use them with attribution and never redraw the mark from a photograph.
+
+<table>
+  <tr>
+    <td width="33%" align="center">
+      <img src="docs/brand/stills/c-01-hero-monolith.png" alt="Material Witness: Hero Monolith" width="100%"><br>
+      <sub><strong>Material Witness</strong><br>the primary family</sub>
+    </td>
+    <td width="33%" align="center">
+      <img src="docs/brand/stills/b-01-frontier-bokeh.png" alt="Proof Cinema: Frontier Bokeh" width="100%"><br>
+      <sub><strong>Proof Cinema</strong><br>supporting</sub>
+    </td>
+    <td width="33%" align="center">
+      <img src="docs/brand/stills/a-01-paper-proof-grid.png" alt="Evidence Editorial: Paper Proof Grid" width="100%"><br>
+      <sub><strong>Evidence Editorial</strong><br>supporting</sub>
+    </td>
+  </tr>
+</table>
+
+All fifteen, at full resolution with the mark, the lockups and the usage rules: **[undominated.ai/press/](https://undominated.ai/press/)**.
+
+---
+
 ## Licensing, said plainly
 
 LMArena leaderboard data on the site is used under **CC BY 4.0** from the official dataset.
 
-Artificial Analysis figures on the site are **shown for evaluation**. Redistribution terms remain unresolved. **This repository does not grant a sublicence** to republish those scores, and it does not copy them into Git.
+Artificial Analysis figures are **not published** on the site at all. There is no redistribution licence, so they inform what gets checked and never what a reader sees — `scripts/audit-aa-exposure.mjs` puts a model's own page publishing its own AA value at **0 of 179**. **This repository does not grant a sublicence** to republish those scores, and it does not copy them into Git.
 
 Vendor prices are facts the vendor published. Every live row is supposed to carry a source link and a fetch date. If one does not, that is a [correction](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml).
 

@@ -1,0 +1,49 @@
+name: figures current
+
+# Every figure on the README and in the hero image is generated from the live
+# board. This proves they still agree with it.
+#
+# It exists because on 2026-09-04 the README stated eleven undominated models,
+# "97 of 108" dominated, 409 in the catalogue, 63% unrated and a 15,000× spread.
+# The live figures were 10, 122 of 132, 414, 68% and 8,824×. Five wrong numbers
+# on the public face of a project whose one rule is never to publish a figure it
+# cannot trace — stale because a human typed them once and the catalogue moved.
+#
+# A pull request that leaves them stale fails here. A catalogue that moves under
+# a correct README fails the nightly run, which is the point: the fix is to run
+# the generators, not to argue with the number.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Well after the site's own daily refresh, so this checks a settled board.
+    - cron: '41 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: figures-current-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      # Both read https://undominated.ai/data/*.json — public, unauthenticated,
+      # no secret. Neither writes anything in --check mode.
+      - name: README figures match the published catalogue
+        run: node scripts/refresh-readme.mjs --check
+
+      - name: The hero image matches the published catalogue
+        run: node scripts/build-hero.mjs --check
+
+      - name: The capability-floor table matches the published series
+        run: node scripts/build-floor-table.mjs --check

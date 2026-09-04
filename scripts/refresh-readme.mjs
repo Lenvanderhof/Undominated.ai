@@ -89,26 +89,63 @@ const FIGURES = {
 const source = readFileSync(README, 'utf8')
 const seen = new Set()
 const stale = []
+let occurrences = 0
 
 const next = source.replace(/<!--fig:([a-zA-Z]+)-->([\s\S]*?)<!--\/fig-->/g, (whole, key, current) => {
   const render = FIGURES[key]
   if (!render) throw new Error(`README names an unknown figure: ${key}`)
   seen.add(key)
+  occurrences += 1
   const value = render()
-  if (current !== value) stale.push(`${key}: README says "${current}", the site says "${value}"`)
+  if (current !== value) stale.push({ key, current, value })
   return `<!--fig:${key}-->${value}<!--/fig-->`
 })
 
+/**
+ * One line per DISTINCT wrong reading, with a count of where it appears.
+ *
+ * The grouping key is `key + current`, never `key` alone, and that is the whole
+ * point. A figure stated in two places can be stale in one of them and correct
+ * in the other, or — worse and likelier — wrong in both places by different
+ * amounts, because a human updated one and missed the second. Collapsing by
+ * figure name would print one of those two wrong values and silently drop the
+ * other, which is how a checker reports a problem and still leaves you blind to
+ * half of it. Grouping on the reading keeps every distinct wrongness visible and
+ * only merges lines that would have been literally identical.
+ *
+ * Every occurrence is still CHECKED individually above; this only decides how
+ * the finding reads. A number stated twice is checked twice.
+ */
+const report = (rows) => {
+  const byReading = new Map()
+  for (const row of rows) {
+    const id = `${row.key}\u0000${row.current}`
+    const hit = byReading.get(id) ?? { ...row, count: 0 }
+    hit.count += 1
+    byReading.set(id, hit)
+  }
+  return [...byReading.values()].map(
+    (r) =>
+      `${r.key}: README says "${r.current}", the site says "${r.value}"` +
+      (r.count > 1 ? ` — in ${r.count} places` : ''),
+  )
+}
+
 const unused = Object.keys(FIGURES).filter((k) => !seen.has(k))
+
+// Distinct figures vs. how many times they are stated — the second number is
+// the one that matters, since a figure is only as current as its last mention.
+const counted = `${seen.size} figure${seen.size === 1 ? '' : 's'}` +
+  (occurrences === seen.size ? '' : ` in ${occurrences} places`)
 
 if (check) {
   if (stale.length) {
     console.error('README figures are stale:')
-    for (const line of stale) console.error(`  ${line}`)
+    for (const line of report(stale)) console.error(`  ${line}`)
     console.error('\nRun: node scripts/refresh-readme.mjs')
     process.exit(1)
   }
-  console.log(`README figures agree with ${ORIGIN} (${seen.size} checked, as of ${FIGURES.asOf()})`)
+  console.log(`README figures agree with ${ORIGIN} (${counted} checked, as of ${FIGURES.asOf()})`)
   if (unused.length) console.log(`  unused figures available: ${unused.join(', ')}`)
   process.exit(0)
 }
@@ -116,6 +153,9 @@ if (check) {
 writeFileSync(README, next)
 console.log(
   stale.length
-    ? `README updated — ${stale.length} figure(s) refreshed:\n${stale.map((l) => `  ${l}`).join('\n')}`
-    : `README already current (${seen.size} figures, as of ${FIGURES.asOf()})`,
+    ? `README updated — ${stale.length} of ${occurrences} statements rewritten:\n` +
+      report(stale)
+        .map((l) => `  ${l}`)
+        .join('\n')
+    : `README already current (${counted}, as of ${FIGURES.asOf()})`,
 )

@@ -1,0 +1,15 @@
+{
+  "capturedOn": "2026-09-05",
+  "catalogueAsOf": "2026-09-04",
+  "viewport": { "desktop": [1440, 900], "mobile": [390, 844] },
+  "maxAgeDays": 30,
+  "shots": [
+    { "file": "board.png",       "url": "https://undominated.ai/",                        "viewport": "desktop" },
+    { "file": "mobile.png",      "url": "https://undominated.ai/",                        "viewport": "mobile"  },
+    { "file": "frontier.png",    "url": "https://undominated.ai/frontier/",               "viewport": "desktop" },
+    { "file": "check.png",       "url": "https://undominated.ai/check/z-ai__glm-5.2/",    "viewport": "desktop" },
+    { "file": "tools.png",       "url": "https://undominated.ai/tools/",                  "viewport": "desktop" },
+    { "file": "now.png",         "url": "https://undominated.ai/now/",                    "viewport": "desktop" },
+    { "file": "methodology.png", "url": "https://undominated.ai/methodology/",            "viewport": "desktop" }
+  ]
+}

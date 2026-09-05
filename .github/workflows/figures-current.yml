@@ -47,3 +47,10 @@ jobs:
 
       - name: The capability-floor table matches the published series
         run: node scripts/build-floor-table.mjs --check
+
+      # A screenshot cannot be generated from the data, so this checks the only
+      # thing that can be checked: that somebody has looked recently, and that
+      # no shot sits in docs/shots/ unlisted. Added after every shot went ten
+      # days stale with alt text claiming "63% unrated" against a live 68%.
+      - name: The README screenshots are recent and all accounted for
+        run: node scripts/shots-current.mjs --check

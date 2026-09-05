@@ -101,7 +101,7 @@ Every figure on this page is generated from the live catalogue by `scripts/refre
 
 <p align="center">
   <a href="https://undominated.ai/">
-    <img src="docs/shots/board.png" alt="Live leaderboard: quality first, then effective price. Claude Opus 5 on the value frontier; rows name what strictly beats them." width="100%">
+    <img src="docs/shots/board.png" alt="The leaderboard, ranked by measured quality first and effective price second. Frontier rows are tinted; every other row names, by link, the model that strictly beats it on both." width="100%">
   </a>
   <br>
   <sub>Live board · Dual Witness lockup · chartreuse is frontier membership, not decoration</sub>
@@ -110,24 +110,24 @@ Every figure on this page is generated from the live catalogue by `scripts/refre
 <table>
   <tr>
     <td width="38%" valign="top">
-      <a href="https://undominated.ai/"><img src="docs/shots/mobile.png" alt="Mobile board: Dual Witness mark, no truncated search, ranked cards with price, score, beaten-by, and context." width="100%"></a>
+      <a href="https://undominated.ai/"><img src="docs/shots/mobile.png" alt="The same board on a phone: ranked cards carrying price in and out, the quality score, a beaten-by link, context window and modalities — nothing truncated, nothing hidden behind a tap." width="100%"></a>
       <br>
       <sub>Phone · first cards, including who beats the row</sub>
     </td>
     <td width="62%" valign="top">
-      <a href="https://undominated.ai/frontier/"><img src="docs/shots/frontier.png" alt="Value frontier scatter and ladder: models nothing both beats and undercuts, with the price you actually pay." width="100%"></a>
+      <a href="https://undominated.ai/frontier/"><img src="docs/shots/frontier.png" alt="The value frontier: every rated, priced model plotted by quality against effective price on a log scale, with the undominated set joined as a staircase, and the same models listed below as a ladder from the cheapest rung up." width="100%"></a>
       <br>
       <sub>Frontier · staircase is the argument</sub>
     </td>
   </tr>
   <tr>
     <td valign="top">
-      <a href="https://undominated.ai/check/"><img src="docs/shots/check.png" alt="Check a model: GLM 5.3 is undominated — nothing in the catalogue is both better and cheaper." width="100%"></a>
+      <a href="https://undominated.ai/check/"><img src="docs/shots/check.png" alt="Check any model and get a computed verdict with its date: whether anything in the catalogue is both higher-scoring and cheaper, or the model sits on the frontier with nothing that beats it." width="100%"></a>
       <br>
       <sub><a href="https://undominated.ai/check/">Check</a> · paste what you already pay for</sub>
     </td>
     <td valign="top">
-      <a href="https://undominated.ai/tools/"><img src="docs/shots/tools.png" alt="Agentic coding tools: documented features only. Unknown is never a win. Not a SWE-bench." width="100%"></a>
+      <a href="https://undominated.ai/tools/"><img src="docs/shots/tools.png" alt="Agentic coding tools compared on documented features only. An undocumented capability is recorded as unknown and never scored as a win. This is not a benchmark." width="100%"></a>
       <br>
       <sub><a href="https://undominated.ai/tools/">Tools</a> · coverage, not a quality score</sub>
     </td>
@@ -136,7 +136,7 @@ Every figure on this page is generated from the live catalogue by `scripts/refre
 
 <p align="center">
   <a href="https://undominated.ai/now/">
-    <img src="docs/shots/now.png" alt="Now: a dated, hashed stamp of the value frontier. Every stamp keeps its date and its content hash, so a figure quoted from one can be checked against it later." width="100%">
+    <img src="docs/shots/now.png" alt="Now: a dated, hashed stamp of the value frontier rather than a price index. Every stamp keeps its date and content hash, so a figure quoted from one can be checked against it later, and nothing is backfilled." width="100%">
   </a>
   <br>
   <sub><a href="https://undominated.ai/now/">Now</a> · a stamp with a date and a hash, not a blended index</sub>
@@ -163,7 +163,7 @@ The method, the hedges, and the licensing limits: [undominated.ai/methodology](h
 
 <p align="center">
   <a href="https://undominated.ai/methodology/">
-    <img src="docs/shots/methodology.png" alt="Methodology: 63% unrated, two sources never blended, significance ranks, correction policy." width="100%">
+    <img src="docs/shots/methodology.png" alt="Methodology, opening with the numbers that are least flattering: the share of the catalogue with no independent quality score, how many rendered positions are genuinely distinct ranks, and how many headline prices are not the whole price." width="100%">
   </a>
 </p>
 

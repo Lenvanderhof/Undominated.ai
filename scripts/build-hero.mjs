@@ -37,6 +37,31 @@ const MUTED = '#6C6659'
 
 const check = process.argv.includes('--check')
 
+/**
+ * The provider mark for a vendor slug, inlined.
+ *
+ * An SVG referenced by <img> — which is how the README shows this file, and how
+ * GitHub renders it — CANNOT load an external resource. A <use href> or an
+ * <image href="/providers/x.svg"> silently draws nothing there. So each mark is
+ * fetched at build time and embedded as a nested <svg>, which establishes its
+ * own viewport and lets the vendored 24x24 artwork scale without touching the
+ * outer coordinate system.
+ */
+async function providerMark(vendor) {
+  const res = await fetch(`${ORIGIN}/providers/${vendor}.svg`)
+  if (!res.ok) return null
+  const raw = await res.text()
+  const viewBox = /viewBox="([^"]+)"/.exec(raw)?.[1] ?? '0 0 24 24'
+  // Keep the artwork, drop the wrapper and its <title>: the title would be read
+  // aloud inside a figure that already carries one aria-label.
+  const inner = raw
+    .replace(/^[\s\S]*?<svg[^>]*>/, '')
+    .replace(/<\/svg>\s*$/, '')
+    .replace(/<title>[\s\S]*?<\/title>/g, '')
+    .trim()
+  return { viewBox, inner }
+}
+
 async function json(path) {
   const res = await fetch(`${ORIGIN}${path}`, { headers: { accept: 'application/json' } })
   if (!res.ok) throw new Error(`${path} returned ${res.status}`)
@@ -54,13 +79,50 @@ const s = catalogue.stats ?? {}
  * claim on the site is made over — quoting a different one here would be the
  * denominator error this project logs corrections for.
  */
+/**
+ * `r.p` IS THE PROVIDER INDEX, NOT THE PRICE. This read `price: r.p` until
+ * 2026-09-05 and drew a chart whose x axis was a provider id on a log scale,
+ * under the label "cheaper". Claude Opus 5 at $10/M — the dearest model on the
+ * frontier — landed at the far LEFT because Anthropic happens to be provider 3,
+ * and Solar Pro 4 at $0.0525 landed at the far right because Upstage is 43. The
+ * staircase was sorted by provider id too, so the picture asserted the exact
+ * opposite of the paper's thesis and was published on the README for ten days.
+ *
+ * Price lives in `i` (input $/M) and `o` (output $/M). The balanced workload the
+ * caption names is three input tokens per output token, so the effective price
+ * is (3i + o) / 4 — verified against /data/frontier.json, which publishes the
+ * same figure for its ten members and agrees to 7.5e-5 on all of them. That
+ * agreement is now asserted below rather than assumed.
+ */
+const effectivePrice = (r) => (3 * r.i + r.o) / 4
+
 const points = (catalogue.rows ?? [])
-  .filter((r) => r.v === 'standard' && r.q != null && r.p > 0)
-  .map((r) => ({ slug: r.s, q: r.q, price: r.p }))
+  .filter((r) => r.v === 'standard' && r.q != null && r.i != null && r.o != null && effectivePrice(r) > 0)
+  .map((r) => ({ slug: r.s, q: r.q, price: effectivePrice(r) }))
 
 if (points.length < 50) throw new Error(`only ${points.length} rated+priced rows — refusing to draw a thin board`)
 
 const onFrontier = new Set((frontier.members ?? []).map((m) => m.slug))
+
+/**
+ * The price this file computes must be the price the site publishes.
+ *
+ * The provider-index bug passed `--check` for ten days because the check
+ * compared COUNTS — 132 rated rows, 10 on the frontier — and both were right the
+ * whole time. A check that cannot see the difference between a price and a
+ * provider id is not checking the axis. This compares the actual quantity being
+ * plotted against the site's own published value for every frontier member.
+ */
+for (const member of frontier.members ?? []) {
+  const row = points.find((p) => p.slug === member.slug)
+  if (!row) throw new Error(`${member.slug} is on the published frontier but not in the plotted set`)
+  if (Math.abs(row.price - member.price) > 0.001) {
+    throw new Error(
+      `${member.slug}: this file computes $${row.price.toFixed(4)}/M, the site publishes ` +
+        `$${member.price}/M — the x axis is not the quantity it claims to be`,
+    )
+  }
+}
 
 const W = 1200
 const H = 480
@@ -83,6 +145,31 @@ const y = (q) => PAD.top + plotH - ((q - qMin) / (qMax - qMin)) * plotH
 
 const dominated = points.filter((p) => !onFrontier.has(p.slug))
 const members = points.filter((p) => onFrontier.has(p.slug)).sort((a, b) => a.price - b.price)
+
+/**
+ * A mark on every frontier point, which is what the site shows. A dot alone says
+ * "something is undominated here"; the mark says who. On a chart whose whole
+ * claim is that the producer is the thing that organises this market, that is
+ * the difference between a scatter plot and the argument.
+ */
+const MARK = 17
+const marks = await Promise.all(
+  members.map(async (m) => ({ point: m, art: await providerMark(m.slug.split('/')[0]) })),
+)
+const missing = marks.filter((m) => !m.art).map((m) => m.point.slug)
+if (missing.length) throw new Error(`no provider mark for ${missing.join(', ')} — the frontier would be drawn with holes in it`)
+
+const markLayer = marks
+  .map(({ point, art }) => {
+    const cx = x(point.price)
+    const cy = y(point.q)
+    return (
+      `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${MARK / 2 + 3}" fill="${WITNESS}"/>` +
+      `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${MARK / 2 + 3}" fill="none" stroke="${EVIDENCE}" stroke-width="1.5"/>` +
+      `<svg x="${(cx - MARK / 2).toFixed(1)}" y="${(cy - MARK / 2).toFixed(1)}" width="${MARK}" height="${MARK}" viewBox="${art.viewBox}">${art.inner}</svg>`
+    )
+  })
+  .join('')
 
 const dot = (p, r) => `M${x(p.price).toFixed(1)} ${y(p.q).toFixed(1)}m-${r} 0a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 -${2 * r} 0`
 const dominatedPath = dominated.map((p) => dot(p, 3)).join('')
@@ -120,8 +207,8 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" wid
   } are not — that staircase is the value frontier.</text>
   <path d="${dominatedPath}" fill="${MUTED}" fill-opacity="0.55"/>
   <path d="${stair}" fill="none" stroke="${EVIDENCE}" stroke-width="1.5" stroke-opacity="0.5"/>
-  <path d="${frontierPath}" fill="${EVIDENCE}"/>
-  <text x="${PAD.left}" y="${H - 26}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13">cheaper →</text>
+  ${markLayer}
+  <text x="${PAD.left}" y="${H - 26}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13">← cheaper</text>
   <text x="${W - PAD.right}" y="${H - 26}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13" text-anchor="end">${
     n(s.models)
   } models · ${n(s.providers)} providers · effective $/M, balanced workload · LMArena · as of ${asOf}</text>

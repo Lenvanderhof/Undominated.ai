@@ -9,7 +9,7 @@
 
 <p align="center">
   <strong>Best first. Then price.</strong><br>
-  <em>The independent AI inference price index.</em>
+  <em>Independent dominance tables for AI inference.</em>
 </p>
 
 <p align="center">
@@ -62,11 +62,19 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: Lenvanderhof/Undominated.ai/actions/dominated-warn@main
+      - uses: Lenvanderhof/Undominated.ai/actions/dominated-warn@v1
         continue-on-error: true
 ```
 
 Warns. Never fails the job. Do not add it to required checks.
+
+## Agent skill (quote-only)
+
+[`skills/undominated/SKILL.md`](skills/undominated/SKILL.md) — fetch published dominance JSON; never invent a price, score, or rank. Unrated is not zero.
+
+```sh
+npx undominated-check@0.1.0 <provider/model>
+```
 
 ---
 

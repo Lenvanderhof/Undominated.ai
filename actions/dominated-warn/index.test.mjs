@@ -400,8 +400,8 @@ describe('packaging', () => {
 
   test('README documents install, warn-never-fail, lens, and v1 scope', () => {
     const md = readFileSync(join(HERE, 'README.md'), 'utf8')
-    assert.match(md, /Lenvanderhof\/Undominated\.ai\/actions\/dominated-warn@main/)
-    assert.match(md, /pin a tag/i)
+    assert.match(md, /Lenvanderhof\/Undominated\.ai\/actions\/dominated-warn@v1/)
+    assert.doesNotMatch(md, /dominated-warn@main/)
     assert.match(md, /warn, never fail/i)
     assert.match(md, /lmarena/i)
     assert.match(md, /not a router/i)

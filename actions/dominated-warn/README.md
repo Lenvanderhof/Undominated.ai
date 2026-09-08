@@ -24,14 +24,12 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-      - uses: Lenvanderhof/Undominated.ai/actions/dominated-warn@main
+      - uses: Lenvanderhof/Undominated.ai/actions/dominated-warn@v1
         continue-on-error: true
 ```
 
-The public default branch is `main` — that ref exists. Pin a tag (for example
-`@v1`) once one is published so a later commit cannot change what your workflow
-runs. Until `actions/dominated-warn/` is on that public tree, copy this
-directory into your repo and use `uses: ./actions/dominated-warn` instead.
+Pin `@v1` so a later commit cannot change what your workflow runs. The public
+default branch is `main` — that ref exists — but it is not the consumer pin.
 
 This working repository (`Lenvanderhof/AIDREAMTEAM`) is private. A `uses:` line
 pointing here will not resolve for other accounts.

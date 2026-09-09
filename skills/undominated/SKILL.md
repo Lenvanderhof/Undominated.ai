@@ -13,9 +13,9 @@ Undominated.ai ranks models by independent capability first, then price. This sk
 1. Prefer the published CLI:
 
 ```sh
-npx undominated-check@0.1.0 <provider/model>
-npx undominated-check@0.1.0 --frontier
-npx undominated-check@0.1.0 google/gemini-3.7-flash --json
+npx undominated-check@0.1.1 <provider/model>
+npx undominated-check@0.1.1 --frontier
+npx undominated-check@0.1.1 google/gemini-3.7-flash --json
 ```
 
 In-repo (same behaviour):

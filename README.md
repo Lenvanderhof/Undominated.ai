@@ -45,7 +45,7 @@ The SVG is the published verdict. Swap the slug for the model you ship.
 npx --yes undominated-check google/gemini-3.7-flash
 ```
 
-Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key. Package: [`undominated-check@0.1.0`](https://www.npmjs.com/package/undominated-check) (MIT, 2026-09-01). GitHub remains an installable source: `npx --yes github:Lenvanderhof/Undominated.ai google/gemini-3.7-flash`.
+Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key. Package: [`undominated-check@0.1.1`](https://www.npmjs.com/package/undominated-check) (MIT, 2026-09-09). GitHub remains an installable source: `npx --yes github:Lenvanderhof/Undominated.ai google/gemini-3.7-flash`.
 
 ## Warn on a dominated model (GitHub Action)
 
@@ -73,7 +73,7 @@ Warns. Never fails the job. Do not add it to required checks.
 [`skills/undominated/SKILL.md`](skills/undominated/SKILL.md) — fetch published dominance JSON; never invent a price, score, or rank. Unrated is not zero.
 
 ```sh
-npx undominated-check@0.1.0 <provider/model>
+npx undominated-check@0.1.1 <provider/model>
 ```
 
 ---

@@ -1,5 +1,12 @@
 # undominated-check
 
+```
+      ▄▌
+    ▄██▌  Undominated.ai
+  ▄████▌  undominated-check
+▄██████▌  quote only
+```
+
 Is the model you are paying for beaten by something both better and cheaper?
 
 ```sh
@@ -16,6 +23,10 @@ verdict, and exits. It sends nothing, stores nothing, and needs no key or accoun
 
 **Warn, never fail.** Printing `dominated` still exits 0. Pass `--exit-code` only if a job
 must distinguish statuses — and even then, do not make it a merge blocker.
+
+On a TTY the Pareto staircase and chartreuse paint the **frontier** finding only.
+Pipes, CI, `--json`, and `--plain` stay the same bytes as before — no colour in a log.
+`--color` forces the chrome when you are capturing a screenshot.
 
 ## README badge
 

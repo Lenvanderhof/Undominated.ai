@@ -8,6 +8,7 @@
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
+import { dress, wantsChrome } from './mark.mjs'
 import {
   ORIGIN,
   STATUS,
@@ -33,6 +34,9 @@ Options
   --json          Print the verdict document and the resolved URLs, unformatted.
   --frontier      List every model nothing beats on both quality and price.
   --exit-code     Exit with a status-specific code so CI can gate on it.
+  --plain         No staircase, no colour. Implied when stdout is not a TTY,
+                  when CI=1, or when NO_COLOR is set. --json is always plain.
+  --color         Force the TTY chrome (staircase + colour) even when piped.
   --help          This text.
   --version       Print the package version.
 
@@ -65,6 +69,8 @@ export function parseArgs(argv) {
     json: false,
     frontier: false,
     exitCode: false,
+    plain: false,
+    color: false,
     help: false,
     version: false,
   }
@@ -76,6 +82,8 @@ export function parseArgs(argv) {
     else if (arg === '--json') opts.json = true
     else if (arg === '--frontier') opts.frontier = true
     else if (arg === '--exit-code') opts.exitCode = true
+    else if (arg === '--plain' || arg === '--no-color') opts.plain = true
+    else if (arg === '--color') opts.color = true
     else if (arg === '--local') opts.local = argv[++i] ?? null
     else if (arg === '--origin') opts.origin = argv[++i] ?? ORIGIN
     else if (arg.startsWith('--local=')) opts.local = arg.slice('--local='.length)
@@ -105,7 +113,7 @@ export function locate(kind, opts) {
 class Missing extends Error {}
 
 /** Identifies this CLI to the origin. Node's default fetch sends no UA. */
-export const FETCH_UA = 'undominated-check/0.1.0 (+https://undominated.ai/check/)'
+export const FETCH_UA = 'undominated-check/0.1.1 (+https://undominated.ai/check/)'
 
 async function load({ source, local }, fetchImpl) {
   if (local) {
@@ -139,20 +147,25 @@ async function load({ source, local }, fetchImpl) {
 
 /**
  * @param {string[]} argv
- * @param {{ fetch?: typeof globalThis.fetch, version?: string }} [deps]
+ * @param {{ fetch?: typeof globalThis.fetch, version?: string, tty?: boolean, env?: NodeJS.ProcessEnv, now?: () => number }} [deps]
  * @returns {Promise<{ code: number, out: string, err: string }>}
  */
 export async function main(argv, deps = {}) {
   const fetchImpl = deps.fetch ?? globalThis.fetch
   const opts = parseArgs(argv)
+  const chrome = wantsChrome(opts, { tty: deps.tty, env: deps.env ?? {} })
 
   if (opts.error) return { code: 1, out: '', err: `${opts.error}\n\n${USAGE}\n` }
-  if (opts.help) return { code: 0, out: `${USAGE}\n`, err: '' }
+  if (opts.help) {
+    const out = chrome ? dress(`\n${USAGE}\n`, { env: deps.env, color: true }) : `${USAGE}\n`
+    return { code: 0, out, err: '' }
+  }
   if (opts.version) return { code: 0, out: `${deps.version ?? '0.0.0'}\n`, err: '' }
   if (!opts.frontier && !opts.slug) return { code: 1, out: '', err: `${USAGE}\n` }
 
   const kind = opts.frontier ? 'frontier' : 'verdict'
   const where = locate(kind, opts)
+  const t0 = (deps.now ?? Date.now)()
 
   let doc
   try {
@@ -167,9 +180,15 @@ export async function main(argv, deps = {}) {
     return { code: 2, out: '', err: `${err instanceof Error ? err.message : String(err)}\n` }
   }
 
+  const ms = (deps.now ?? Date.now)() - t0
+
   if (opts.frontier) {
     if (opts.json) return { code: 0, out: `${JSON.stringify(doc, null, 2)}\n`, err: '' }
-    return { code: 0, out: renderFrontier(doc, { origin: opts.origin }), err: '' }
+    const body = renderFrontier(doc, { origin: opts.origin })
+    const out = chrome
+      ? dress(body, { status: 'frontier', ms, env: deps.env, color: true })
+      : body
+    return { code: 0, out, err: '' }
   }
 
   let verdict
@@ -189,7 +208,10 @@ export async function main(argv, deps = {}) {
     return { code: 0, out: `${JSON.stringify(payload, null, 2)}\n`, err: '' }
   }
 
-  const out = renderVerdict(verdict, { origin: opts.origin, source: String(where.source) })
+  const body = renderVerdict(verdict, { origin: opts.origin, source: String(where.source) })
+  const out = chrome
+    ? dress(body, { status: verdict.status, ms, env: deps.env, color: true })
+    : body
   const code = opts.exitCode ? statusExitCode(verdict.status) : 0
   return { code, out, err: '' }
 }

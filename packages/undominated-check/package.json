@@ -1,6 +1,6 @@
 {
   "name": "undominated-check",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Read-only CLI: is a model beaten by something both better and cheaper? Prints the published Undominated.ai verdict with its lens, workload and snapshot date.",
   "keywords": [
     "llm",
@@ -41,6 +41,7 @@
   },
   "dependencies": {},
   "scripts": {
-    "test": "node --test ../../scripts/undominated-check.test.mjs"
+    "test": "node --test ../../scripts/undominated-check.test.mjs",
+    "prepublishOnly": "node ./prepublish.mjs"
   }
 }

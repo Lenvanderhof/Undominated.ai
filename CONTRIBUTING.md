@@ -5,7 +5,8 @@ This repository is not a code drop of undominated.ai.
 **What to send**
 
 1. A [Wrong figure](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml) issue when a live price, score, or rank disagrees with a primary source. Required: model, what the page shows, what it should be, source URL, date.
-2. Nothing else that belongs on the live site. Feature ideas are cheaper as a visit to [the index](https://undominated.ai/) than as a pull request here.
+2. A [Discussion](https://github.com/Lenvanderhof/Undominated.ai/discussions) for how to cite a dump, how a verdict is computed, or how to read `null`. Not for a wrong live figure.
+3. Nothing else that belongs on the live site. Feature ideas are cheaper as a visit to [the index](https://undominated.ai/) than as a pull request here.
 
 **What not to send**
 

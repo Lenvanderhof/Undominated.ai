@@ -10,24 +10,26 @@ authors:
 url: https://undominated.ai/
 repository-code: https://github.com/Lenvanderhof/Undominated.ai
 license: CC-BY-4.0
-version: '2026-08-31'
-date-released: '2026-08-31'
+version: '2026-09-19'
+date-released: '2026-09-19'
 identifiers:
   - type: url
     value: https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing
-    description: 2026-Q3 licence-gated dump on Hugging Face (no Artificial Analysis fields)
+    description: Licence-gated dump on Hugging Face (no Artificial Analysis fields)
   - type: url
-    value: https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-08-31
-    description: 2026-Q3 licence-gated dump as a GitHub Release (no Artificial Analysis fields)
+    value: https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-09-19
+    description: 2026-09-19 licence-gated dump as a GitHub Release (no Artificial Analysis fields)
 keywords:
   - LLM
   - pricing
   - LMArena
   - OpenRouter
   - inference
+  - Pareto
 abstract: >
-  405 model listings from 50 providers with list prices, context-tier ladders,
+  429 model listings from 52 providers with list prices, context-tier ladders,
   time-of-day price windows and LMArena Elo with confidence bounds. Produced
-  by https://undominated.ai. LMArena fields are CC BY 4.0 from the official
-  Hugging Face dataset. OpenRouter prices are vendor list rates. No Artificial
-  Analysis field is included.
+  by https://undominated.ai as of 2026-09-19. LMArena fields are CC BY 4.0 from
+  the official Hugging Face dataset. OpenRouter prices are vendor list rates.
+  No Artificial Analysis field is included. Unrated is not a score of zero.
+

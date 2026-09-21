@@ -1,6 +1,6 @@
 {
-  "capturedOn": "2026-09-09",
-  "catalogueAsOf": "2026-09-09",
+  "capturedOn": "2026-09-21",
+  "catalogueAsOf": "2026-09-19",
   "viewport": {
     "desktop": [
       1440,
@@ -30,7 +30,7 @@
     },
     {
       "file": "check.png",
-      "url": "https://undominated.ai/check/z-ai__glm-5.2/",
+      "url": "https://undominated.ai/check/z-ai__glm-5.3-flash/",
       "viewport": "desktop"
     },
     {
@@ -46,6 +46,11 @@
     {
       "file": "methodology.png",
       "url": "https://undominated.ai/methodology/",
+      "viewport": "desktop"
+    },
+    {
+      "file": "plans.png",
+      "url": "https://undominated.ai/plans/",
       "viewport": "desktop"
     }
   ]

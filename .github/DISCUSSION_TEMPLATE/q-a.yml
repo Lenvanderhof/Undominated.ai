@@ -1,0 +1,22 @@
+name: Question
+description: How the index works, how to cite a dump, how to read a verdict.
+title: "[q] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A question about how the index works, how to cite a dump, or how to read a verdict.
+        A **wrong live figure** is an [issue](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml), not a discussion.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What do you want to check? Name the page or the dump if you have one.
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page or dump (optional)
+      placeholder: https://undominated.ai/models/… or catalogue-2026-09-19

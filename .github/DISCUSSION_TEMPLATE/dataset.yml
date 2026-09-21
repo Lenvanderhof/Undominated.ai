@@ -1,0 +1,27 @@
+name: Dataset
+description: Reading, citing, or joining a citable catalogue dump.
+title: "[dataset] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        How to read, cite, or join a citable dump. The dumps contain **no Artificial Analysis fields**.
+        Do not paste a scraped catalogue here.
+  - type: dropdown
+    id: dump
+    attributes:
+      label: Which dump
+      options:
+        - GitHub Release (catalogue-YYYY-MM-DD)
+        - Hugging Face LPH98/undominated-ai-model-pricing
+        - Live hashed snapshot on undominated.ai/data/snapshots/
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: What you are trying to do
+    validations:
+      required: true

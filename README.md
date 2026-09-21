@@ -25,8 +25,8 @@
 </p>
 
 <p align="center">
-  <a href="https://undominated.ai/models/anthropic__claude-opus-5/">
-    <img src="https://undominated.ai/badge/anthropic__claude-opus-5.svg" alt="anthropic/claude-opus-5 dominance badge">
+  <a href="https://undominated.ai/models/anthropic__claude-fable-5.1/">
+    <img src="https://undominated.ai/badge/anthropic__claude-fable-5.1.svg" alt="anthropic/claude-fable-5.1 dominance badge — current #1 on the live board, LMArena, balanced workload">
   </a>
 </p>
 
@@ -37,7 +37,7 @@
 The SVG is the published verdict. Swap the slug for the model you ship.
 
 ```markdown
-[![anthropic/claude-opus-5](https://undominated.ai/badge/anthropic__claude-opus-5.svg)](https://undominated.ai/models/anthropic__claude-opus-5/)
+[![anthropic/claude-fable-5.1](https://undominated.ai/badge/anthropic__claude-fable-5.1.svg)](https://undominated.ai/models/anthropic__claude-fable-5.1/)
 ```
 
 `<key>` is the same segment as `/models/<key>/`. Replace `/` and `:` in the model id with `__`. The badge states one model's dominance verdict at the balanced workload on the LMArena lens, with the date it was computed. It changes when that verdict changes. Unrated is labelled unrated, not scored zero.
@@ -263,7 +263,7 @@ Machine-readable surfaces stay on the origin, where they can carry provenance:
 
 - [`/llms.txt`](https://undominated.ai/llms.txt) — facts for agents
 - [`/data/catalogue.json`](https://undominated.ai/data/catalogue.json) — the public catalogue
-- [`/badge/<key>.svg`](https://undominated.ai/badge/anthropic__claude-opus-5.svg) — README dominance badge
+- [`/badge/<key>.svg`](https://undominated.ai/badge/anthropic__claude-fable-5.1.svg) — README dominance badge
 - [`/?format=md`](https://undominated.ai/?format=md) — any page as Markdown
 - [`/now/`](https://undominated.ai/now/) — dated frontier stamp (hash on the page)
 - [`/data/citation.json`](https://undominated.ai/data/citation.json) — what is citable, with hashes

@@ -97,10 +97,10 @@ Most AI “value” tables invent a score, then sort by it.
 
 Undominated.ai does the opposite. It ranks on **independently measured capability first**. Price breaks ties. A model that is both worse and dearer is named as such. A model that has not been measured is **unrated**, never zero.
 
-> **<!--fig:dominatedOfRated-->124 of 136<!--/fig-->** rated, priced models are beaten on quality *and* undercut on price by something else on the board.<br>
-> **<!--fig:frontier-->12<!--/fig-->** are not. That set is the value frontier.
+> **<!--fig:dominatedOfRated-->123 of 136<!--/fig-->** rated, priced models are beaten on quality *and* undercut on price by something else on the board.<br>
+> **<!--fig:frontier-->13<!--/fig-->** are not. That set is the value frontier.
 
-Every figure on this page is generated from the live catalogue by `scripts/refresh-readme.mjs`, last on **<!--fig:asOf-->2026-09-22<!--/fig-->** (<!--fig:models-->425<!--/fig--> models, <!--fig:providers-->52<!--/fig--> providers). It is checked in CI, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
+Every figure on this page is generated from the live catalogue by `scripts/refresh-readme.mjs`, last on **<!--fig:asOf-->2026-09-23<!--/fig-->** (<!--fig:models-->437<!--/fig--> models, <!--fig:providers-->52<!--/fig--> providers). It is checked in CI, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
 
 <p align="center">
   <a href="https://undominated.ai/"><strong>Open the index →</strong></a>
@@ -171,10 +171,10 @@ Undominated.ai publishes the uncomfortable version:
 | Claim the market likes | What this index actually does |
 | --- | --- |
 | A blended “value” rank | Capability first, effective price second. Never mixed into one score. |
-| Unrated at the bottom | Unrated is not zero. **<!--fig:unratedPct-->68%<!--/fig-->** of the catalogue (<!--fig:unrated-->289<!--/fig--> of <!--fig:models-->425<!--/fig-->) has no independent quality score. Those rows are listed by price and excluded from quality order. |
+| Unrated at the bottom | Unrated is not zero. **<!--fig:unratedPct-->69%<!--/fig-->** of the catalogue (<!--fig:unrated-->301<!--/fig--> of <!--fig:models-->437<!--/fig-->) has no independent quality score. Those rows are listed by price and excluded from quality order. |
 | Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank** — roughly half the ranked board collapses into shared positions once the published confidence intervals are drawn. [The live board states the exact split](https://undominated.ai/); it moves whenever a score does, so it is not repeated here. |
 | “Cheaper is better” | Cheaper is cheaper. A strict upgrade is a capability *superset* that also costs less: same context, same modalities, same tools. |
-| Headline $/M | **<!--fig:tiered-->61<!--/fig-->** models change rate past a context threshold. The board reprices the row when your prompt crosses it. |
+| Headline $/M | **<!--fig:tiered-->69<!--/fig-->** models change rate past a context threshold. The board reprices the row when your prompt crosses it. |
 | Affiliate “best” lists | **No cut of inference. No affiliate. No paid placement. No gateway.** |
 
 The method, the hedges, and the licensing limits: [undominated.ai/methodology](https://undominated.ai/methodology/).
@@ -194,7 +194,7 @@ Every route answers a decision, not a document type.
 | You want to | Open |
 | --- | --- |
 | See what is actually worth buying | [Leaderboard](https://undominated.ai/) |
-| See the <!--fig:frontier-->12<!--/fig--> nothing beats on both axes | [Frontier](https://undominated.ai/frontier/) |
+| See the <!--fig:frontier-->13<!--/fig--> nothing beats on both axes | [Frontier](https://undominated.ai/frontier/) |
 | Test the model you already use | [Check](https://undominated.ai/check/) |
 | Cite a dated stamp | [Now](https://undominated.ai/now/) |
 | Download the citable dump | [GitHub Release](https://github.com/Lenvanderhof/Undominated.ai/releases) · [Hugging Face](https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing) · [`CITATION.cff`](CITATION.cff) · [`datasets/`](datasets/) |
@@ -317,14 +317,14 @@ Everyone publishes today's prices. Nobody publishes what the **cheapest model cl
 
 <!--floors-->
 
-| Capability floor (LMArena) | 2026-08-24 | 2026-09-22 | Move | Cheapest today |
+| Capability floor (LMArena) | 2026-08-24 | 2026-09-23 | Move | Cheapest today |
 |:---|---:|---:|---:|:---|
-| **≥ 1200** | $0.0525 | $0.055 | +5% | `openai/gpt-oss-20b` |
+| **≥ 1200** | $0.0525 | $0.036 | -31% | `openai/gpt-oss-20b` |
 | **≥ 1350** | $0.0525 | $0.0844 | +61% | `qwen/qwen3-30b-a3b-instruct-2507` |
-| **≥ 1400** | $0.0611 | $0.1108 | +81% | `deepseek/deepseek-v4-flash` |
+| **≥ 1400** | $0.0611 | $0.1031 | +69% | `deepseek/deepseek-v4-flash` |
 | **≥ 1450** | $0.4961 | $0.2375 | -52% | `z-ai/glm-5.3-flash` |
 
-<sub>Effective $/M on the balanced workload, from 13 dated snapshots. Generated by `scripts/build-floor-table.mjs`. The floors are append-only — a threshold is never edited in place, because a moved goalpost turns a series into marketing.</sub>
+<sub>Effective $/M on the balanced workload, from 14 dated snapshots. Generated by `scripts/build-floor-table.mjs`. The floors are append-only — a threshold is never edited in place, because a moved goalpost turns a series into marketing.</sub>
 
 <!--/floors-->
 

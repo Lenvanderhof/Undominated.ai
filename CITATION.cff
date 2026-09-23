@@ -18,7 +18,7 @@ identifiers:
     description: Licence-gated dump on Hugging Face (no Artificial Analysis fields)
   - type: url
     value: https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-09-23
-    description: 2026-09-19 licence-gated dump as a GitHub Release (no Artificial Analysis fields)
+    description: 2026-09-23 licence-gated dump as a GitHub Release (no Artificial Analysis fields)
 keywords:
   - LLM
   - pricing
@@ -27,9 +27,9 @@ keywords:
   - inference
   - Pareto
 abstract: >
-  429 model listings from 52 providers with list prices, context-tier ladders,
+  437 model listings from 52 providers with list prices, context-tier ladders,
   time-of-day price windows and LMArena Elo with confidence bounds. Produced
-  by https://undominated.ai as of 2026-09-19. LMArena fields are CC BY 4.0 from
+  by https://undominated.ai as of 2026-09-23. LMArena fields are CC BY 4.0 from
   the official Hugging Face dataset. OpenRouter prices are vendor list rates.
   No Artificial Analysis field is included. Unrated is not a score of zero.
 

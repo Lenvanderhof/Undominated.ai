@@ -25,13 +25,22 @@ node packages/undominated-check/bin/undominated-check.mjs <provider/model>
 node packages/undominated-check/bin/undominated-check.mjs --frontier --local static/data
 ```
 
-2. Or fetch and print only:
+2. If your client speaks MCP, register the same lookups as tools (0.2.0 and later):
+
+```sh
+claude mcp add undominated -- npx -y undominated-check --mcp
+```
+
+`check_model { model }` and `list_frontier` return the published text plus `structuredContent`.
+A tool error means **cannot confirm** — report it; do not fill the gap.
+
+3. Or fetch and print only:
 
 - `https://undominated.ai/data/frontier.json`
 - `https://undominated.ai/data/dominance/<slug>.json` where `/` and `:` in the model id become `__`
 
-3. Always include in the answer: **status**, **asOf**, **lens**, and the **provenance URL**.
-4. If the model is unrated, unpriced, or the fetch fails: say **cannot confirm**. Exit without guessing.
+4. Always include in the answer: **status**, **asOf**, **lens**, and the **provenance URL**.
+5. If the model is unrated, unpriced, or the fetch fails: say **cannot confirm**. Exit without guessing.
 
 ## Do not
 

@@ -1,24 +1,46 @@
 {
   "name": "undominated-check",
-  "version": "0.1.1",
-  "description": "Read-only CLI: is a model beaten by something both better and cheaper? Prints the published Undominated.ai verdict with its lens, workload and snapshot date.",
+  "version": "0.2.0",
+  "description": "Is the AI model you pay for beaten by one that is both better and cheaper? Read-only CLI, CI gate and MCP server that quote Undominated.ai's published verdict with its lens, workload and date.",
   "keywords": [
     "llm",
-    "pricing",
+    "ai",
+    "llm-pricing",
+    "model-selection",
     "inference",
-    "openrouter",
+    "pareto",
+    "pareto-frontier",
+    "lmarena",
+    "leaderboard",
     "cost-optimisation",
-    "pareto"
+    "cost-optimization",
+    "finops",
+    "openrouter",
+    "openai",
+    "anthropic",
+    "gemini",
+    "cli",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "ci"
   ],
   "homepage": "https://undominated.ai/check/",
+  "bugs": {
+    "url": "https://github.com/Lenvanderhof/Undominated.ai/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Lenvanderhof/Undominated.ai.git",
     "directory": "packages/undominated-check"
   },
-  "bugs": "https://github.com/Lenvanderhof/Undominated.ai/issues",
   "license": "MIT",
+  "author": {
+    "name": "Len van der Hof",
+    "url": "https://lenvanderhof.com"
+  },
   "type": "module",
+  "mcpName": "io.github.Lenvanderhof/undominated",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -28,12 +50,14 @@
   },
   "exports": {
     ".": "./src/verdict.mjs",
-    "./cli": "./src/cli.mjs"
+    "./cli": "./src/cli.mjs",
+    "./mcp": "./src/mcp.mjs"
   },
   "files": [
     "bin",
     "src",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "engines": {
@@ -41,7 +65,7 @@
   },
   "dependencies": {},
   "scripts": {
-    "test": "node --test ../../scripts/undominated-check.test.mjs",
+    "test": "node --test 'test/*.test.mjs'",
     "prepublishOnly": "node ./prepublish.mjs"
   }
 }

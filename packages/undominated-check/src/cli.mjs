@@ -5,6 +5,7 @@
  * the exact bytes a user sees.
  */
 
+import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
@@ -25,6 +26,7 @@ export const USAGE = `undominated-check — is a model beaten by something bette
 Usage
   npx undominated-check <model-slug>
   npx undominated-check --frontier
+  npx undominated-check --mcp
 
 Options
   --local <dir>   Read from a local directory instead of the network. Point it at
@@ -37,6 +39,9 @@ Options
   --plain         No staircase, no colour. Implied when stdout is not a TTY,
                   when CI=1, or when NO_COLOR is set. --json is always plain.
   --color         Force the TTY chrome (staircase + colour) even when piped.
+  --mcp           Run as a Model Context Protocol server on stdio, exposing the
+                  same two read-only lookups as tools: check_model and
+                  list_frontier. --local and --origin apply.
   --help          This text.
   --version       Print the package version.
 
@@ -71,6 +76,7 @@ export function parseArgs(argv) {
     exitCode: false,
     plain: false,
     color: false,
+    mcp: false,
     help: false,
     version: false,
   }
@@ -84,6 +90,7 @@ export function parseArgs(argv) {
     else if (arg === '--exit-code') opts.exitCode = true
     else if (arg === '--plain' || arg === '--no-color') opts.plain = true
     else if (arg === '--color') opts.color = true
+    else if (arg === '--mcp') opts.mcp = true
     else if (arg === '--local') opts.local = argv[++i] ?? null
     else if (arg === '--origin') opts.origin = argv[++i] ?? ORIGIN
     else if (arg.startsWith('--local=')) opts.local = arg.slice('--local='.length)
@@ -110,12 +117,19 @@ export function locate(kind, opts) {
     : { source: verdictUrl(opts.slug, opts.origin), local: false }
 }
 
-class Missing extends Error {}
+export class Missing extends Error {}
 
-/** Identifies this CLI to the origin. Node's default fetch sends no UA. */
-export const FETCH_UA = 'undominated-check/0.1.1 (+https://undominated.ai/check/)'
+const PKG_VERSION = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+).version
 
-async function load({ source, local }, fetchImpl) {
+/**
+ * Identifies this CLI to the origin. Node's default fetch sends no UA.
+ * Read from package.json, so a version bump cannot leave a stale UA behind.
+ */
+export const FETCH_UA = `undominated-check/${PKG_VERSION} (+https://undominated.ai/check/)`
+
+export async function load({ source, local }, fetchImpl) {
   if (local) {
     try {
       return JSON.parse(await readFile(source, 'utf8'))
@@ -161,6 +175,8 @@ export async function main(argv, deps = {}) {
     return { code: 0, out, err: '' }
   }
   if (opts.version) return { code: 0, out: `${deps.version ?? '0.0.0'}\n`, err: '' }
+  // The server is long-running and owns stdio, so bin/ starts it, not main().
+  if (opts.mcp) return { code: 1, out: '', err: '--mcp is started by the undominated-check binary\n' }
   if (!opts.frontier && !opts.slug) return { code: 1, out: '', err: `${USAGE}\n` }
 
   const kind = opts.frontier ? 'frontier' : 'verdict'

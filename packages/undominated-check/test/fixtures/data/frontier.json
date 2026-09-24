@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "lens": "lmarena",
+  "workload": "balanced",
+  "asOf": "2026-09-23",
+  "members": [
+    {
+      "slug": "acme/fast-2",
+      "score": 1401.5,
+      "price": 0.12
+    },
+    {
+      "slug": "acme/big-3",
+      "score": 1502.1,
+      "price": 9.5
+    }
+  ]
+}

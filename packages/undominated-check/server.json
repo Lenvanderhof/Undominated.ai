@@ -1,0 +1,31 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Lenvanderhof/undominated",
+  "title": "Undominated.ai check",
+  "description": "Quote-only: is an AI model beaten by one both better and cheaper? Dated, sourced verdicts.",
+  "websiteUrl": "https://undominated.ai/check/",
+  "repository": {
+    "url": "https://github.com/Lenvanderhof/Undominated.ai",
+    "source": "github",
+    "subfolder": "packages/undominated-check"
+  },
+  "version": "0.2.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "undominated-check",
+      "version": "0.2.0",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "--mcp"
+        }
+      ]
+    }
+  ]
+}

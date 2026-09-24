@@ -7,17 +7,26 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import { main } from '../src/cli.mjs'
+import { main, parseArgs } from '../src/cli.mjs'
 
 const pkg = JSON.parse(
   readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'),
 )
 
-const { code, out, err } = await main(process.argv.slice(2), {
-  version: pkg.version,
-  tty: Boolean(process.stdout.isTTY),
-  env: process.env,
-})
-if (out) process.stdout.write(out)
-if (err) process.stderr.write(err)
-process.exitCode = code
+const argv = process.argv.slice(2)
+const opts = parseArgs(argv)
+
+if (opts.mcp && !opts.error && !opts.help && !opts.version) {
+  // Long-running: stdio belongs to the protocol until the client hangs up.
+  const { serveStdio } = await import('../src/mcp.mjs')
+  await serveStdio({ origin: opts.origin, local: opts.local, version: pkg.version })
+} else {
+  const { code, out, err } = await main(argv, {
+    version: pkg.version,
+    tty: Boolean(process.stdout.isTTY),
+    env: process.env,
+  })
+  if (out) process.stdout.write(out)
+  if (err) process.stderr.write(err)
+  process.exitCode = code
+}

@@ -17,6 +17,7 @@
   <a href="https://undominated.ai/frontier/"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fundominated.ai%2Fdata%2Fcatalogue.json&query=%24.stats.frontierSize&label=frontier&suffix=%20undominated&style=flat-square&labelColor=191814&color=83B81D" alt="Models on the value frontier, read live from the published catalogue"></a>
   <a href="https://undominated.ai/check/"><img src="https://img.shields.io/badge/check-the_model_you_pay_for-0072DA?style=flat-square&labelColor=191814" alt="Check a model"></a>
   <a href="https://www.npmjs.com/package/undominated-check"><img src="https://img.shields.io/npm/v/undominated-check?style=flat-square&labelColor=191814&color=83B81D" alt="undominated-check on npm"></a>
+  <a href="#give-your-agent-the-verdict-mcp-server"><img src="https://img.shields.io/badge/MCP-server-0072DA?style=flat-square&labelColor=191814" alt="MCP server: check_model and list_frontier, read-only"></a>
   <a href="https://undominated.ai/"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fundominated.ai%2Fdata%2Fcatalogue.json&query=%24.stats.models&label=models&style=flat-square&labelColor=191814&color=83B81D" alt="Model count, read live from the published catalogue"></a>
   <a href="https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing"><img src="https://img.shields.io/badge/dataset-Hugging_Face-FFD21E?style=flat-square&labelColor=191814" alt="Licence-gated dump on Hugging Face"></a>
   <a href="https://github.com/Lenvanderhof/Undominated.ai/releases"><img src="https://img.shields.io/github/v/release/Lenvanderhof/Undominated.ai?filter=catalogue-*&style=flat-square&labelColor=191814&color=0072DA&label=catalogue" alt="Latest citable catalogue dump"></a>
@@ -64,12 +65,20 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: Lenvanderhof/Undominated.ai/actions/dominated-warn@v1
         continue-on-error: true
 ```
 
 Warns. Never fails the job. Do not add it to required checks.
+
+## Give your agent the verdict (MCP server)
+
+```sh
+claude mcp add undominated -- npx -y undominated-check --mcp
+```
+
+Two read-only tools for any [MCP](https://modelcontextprotocol.io) client — Claude Code, Claude Desktop, Cursor, VS Code, Zed: `check_model` returns the published verdict with its lens, workload, date and URL; `list_frontier` returns what nothing beats. A failed lookup is an error that says *cannot confirm*, never a fallback figure. Needs `undominated-check` 0.2.0 or later; GitHub is also an installable source: `npx -y github:Lenvanderhof/Undominated.ai --mcp`. Client configs: [package README](packages/undominated-check/README.md#mcp-server).
 
 ## Agent skill (quote-only)
 
@@ -247,7 +256,7 @@ Quality on the board is **LMArena Elo**, from the official CC BY 4.0 dataset, wi
 
 ## This repository
 
-**Undominated.ai lives at [undominated.ai](https://undominated.ai/).** This GitHub repository is the public face of that product: a landing page you can star, cite, and link; a **public issue tracker** for corrections; **Discussions** for questions; and **dated catalogue dumps** you can download without scraping the live board.
+**Undominated.ai lives at [undominated.ai](https://undominated.ai/).** This GitHub repository is the public face of that product: a landing page you can star, cite, and link; a **public issue tracker** for corrections; **[Discussions](https://github.com/Lenvanderhof/Undominated.ai/discussions)** for the open questions the index has not settled; **dated catalogue dumps** you can download without scraping the live board; and the MIT-licensed tools above — [`packages/undominated-check`](packages/undominated-check/) (CLI and MCP server), [`actions/dominated-warn`](actions/dominated-warn/) and [`skills/undominated`](skills/undominated/) — which take pull requests ([CONTRIBUTING](CONTRIBUTING.md)).
 
 It is not a place to send scraped prices. It is not a second copy of the ranking engine. The live board remains the source.
 
@@ -267,7 +276,7 @@ Machine-readable surfaces stay on the origin, where they can carry provenance:
 - [`/?format=md`](https://undominated.ai/?format=md) — any page as Markdown
 - [`/now/`](https://undominated.ai/now/) — dated frontier stamp (hash on the page)
 - [`/data/citation.json`](https://undominated.ai/data/citation.json) — what is citable, with hashes
-- [`/data/snapshots/2026-09-19.json`](https://undominated.ai/data/snapshots/2026-09-19.json) — the current citable snapshot
+- [`/data/snapshots/<date>.json`](https://undominated.ai/data/citation.json) — dated, hashed snapshots; `citation.json` names the current one
 
 ---
 
@@ -277,7 +286,7 @@ The live board is rebuilt in place. A citation needs bytes that will still be th
 
 | What | Where |
 | --- | --- |
-| **2026-09-19 dump** (JSON + CSV, no Artificial Analysis fields) | [GitHub Release `catalogue-2026-09-19`](https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-09-19) |
+| **Latest dump** (JSON + CSV, no Artificial Analysis fields) | [GitHub Release `catalogue-2026-09-23`](https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-09-23) |
 | Same dump, Hugging Face | [`LPH98/undominated-ai-model-pricing`](https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing) |
 | How to cite | [`CITATION.cff`](CITATION.cff) · [`datasets/README.md`](datasets/README.md) |
 | What is *not* citable | [`catalogue.json` and per-model JSON](https://undominated.ai/data/citation.json) — rebuilt on every deploy, no date in the path |

@@ -1,8 +1,8 @@
 {
   "name": "undominated-check",
-  "version": "0.1.0",
-  "private": false,
-  "description": "Read-only CLI: is a model beaten by something both better and cheaper? Fetches published JSON from undominated.ai.",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Is the AI model you pay for beaten by one that is both better and cheaper? Read-only CLI, CI gate and MCP server that quote Undominated.ai's published verdict with its lens, workload and date.",
   "license": "MIT",
   "type": "module",
   "bin": {
@@ -12,8 +12,9 @@
     "packages/undominated-check/bin",
     "packages/undominated-check/src",
     "packages/undominated-check/package.json",
+    "packages/undominated-check/LICENSE",
     "packages/undominated-check/README.md",
-    "packages/undominated-check/LICENSE"
+    "packages/undominated-check/CHANGELOG.md"
   ],
   "repository": {
     "type": "git",
@@ -22,5 +23,9 @@
   "homepage": "https://undominated.ai/check/",
   "engines": {
     "node": ">=22.12"
+  },
+  "scripts": {
+    "test": "node --test 'packages/undominated-check/test/*.test.mjs' 'actions/dominated-warn/*.test.mjs' 'scripts/*.test.mjs'",
+    "check:release": "node packages/undominated-check/prepublish.mjs"
   }
 }

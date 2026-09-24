@@ -28,6 +28,35 @@ On a TTY the Pareto staircase and chartreuse paint the **frontier** finding only
 Pipes, CI, `--json`, and `--plain` stay the same bytes as before — no colour in a log.
 `--color` forces the chrome when you are capturing a screenshot.
 
+## MCP server
+
+The same two lookups, as [Model Context Protocol](https://modelcontextprotocol.io) tools, so an
+agent quotes the published verdict instead of reconstructing one from memory.
+
+```sh
+claude mcp add undominated -- npx -y undominated-check --mcp
+```
+
+Any other MCP client (Claude Desktop, Cursor, VS Code, Windsurf, Zed):
+
+```json
+{
+  "mcpServers": {
+    "undominated": { "command": "npx", "args": ["-y", "undominated-check", "--mcp"] }
+  }
+}
+```
+
+| Tool | Returns |
+|---|---|
+| `check_model` `{ model }` | The published verdict: status, who beats it and by how much, what that model gives up, lens, workload, as-of date, and the URLs to cite. |
+| `list_frontier` | Every model nothing beats on both quality and price, with score, effective $/M and date. |
+
+Both tools are annotated read-only. A lookup that fails comes back as a tool error that says
+*cannot confirm*; there is no fallback figure. `unrated` comes back as `unrated`, never as a
+low score. `--local <dir>` and `--origin <url>` work here too. Registry name:
+`io.github.Lenvanderhof/undominated`.
+
 ## README badge
 
 Same verdict as a static SVG. The slug is the dominance filename: `/` and `:` become `__`.
@@ -98,6 +127,7 @@ npx undominated-check --frontier
 | `--json` | Print the verdict document plus the resolved URLs, unformatted. |
 | `--frontier` | List every model nothing beats on both quality and price. |
 | `--exit-code` | Exit with the status-specific code above, for CI. |
+| `--mcp` | Run as an MCP server on stdio. See [MCP server](#mcp-server). |
 | `--help`, `--version` | |
 
 Without `--exit-code`, exit is `0` whenever a verdict was printed, `1` on a usage error or an

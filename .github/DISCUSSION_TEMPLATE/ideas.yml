@@ -1,0 +1,42 @@
+title: "[idea] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A proposal for the index, the CLI, the Action or the MCP server. The strongest proposals name
+        a **primary source** for any new figure — a number nobody can trace does not ship.
+        A wrong live figure is an [issue](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml), not an idea.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - A new quality source (lens)
+        - Pricing mechanics (cache, batch, tiers, windows)
+        - Workload presets
+        - Capability checks for "dominated, with a trade"
+        - CLI / GitHub Action / MCP server
+        - Dumps and data formats
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: The decision this would improve
+      description: Which buying or engineering decision is wrong or slow today, and for whom?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Primary source (if the idea adds a figure)
+      description: Who measures or publishes it, under what licence, and how often it updates.
+      placeholder: https://

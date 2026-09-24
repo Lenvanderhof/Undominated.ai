@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Ask a question or propose an idea
+    url: https://github.com/Lenvanderhof/Undominated.ai/discussions
+    about: How a verdict is computed, a new lens or workload, the CLI, Action or MCP server. Issues are for wrong figures with a primary source.
   - name: Open the live index
     url: https://undominated.ai/
     about: Rankings, prices, plans, and methodology live on the site. This repository is the public tracker, not the product.

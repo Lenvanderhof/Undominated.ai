@@ -1,0 +1,33 @@
+title: "[show] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Show where a dominance verdict lives in your project — a README badge, the `undominated-check`
+        CLI, the `dominated-warn` Action, the MCP server, or something built on a dump.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: What you used
+      multiple: true
+      options:
+        - README badge
+        - undominated-check CLI
+        - dominated-warn GitHub Action
+        - MCP server (undominated-check --mcp)
+        - Agent skill
+        - A catalogue dump
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link
+      placeholder: https://github.com/you/your-repo
+  - type: textarea
+    id: story
+    attributes:
+      label: What did the verdict say, and what did you do about it?
+    validations:
+      required: true

@@ -1,0 +1,19 @@
+# Keeps every workflow's pinned action SHA current. Updates wait a week after
+# upstream publishes (cooldown), so a compromised release has time to be
+# noticed before it lands here. The CLI and the action have no npm
+# dependencies, so there is nothing else to watch.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ['*']
+    commit-message:
+      prefix: ci
+    labels: [dependencies]

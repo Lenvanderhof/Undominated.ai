@@ -1,0 +1,216 @@
+name: release
+
+# Everything this repository ships is released by pushing one tag:
+#
+#   undominated-check@X.Y.Z   npm (trusted publishing, so the tarball carries a
+#                             provenance attestation), the MCP Registry, and a
+#                             GitHub Release whose body is the CHANGELOG section.
+#   vX.Y.Z                    a GitHub Release for dominated-warn, and the
+#                             moving major tag (v1) consumers pin.
+#
+# Catalogue dumps (catalogue-YYYY-MM-DD) are released from the build tree and
+# stay the repository's "Latest" release; nothing here marks itself latest.
+#
+# workflow_dispatch writes a GitHub Release for a tag that has none — notes
+# only, never npm. That is how v1.0.0 and undominated-check@0.1.1 get theirs.
+#
+# One-time setup, owner only:
+#   npmjs.com → undominated-check → Settings → Trusted Publisher → GitHub Actions:
+#     user Lenvanderhof · repo Undominated.ai · workflow release.yml · environment npm
+#   GitHub → Settings → Environments → new environment "npm" (add yourself as a
+#     required reviewer if a tag push alone should not be enough to publish).
+
+on:
+  push:
+    tags:
+      - 'undominated-check@*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to write a GitHub Release for, e.g. v1.0.0 or undominated-check@0.1.1'
+        required: true
+        type: string
+      target:
+        description: 'Commit SHA to create the tag at, only if the tag does not exist yet'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cli:
+    name: undominated-check → npm, MCP Registry, GitHub Release
+    if: github.event_name == 'push' && startsWith(github.ref_name, 'undominated-check@')
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/undominated-check
+    permissions:
+      contents: write # the GitHub Release
+      id-token: write # npm trusted publishing and MCP Registry login, both OIDC
+    env:
+      TAG: ${{ github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: npm new enough for trusted publishing (11.5.1 or later)
+        run: |
+          node -e '
+            const [a, b, c] = process.argv[1].split(".").map(Number)
+            process.exit(a > 11 || (a === 11 && (b > 5 || (b === 5 && c >= 1))) ? 0 : 1)
+          ' "$(npm --version)" || npm install --global npm@11
+          npm --version
+
+      - name: Tests
+        run: npm test
+
+      - name: The tag, package.json, root, server.json and CHANGELOG agree
+        run: node packages/undominated-check/prepublish.mjs --tag "$TAG"
+
+      - name: Release notes from the CHANGELOG
+        run: node scripts/release-notes.mjs packages/undominated-check/CHANGELOG.md "${TAG#undominated-check@}" > "$RUNNER_TEMP/notes.md"
+
+      - name: Publish to npm with provenance
+        working-directory: packages/undominated-check
+        run: |
+          VERSION="${TAG#undominated-check@}"
+          if [ "$(npm view "undominated-check@$VERSION" version 2>/dev/null)" = "$VERSION" ]; then
+            echo "undominated-check@$VERSION is already on npm; not publishing twice."
+          else
+            npm publish --provenance --access public
+          fi
+
+      - name: GitHub Release
+        run: |
+          VERSION="${TAG#undominated-check@}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --notes-file "$RUNNER_TEMP/notes.md"
+          else
+            gh release create "$TAG" --verify-tag --latest=false \
+              --title "undominated-check $VERSION" --notes-file "$RUNNER_TEMP/notes.md"
+          fi
+
+      # Last, and allowed to fail: npm and the GitHub Release are the release;
+      # the registry listing is discovery. A failure here is re-run, not rolled back.
+      - name: MCP Registry
+        continue-on-error: true
+        working-directory: packages/undominated-check
+        env:
+          PUBLISHER: v1.8.1
+          PUBLISHER_SHA256: a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/mcp-publisher.tgz" \
+            "https://github.com/modelcontextprotocol/registry/releases/download/$PUBLISHER/mcp-publisher_linux_amd64.tar.gz"
+          echo "$PUBLISHER_SHA256  $RUNNER_TEMP/mcp-publisher.tgz" | sha256sum --check --strict
+          tar -xzf "$RUNNER_TEMP/mcp-publisher.tgz" -C "$RUNNER_TEMP" mcp-publisher
+          "$RUNNER_TEMP/mcp-publisher" login github-oidc
+          # The registry checks mcpName against the npm tarball just published;
+          # give the npm CDN a moment rather than fail on propagation.
+          for attempt in 1 2 3 4; do
+            "$RUNNER_TEMP/mcp-publisher" publish && exit 0
+            echo "attempt $attempt failed; retrying in 30s"
+            sleep 30
+          done
+          exit 1
+
+  action:
+    name: dominated-warn → GitHub Release, moving major tag
+    if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # the GitHub Release and the major tag
+    env:
+      TAG: ${{ github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # every vX.Y.Z tag, to decide whether the major tag moves
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+
+      - name: Tests
+        run: node --test 'actions/dominated-warn/*.test.mjs'
+
+      - name: Release notes from the CHANGELOG
+        run: node scripts/release-notes.mjs actions/dominated-warn/CHANGELOG.md "${TAG#v}" > "$RUNNER_TEMP/notes.md"
+
+      - name: GitHub Release
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --notes-file "$RUNNER_TEMP/notes.md"
+          else
+            gh release create "$TAG" --verify-tag --latest=false \
+              --title "dominated-warn $TAG" --notes-file "$RUNNER_TEMP/notes.md"
+          fi
+
+      # Consumers pin @v1. It follows the highest v1.x.y — a late patch to an
+      # older minor never drags it backwards.
+      - name: Move the major tag
+        run: |
+          MAJOR="${TAG%%.*}"
+          HIGHEST="$(git tag --list "$MAJOR.*.*" | sort -V | tail -n 1)"
+          if [ "$HIGHEST" != "$TAG" ]; then
+            echo "$TAG is not the highest $MAJOR release ($HIGHEST is); $MAJOR stays."
+            exit 0
+          fi
+          git tag --force "$MAJOR" "$GITHUB_SHA"
+          git push --force origin "refs/tags/$MAJOR"
+          echo "$MAJOR → $TAG ($GITHUB_SHA)"
+
+  backfill:
+    name: GitHub Release for an existing tag (notes only)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TAG: ${{ inputs.tag }}
+      TARGET: ${{ inputs.target }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+
+      - name: Write or refresh the release
+        run: |
+          case "$TAG" in
+            undominated-check@[0-9]*.[0-9]*.[0-9]*)
+              CHANGELOG=packages/undominated-check/CHANGELOG.md; VERSION="${TAG#undominated-check@}"; TITLE="undominated-check $VERSION" ;;
+            v[0-9]*.[0-9]*.[0-9]*)
+              CHANGELOG=actions/dominated-warn/CHANGELOG.md; VERSION="${TAG#v}"; TITLE="dominated-warn $TAG" ;;
+            *)
+              echo "::error::$TAG is neither undominated-check@X.Y.Z nor vX.Y.Z"; exit 1 ;;
+          esac
+          node scripts/release-notes.mjs "$CHANGELOG" "$VERSION" > "$RUNNER_TEMP/notes.md"
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --notes-file "$RUNNER_TEMP/notes.md"
+          elif git rev-parse --verify --quiet "refs/tags/$TAG" >/dev/null; then
+            gh release create "$TAG" --verify-tag --latest=false --title "$TITLE" --notes-file "$RUNNER_TEMP/notes.md"
+          elif printf '%s' "$TARGET" | grep -Eq '^[0-9a-f]{40}$'; then
+            git cat-file -e "$TARGET^{commit}"
+            gh release create "$TAG" --target "$TARGET" --latest=false --title "$TITLE" --notes-file "$RUNNER_TEMP/notes.md"
+          else
+            echo "::error::$TAG does not exist; pass the full 40-character commit SHA as target to create it"
+            exit 1
+          fi

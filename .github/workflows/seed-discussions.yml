@@ -1,0 +1,48 @@
+name: seed discussions
+
+# Posts each thread in .github/discussion-seeds/ whose title does not exist yet.
+# Manual only, and a dry run unless "apply" is ticked: opening a public thread
+# is an outward-facing act, so a person decides when it happens.
+#
+# Threads are authored by whoever owns the token. With the default
+# GITHUB_TOKEN that is github-actions[bot]. To post as yourself, add a
+# fine-grained token with "Discussions: read and write" on this repository as
+# the secret DISCUSSIONS_TOKEN — or skip Actions entirely:
+#   GITHUB_TOKEN=$(gh auth token) node scripts/seed-discussions.mjs --apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Create the threads (unticked: print the plan only)'
+        type: boolean
+        default: false
+      only:
+        description: 'Only seeds whose filename starts with this, e.g. 01'
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  discussions: write
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+      - name: Seed
+        env:
+          GITHUB_TOKEN: ${{ secrets.DISCUSSIONS_TOKEN || github.token }}
+          APPLY: ${{ inputs.apply }}
+          ONLY: ${{ inputs.only }}
+        run: |
+          args=()
+          if [ "$APPLY" = "true" ]; then args+=(--apply); fi
+          if [ -n "$ONLY" ]; then args+=(--only "$ONLY"); fi
+          node scripts/seed-discussions.mjs "${args[@]}"

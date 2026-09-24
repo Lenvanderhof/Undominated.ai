@@ -33,19 +33,28 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: '22' }
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # dump-current.mjs reads the catalogue-* tags.
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with: { node-version: '24' }
 
+      # Every check below runs even when an earlier one fails (!cancelled()),
+      # so one red run lists every stale surface, not just the first.
+      #
       # Both read https://undominated.ai/data/*.json — public, unauthenticated,
       # no secret. Neither writes anything in --check mode.
       - name: README figures match the published catalogue
         run: node scripts/refresh-readme.mjs --check
 
       - name: The hero image matches the published catalogue
+        if: ${{ !cancelled() }}
         run: node scripts/build-hero.mjs --check
 
       - name: The capability-floor table matches the published series
+        if: ${{ !cancelled() }}
         run: node scripts/build-floor-table.mjs --check
 
       # A screenshot cannot be generated from the data, so this checks the only
@@ -53,4 +62,18 @@ jobs:
       # no shot sits in docs/shots/ unlisted. Added after every shot went ten
       # days stale with alt text claiming "63% unrated" against a live 68%.
       - name: The README screenshots are recent and all accounted for
+        if: ${{ !cancelled() }}
         run: node scripts/shots-current.mjs --check
+
+      # Git tags, not the site, decide which dump is current. Added after
+      # CITATION.cff moved to catalogue-2026-09-23 while the README and
+      # datasets/README.md still cited catalogue-2026-09-19.
+      - name: Every "current dump" reference names the newest catalogue tag
+        if: ${{ !cancelled() }}
+        run: node scripts/dump-current.mjs --check
+
+      # A pin ahead of npm is a broken install line; a pin behind it strands
+      # readers on an old CLI.
+      - name: The undominated-check pins match npm latest
+        if: ${{ !cancelled() }}
+        run: node scripts/pins-current.mjs --check

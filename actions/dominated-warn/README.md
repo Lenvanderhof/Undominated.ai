@@ -23,16 +23,15 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: Lenvanderhof/Undominated.ai/actions/dominated-warn@v1
         continue-on-error: true
 ```
 
-Pin `@v1` so a later commit cannot change what your workflow runs. The public
-default branch is `main` — that ref exists — but it is not the consumer pin.
-
-This working repository (`Lenvanderhof/AIDREAMTEAM`) is private. A `uses:` line
-pointing here will not resolve for other accounts.
+Pin `@v1` so a later commit cannot change what your workflow runs. `v1` is a
+moving major tag: it follows the newest `v1.x.y` release and never crosses a
+breaking change. For a fully immutable pin, use a release tag (`@v1.0.0`) or its
+commit SHA. `main` exists, but it is not the consumer pin.
 
 The job must be allowed to succeed even when a model is dominated. Do not wrap
 this step in a required check that treats a comment as a failure. The action
@@ -70,10 +69,11 @@ If the fetch fails, the action warns on the log and **exits 0**.
 
 ## v1 scope vs classify()
 
-Price-move materiality (≥5%, context cut, modality loss) lives in this
-repository’s `scripts/watch-upstream.mjs` `classify()`. This action does **not**
-reimplement `classify()`. v1 only flags strict dominance from the published
-JSON so the two definitions cannot drift inside the action runtime.
+Price-move materiality (≥5%, context cut, modality loss) is decided by
+`classify()` in the site's private build tree (`scripts/watch-upstream.mjs`),
+which is not in this repository. This action does **not** reimplement
+`classify()`. v1 only flags strict dominance from the published JSON so the two
+definitions cannot drift inside the action runtime.
 
 ## Licence
 

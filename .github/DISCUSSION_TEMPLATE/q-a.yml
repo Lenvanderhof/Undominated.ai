@@ -19,4 +19,4 @@ body:
     id: page
     attributes:
       label: Page or dump (optional)
-      placeholder: https://undominated.ai/models/… or catalogue-2026-09-19
+      placeholder: https://undominated.ai/models/… or catalogue-YYYY-MM-DD

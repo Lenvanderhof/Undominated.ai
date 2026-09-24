@@ -6,7 +6,7 @@
 
 import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -411,11 +411,21 @@ describe('packaging', () => {
     assert.match(md, /\.env\.example/)
     assert.match(md, /config\/\*\.toml/)
     assert.match(md, /package\.json/)
-    assert.doesNotMatch(md, /Lenvanderhof\/AIDREAMTEAM\/actions\/dominated-warn@/)
+    // Every install line must resolve for any account: the public repository only.
+    const uses = [...md.matchAll(/uses:\s*(\S*dominated-warn\S*)/g)].map((m) => m[1])
+    assert.ok(uses.length > 0)
+    for (const ref of uses) {
+      assert.match(ref, /^Lenvanderhof\/Undominated\.ai\/actions\/dominated-warn@/)
+    }
   })
 
-  test('launch-verdicts workflow drafts privately and never publishes', () => {
-    const yml = readFileSync(resolve(HERE, '../../.github/workflows/launch-verdicts.yml'), 'utf8')
+  // launch-verdicts.yml lives in the private build tree only. The public mirror
+  // has no such workflow, so the assertion is skipped there rather than failed.
+  const LAUNCH_VERDICTS = resolve(HERE, '../../.github/workflows/launch-verdicts.yml')
+  const launchSkip = existsSync(LAUNCH_VERDICTS) ? false : 'private build tree only'
+
+  test('launch-verdicts workflow drafts privately and never publishes', { skip: launchSkip }, () => {
+    const yml = readFileSync(LAUNCH_VERDICTS, 'utf8')
     assert.match(yml, /workflow_dispatch/)
     assert.match(yml, /cron:/)
     assert.match(yml, /watch-upstream\.mjs --json data\/\.cache\/changeset\.json/)

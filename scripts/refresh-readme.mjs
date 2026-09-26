@@ -22,6 +22,8 @@
  *
  *   node scripts/refresh-readme.mjs          # rewrite README.md in place
  *   node scripts/refresh-readme.mjs --check  # exit 1 if any figure is stale
+ *   node scripts/refresh-readme.mjs --origin http://localhost:4173
+ *                                            # read a staged build instead
  *
  * `--check` is what CI runs, so a stale README fails a pull request rather than
  * being noticed by a reader.
@@ -32,9 +34,12 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const README = resolve(ROOT, 'README.md')
-const ORIGIN = 'https://undominated.ai'
-
-const check = process.argv.includes('--check')
+const argv = process.argv.slice(2)
+const check = argv.includes('--check')
+// A staged release serves the same /data/*.json the live site will. Reading it
+// lets the README follow a release before it is activated; CI reads the site.
+const originAt = argv.indexOf('--origin')
+const ORIGIN = originAt >= 0 && argv[originAt + 1] ? argv[originAt + 1].replace(/\/$/, '') : 'https://undominated.ai'
 
 async function json(path) {
   const res = await fetch(`${ORIGIN}${path}`, { headers: { accept: 'application/json' } })
@@ -47,6 +52,14 @@ const [catalogue, frontier] = await Promise.all([
   json('/data/frontier.json'),
 ])
 const s = catalogue.stats ?? {}
+/**
+ * The site's one unrated count: standard-delivery models, batch and free
+ * listings counted apart (src/lib/coverage.mjs on the site). `stats.unrated`
+ * counts catalogue rows, and this README once printed "301 of 437" as models
+ * with no score while the leaderboard said 210: 91 of the 437 rows are batch or
+ * free listings, 52 of them tiers of a model that has a score.
+ */
+const coverage = catalogue.integrity?.coverage
 
 /**
  * One entry per marker. Each returns a STRING exactly as it should read, or
@@ -61,9 +74,12 @@ const need = (value, name) => {
 }
 
 const FIGURES = {
-  /** Models on the value frontier: nothing beats them on quality and price at once. */
+  /**
+   * Models on the value frontier: nothing else scores at least as high for less,
+   * or higher for the same price.
+   */
   frontier: () => String(need(frontier.members?.length, 'frontier size')),
-  /** Every purchasable row in the catalogue, all variants. */
+  /** Every purchasable row in the catalogue, batch and free listings included. Not a count of models. */
   models: () => String(need(s.models, 'stats.models')),
   providers: () => String(need(s.providers, 'stats.providers')),
   /** Rated AND priced: the population every dominance claim is made over. */
@@ -73,8 +89,11 @@ const FIGURES = {
   /** "122 of 132" — stated together so the denominator can never drift away. */
   dominatedOfRated: () =>
     `${need(s.dominatedCount, 'stats.dominatedCount')} of ${need(s.ratedPriced ?? s.rated, 'stats.ratedPriced')}`,
-  unrated: () => String(need(s.unrated, 'stats.unrated')),
-  unratedPct: () => `${Math.round((100 * need(s.unrated, 'stats.unrated')) / need(s.models, 'stats.models'))}%`,
+  /** Standard-delivery models, the population the leaderboard ranks. */
+  standardModels: () => String(need(coverage?.total, 'integrity.coverage.total')),
+  unrated: () => String(need(coverage?.unrated, 'integrity.coverage.unrated')),
+  unratedPct: () => `${need(coverage?.unratedPct, 'integrity.coverage.unratedPct')}%`,
+  variantRows: () => String(need(coverage?.variantRows, 'integrity.coverage.variantRows')),
   /**
    * Dearest ÷ cheapest INPUT price. The site publishes this one; a blended-price
    * spread over the same catalogue is a different number (15,306× on the day

@@ -10,10 +10,12 @@
  * most prominent wrong claim the project makes.
  *
  * WHAT IT DRAWS. Every rated, priced model as one dot: quality up, effective
- * price right (log). The frontier — the models nothing beats on both axes at
- * once — is the staircase. Everything below and right of it is a strictly worse
- * deal, and that shape IS the thesis: you cannot argue with a scatter plot of
- * published prices.
+ * price right (log). The frontier is the staircase: nothing scores at least as
+ * high as those models for less, or higher for the same price. Everything below
+ * and right of it has an alternative no worse on either axis and better on one
+ * (weak Pareto dominance, as the site computes it; a tie on one axis counts, so
+ * "better AND cheaper" would overstate it). That shape IS the thesis: you cannot
+ * argue with a scatter plot of published prices.
  *
  * No axis is invented and no dot is placed by hand. If /data/frontier.json and
  * /data/catalogue.json disagree with this image, the image is regenerated.
@@ -195,14 +197,14 @@ const asOf = String(s.updatedAt ?? '').slice(0, 10)
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${
   n(s.dominatedCount)
-} of ${n(s.ratedPriced ?? s.rated)} rated, priced models are beaten on quality and undercut on price. ${
+} of ${n(s.ratedPriced ?? s.rated)} rated, priced models have an alternative with a higher score or a lower price, with neither dimension worse. ${
   frontier.members.length
 } are not.">
   <rect width="${W}" height="${H}" fill="${GROUND}"/>
   <text x="${PAD.left}" y="52" fill="${WITNESS}" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="600">${
     n(s.dominatedCount)
-  } of ${n(s.ratedPriced ?? s.rated)} models are a strictly worse deal.</text>
-  <text x="${PAD.left}" y="78" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="15">Something on the same board is better on quality <tspan font-style="italic">and</tspan> cheaper. ${
+  } of ${n(s.ratedPriced ?? s.rated)} models have a better deal on the board.</text>
+  <text x="${PAD.left}" y="78" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="15">Something scores at least as high <tspan font-style="italic">and</tspan> costs no more, and is better on one of the two. ${
     frontier.members.length
   } are not — that staircase is the value frontier.</text>
   <path d="${dominatedPath}" fill="${MUTED}" fill-opacity="0.55"/>
@@ -211,7 +213,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" wid
   <text x="${PAD.left}" y="${H - 26}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13">← cheaper</text>
   <text x="${W - PAD.right}" y="${H - 26}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13" text-anchor="end">${
     n(s.models)
-  } models · ${n(s.providers)} providers · effective $/M, balanced workload · LMArena · as of ${asOf}</text>
+  } listings · ${n(s.providers)} providers · effective $/M, balanced workload · LMArena · as of ${asOf}</text>
   <text x="${PAD.left - 14}" y="${PAD.top - 8}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13" transform="rotate(-90 ${
     PAD.left - 14
   } ${PAD.top - 8})" text-anchor="end">better →</text>

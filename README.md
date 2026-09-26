@@ -83,7 +83,7 @@ npx undominated-check@0.1.1 <provider/model>
 
 <p align="center">
   <a href="https://undominated.ai/frontier/">
-    <img src="docs/brand/hero.svg" alt="Every rated, priced model plotted by quality against effective price. The value frontier is the staircase; everything below and to the right of it is beaten on quality and undercut on price at the same time." width="100%">
+    <img src="docs/brand/hero.svg" alt="Every rated, priced model plotted by quality against effective price. The value frontier is the staircase; every model below and to the right of it has an alternative with a higher score or a lower price, with neither dimension worse." width="100%">
   </a>
 </p>
 
@@ -95,12 +95,12 @@ npx undominated-check@0.1.1 <provider/model>
 
 Most AI “value” tables invent a score, then sort by it.
 
-Undominated.ai does the opposite. It ranks on **independently measured capability first**. Price breaks ties. A model that is both worse and dearer is named as such. A model that has not been measured is **unrated**, never zero.
+Undominated.ai does the opposite. It ranks on **independently measured capability first**. Price breaks ties. A model is named as dominated when another scores at least as high and costs no more, and is better on one of the two. A model that has not been measured is **unrated**, never zero.
 
-> **<!--fig:dominatedOfRated-->123 of 136<!--/fig-->** rated, priced models are beaten on quality *and* undercut on price by something else on the board.<br>
+> **<!--fig:dominatedOfRated-->123 of 136<!--/fig-->** rated, priced models have an alternative on the board with a higher score or a lower price, with neither dimension worse.<br>
 > **<!--fig:frontier-->13<!--/fig-->** are not. That set is the value frontier.
 
-Every figure on this page is generated from the live catalogue by `scripts/refresh-readme.mjs`, last on **<!--fig:asOf-->2026-09-23<!--/fig-->** (<!--fig:models-->437<!--/fig--> models, <!--fig:providers-->52<!--/fig--> providers). It is checked in CI, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
+Every figure on this page is generated from the live catalogue by `scripts/refresh-readme.mjs`, last on **<!--fig:asOf-->2026-09-23<!--/fig-->** (<!--fig:models-->437<!--/fig--> catalogue listings, <!--fig:providers-->52<!--/fig--> providers). It is checked in CI, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
 
 <p align="center">
   <a href="https://undominated.ai/"><strong>Open the index →</strong></a>
@@ -171,9 +171,9 @@ Undominated.ai publishes the uncomfortable version:
 | Claim the market likes | What this index actually does |
 | --- | --- |
 | A blended “value” rank | Capability first, effective price second. Never mixed into one score. |
-| Unrated at the bottom | Unrated is not zero. **<!--fig:unratedPct-->69%<!--/fig-->** of the catalogue (<!--fig:unrated-->301<!--/fig--> of <!--fig:models-->437<!--/fig-->) has no independent quality score. Those rows are listed by price and excluded from quality order. |
+| Unrated at the bottom | Unrated is not zero. **<!--fig:unratedPct-->61%<!--/fig-->** of standard-delivery models (<!--fig:unrated-->210<!--/fig--> of <!--fig:standardModels-->346<!--/fig-->) have no score on the LMArena general board the index ranks on. They are listed by price and excluded from quality order. The catalogue's <!--fig:variantRows-->91<!--/fig--> batch and free listings are counted apart. |
 | Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank** — roughly half the ranked board collapses into shared positions once the published confidence intervals are drawn. [The live board states the exact split](https://undominated.ai/); it moves whenever a score does, so it is not repeated here. |
-| “Cheaper is better” | Cheaper is cheaper. A strict upgrade is a capability *superset* that also costs less: same context, same modalities, same tools. |
+| “Cheaper is better” | Cheaper is cheaper. A model is dominated when another scores at least as high and costs no more, and is better on one of the two. The other is a clean replacement only when it keeps every recorded capability: context window, maximum output, input modalities, tool use and reasoning. |
 | Headline $/M | **<!--fig:tiered-->69<!--/fig-->** models change rate past a context threshold. The board reprices the row when your prompt crosses it. |
 | Affiliate “best” lists | **No cut of inference. No affiliate. No paid placement. No gateway.** |
 
@@ -194,7 +194,7 @@ Every route answers a decision, not a document type.
 | You want to | Open |
 | --- | --- |
 | See what is actually worth buying | [Leaderboard](https://undominated.ai/) |
-| See the <!--fig:frontier-->13<!--/fig--> nothing beats on both axes | [Frontier](https://undominated.ai/frontier/) |
+| See the <!--fig:frontier-->13<!--/fig--> nothing dominates | [Frontier](https://undominated.ai/frontier/) |
 | Test the model you already use | [Check](https://undominated.ai/check/) |
 | Cite a dated stamp | [Now](https://undominated.ai/now/) |
 | Download the citable dump | [GitHub Release](https://github.com/Lenvanderhof/Undominated.ai/releases) · [Hugging Face](https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing) · [`CITATION.cff`](CITATION.cff) · [`datasets/`](datasets/) |
@@ -235,9 +235,9 @@ English is the source language. Nineteen locales ship as machine translation wit
 
 ## What “undominated” means here
 
-A model is **dominated** when another model in the catalogue scores higher *and* costs less *and* can do everything it can do.
+A model is **dominated** when another model in the catalogue scores at least as high *and* costs no more under the selected workload, and is better on one of the two. A higher score at the same price counts, and so does the same score at a lower price. Scores are compared as published LMArena Elo point estimates, not significance ranks. The dominating model is a clean replacement only when it can also do everything the first one can: context window, maximum output, input modalities, tool use and reasoning. Otherwise the index names what you would give up.
 
-A model is **on the frontier** when nothing in the catalogue is both better and cheaper under the selected lens and workload.
+A model is **on the frontier** when nothing in the catalogue dominates it under the selected lens and workload: nothing scores at least as high for less, or higher for the same price.
 
 That is a Pareto statement, not a vibe. Chartreuse in the interface is reserved for frontier membership. It is not a brand highlight colour.
 

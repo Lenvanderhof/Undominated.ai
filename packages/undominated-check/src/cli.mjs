@@ -27,6 +27,7 @@ Usage
   npx undominated-check <model-slug>
   npx undominated-check --frontier
   npx undominated-check resources --help
+  npx undominated-check install <resource-id> --project <existing-absolute-directory>
 
 Options
   --local <dir>   Read from a local directory instead of the network. Point it at
@@ -115,7 +116,7 @@ export function locate(kind, opts) {
 class Missing extends Error {}
 
 /** Identifies this CLI to the origin. Node's default fetch sends no UA. */
-export const FETCH_UA = 'undominated-check/0.3.1 (+https://undominated.ai/check/)'
+export const FETCH_UA = 'undominated-check/0.4.0 (+https://undominated.ai/check/)'
 
 async function load({ source, local }, fetchImpl) {
   if (local) {
@@ -154,6 +155,7 @@ async function load({ source, local }, fetchImpl) {
  */
 export async function main(argv, deps = {}) {
   if (argv[0] === 'resources') return resourceMain(argv.slice(1))
+  if (argv[0] === 'install') return resourceMain(['install', ...argv.slice(1)])
   const fetchImpl = deps.fetch ?? globalThis.fetch
   const opts = parseArgs(argv)
   const chrome = wantsChrome(opts, { tty: deps.tty, env: deps.env ?? {} })

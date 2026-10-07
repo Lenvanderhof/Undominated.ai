@@ -9,6 +9,7 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | `undominated-check@0.2.0` | 6 | 4 | 1 bundled server | Published; archive equality, installation and synthetic checks verified |
 | `undominated-check@0.3.0` | 11 | 6 | 1 bundled server | Published; later review identified checker correctness defects. Use the corrected `0.3.1` release. |
 | `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Published; archive equality, 18 installations, 11 synthetic checks and 43 boundary and control cases verified |
+| `undominated-check@0.4.0` | 11 | 6 | 1 bundled server | Candidate: verified installer targets, native adapters and MCP setup; publication tracked in [Evidence](EVIDENCE.md#installer-integration--040-candidate) |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
 | GitHub source | 32 | 11 | 1 server | Eleven skills and six profiles are the npm-mapped set. Twenty-one skills and five profiles are source-only. Skills CLI acquisition, 139 installed file hashes and 30 synthetic checks were verified at pinned corrected source `bf1c18e`; semantic review is separate. The later meter-scope and hint-versus-handler additions are outside that pinned proof. |
 | Website original entries | 6 | 4 | 1 server | Included in the 2026-10-07 website directory release |
@@ -42,7 +43,7 @@ Five later skills expand the source library. Use **`0.3.1`** for these skills: i
 
 ## Portable agent profiles
 
-A profile is a role, workflow and output contract. It does not register a native subagent, select a model or grant tools. Load it as instructions or adapt it to your client's agent format. Supply the evidence, workspace and permissions the task requires.
+A profile is a role, workflow and output contract. The default export is portable; `0.4.0` adds explicit [Claude/GitHub native adapters](INSTALLER.md#native-agent-adapters) for the six bundled profiles. These inherit the host's tools, model and permission policy. A source profile alone does not register a native subagent. Load it as instructions or adapt it to your client's agent format. Supply the evidence, workspace and permissions the task requires.
 
 | Profile | Responsibility | CLI availability |
 |---|---|---|
@@ -55,7 +56,7 @@ A profile is a role, workflow and output contract. It does not register a native
 
 ## Source-only additions
 
-These directories can be installed from GitHub source with a pinned Skills CLI command. They are not in `undominated-check@0.2.0`, `@0.3.0`, or `@0.3.1`. On 2026-10-07 each skill's `examples/synthetic.json` was run with its own `scripts/check.py` and exited 0. Those inputs are synthetic. A passing check is not a vendor quote and is not an install receipt. The pinned `bf1c18e` Skills CLI check described above verified acquisition and file identity for all 19 source-only skills, including the two added in `c47ac12`, after the recorded corrections. The later meter-scope and hint-versus-handler additions have supplied synthetic and refusal examples but are outside that installation and independent semantic-review scope. The five profiles were not registered as native subagents.
+These directories can be installed from GitHub source with a pinned Skills CLI command. They are not in `undominated-check@0.2.0`, `@0.3.0`, `@0.3.1`, or `@0.4.0`. On 2026-10-07 each skill's `examples/synthetic.json` was run with its own `scripts/check.py` and exited 0. Those inputs are synthetic. A passing check is not a vendor quote and is not an install receipt. The pinned `bf1c18e` Skills CLI check described above verified acquisition and file identity for all 19 source-only skills, including the two added in `c47ac12`, after the recorded corrections. The later meter-scope and hint-versus-handler additions have supplied synthetic and refusal examples but are outside that installation and independent semantic-review scope. The five profiles were not registered as native subagents.
 
 | Resource | Contract | Limit |
 |---|---|---|

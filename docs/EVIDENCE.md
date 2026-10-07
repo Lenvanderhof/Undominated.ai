@@ -30,6 +30,14 @@ npm view undominated-mcp@0.1.0 version dist.tarball dist.integrity
 
 The older bundled `status: local-tested-unreleased` field is retained build-time metadata, not an npm registry query. It does not override the verified registry publication above. `0.3.1` uses `fixture-tested` to describe validation scope without implying publication. Published versions are immutable; source changes require a new package version. A version on npm does not establish marketplace listing, broad host compatibility or production performance.
 
+## Installer integration — 0.4.0 candidate
+
+The installer work preserved in [PR #5](https://github.com/Lenvanderhof/Undominated.ai/pull/5) was integrated onto the corrected public source. The draft's unquoted MCP command split paths containing spaces and could interpret shell metacharacters. A harmless local command-capture reproduction demonstrated both failures. The corrected helpers preserve executable/argument identity in labelled shell commands and structured JSON, reject client interpolation syntax, validate targets by resource kind and keep the previous default profile destination.
+
+Explicit Claude/GitHub profile targets now create native adapters while retaining the original licensed files. All six adapters were discovered by actual Claude Code and Copilot clients; all eleven skills were discovered by Claude Code, Codex and Copilot. These checks used isolated configuration and no model turns. See [exact versions and verification limits](INSTALLER.md#compatibility-evidence).
+
+The local release candidate passes 71 CLI tests, 32 MCP tests, 22 public Action tests, 74 source boundary/control cases and 32 source synthetic examples. A separate independent installer suite passes 71 targeted cases, including hostile paths, malformed flags, hash mismatches, symlinks, overwrite refusal, adapter collisions, existing configuration preservation and exported MCP initialization. The 69 bundled source files match the verified `0.3.1` release. Registry publication and the new cross-platform CI run are separate release checks.
+
 ## Checker corrections
 
 Adverse review after `0.3.0` publication identified cases where supplied inputs could be accepted too favourably: a redistribution denial was labelled as internal-use permission; reverse dominance did not establish capability preservation in the reverse direction; an omitted final tier cap could stand in for an explicit unbounded cap; Decimal-context rounding could hide a mismatch in high-precision plan totals; and rounded repeating ratios could be mistaken for exact equality in spread or tier claims.

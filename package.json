@@ -1,6 +1,6 @@
 {
   "name": "undominated-check",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": false,
   "description": "Quote published AI model evidence and inspect or install original Undominated resources.",
   "license": "SEE LICENSE IN LICENSE",
@@ -14,7 +14,8 @@
     "packages/undominated-check/package.json",
     "packages/undominated-check/README.md",
     "packages/undominated-check/LICENSE",
-    "packages/undominated-check/resources"
+    "packages/undominated-check/resources",
+    "packages/undominated-check/completions"
   ],
   "repository": {
     "type": "git",
@@ -26,6 +27,9 @@
   },
   "scripts": {
     "prepare": "node packages/undominated-check/scripts/build-resources.mjs",
-    "prepublishOnly": "node -e \"console.error('Root package is a GitHub installation wrapper. Publish only from the dedicated packages directory after the documented human release gate.'); process.exit(1)\""
+    "prepublishOnly": "node -e \"console.error('Root package is a GitHub installation wrapper. Publish only from the dedicated packages directory after the documented human release gate.'); process.exit(1)\"",
+    "test": "npm test --prefix packages/undominated-check && npm test --prefix packages/undominated-mcp && node --test actions/dominated-warn/index.test.mjs && python3 -B scripts/source-skill-boundaries.test.py",
+    "check": "node --check packages/undominated-check/src/cli.mjs && node --check packages/undominated-check/src/resources.mjs && node --check packages/undominated-mcp/src/server.mjs",
+    "build": "node packages/undominated-check/scripts/build-resources.mjs"
   }
 }

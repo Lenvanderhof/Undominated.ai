@@ -43,12 +43,12 @@ npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --skill undominated-evide
 Or use the published Undominated installer to inspect the bundled resource first:
 
 ```sh
-npx --yes undominated-check@0.3.1 resources list
-npx --yes undominated-check@0.3.1 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.3.1 resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+npx --yes undominated-check@0.4.0 resources list
+npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-audit
+npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project /absolute/path/to/project --dry-run
 ```
 
-Replace the path with an existing project and remove `--dry-run` to install. This pinned version bundles eleven original skills, six portable agent profiles and the MCP server. It checks file hashes and refuses to overwrite an existing installation. Node.js **22.12+** is required; offline skill checks use **Python 3.10+**.
+Replace the path with an existing project and remove `--dry-run` to install. This pinned version bundles eleven original skills, six portable agent profiles and the MCP server. It checks file hashes and refuses to overwrite an existing installation. [Client targets, native agent adapters and MCP setup helpers](docs/INSTALLER.md) are available in this release. Node.js **22.12+** is required; offline skill checks use **Python 3.10+**.
 
 [Installation, examples and troubleshooting →](docs/GETTING-STARTED.md)
 
@@ -57,7 +57,7 @@ Replace the path with an existing project and remove `--dry-run` to install. Thi
 Quote a published model verdict:
 
 ```sh
-npx --yes undominated-check@0.3.1 google/gemini-3.7-flash --json
+npx --yes undominated-check@0.4.0 google/gemini-3.7-flash --json
 ```
 
 For an MCP client, use `npx` with arguments `["--yes", "undominated-mcp@0.1.0"]`. Its five read-only tools retrieve model details, verdicts, the frontier and resource reviews. It does not install resources or route inference. [MCP setup and examples →](docs/GETTING-STARTED.md#mcp-server)

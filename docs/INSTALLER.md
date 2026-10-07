@@ -64,13 +64,15 @@ After registration, confirm the client sees `get_model`, `get_verdict`, `get_fro
 
 ## Compatibility evidence
 
+The [portable installer CI](https://github.com/Lenvanderhof/Undominated.ai/actions/runs/37680109407) passed Linux, macOS and Windows, including actual PowerShell argument parsing.
+
 The release verification distinguishes a documented format, local discovery and a live MCP handshake. Discovery does not prove that an agent will perform every task correctly. See the [release evidence](EVIDENCE.md) for measured client versions and package identity.
 
 Measured on 2026-10-07 with isolated project/configuration directories and **zero model turns**:
 
 | Client | Observed result |
 |---|---|
-| Claude Code 2.1.292 | All 11 installed skills and all six native adapters discovered; generated project-scoped MCP registration preserved exact executable/arguments |
+| Claude Code 2.1.292 | All 11 installed skills and all six native adapters discovered; generated project-scoped MCP registration preserved exact executable/arguments and exposed five tools after host approval |
 | Codex 0.160.1 | All 11 skills discovered through the app-server; generated MCP registration and five-tool handshake passed |
 | GitHub Copilot CLI 1.0.73 | All 11 skills and all six native adapters discovered; portable MCP project configuration loaded |
 | Cursor agent 2026.09.28-64d2043 | Project MCP configuration loaded; five tools discovered after explicit approval in the isolated test configuration |

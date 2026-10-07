@@ -9,7 +9,7 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | `undominated-check@0.2.0` | 6 | 4 | 1 bundled server | Published; archive equality, installation and synthetic checks verified |
 | `undominated-check@0.3.0` | 11 | 6 | 1 bundled server | Published; later review identified checker correctness defects. Use the corrected `0.3.1` release. |
 | `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Published; archive equality, 18 installations, 11 synthetic checks and 43 boundary and control cases verified |
-| `undominated-check@0.4.0` | 11 | 6 | 1 bundled server | Candidate: verified installer targets, native adapters and MCP setup; publication tracked in [Evidence](EVIDENCE.md#installer-integration--040-candidate) |
+| `undominated-check@0.4.0` | 11 | 6 | 1 bundled server | Candidate: verified installer targets, native adapters and MCP setup; publication tracked in [Evidence](EVIDENCE.md#installer-integration--040) |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
 | GitHub source | 33 | 11 | 1 server | Eleven skills and six profiles are the npm-mapped set. Twenty-two skills and five profiles are source-only. Skills CLI acquisition, 139 installed file hashes and 30 synthetic checks were verified at pinned corrected source `bf1c18e`; semantic review is separate. The later meter-scope, hint-versus-handler, and spelled-meter additions are outside that pinned proof. |
 | Website original entries | 6 | 4 | 1 server | Included in the 2026-10-07 website directory release |

@@ -1,0 +1,20 @@
+{
+  "label": "synthetic hints, not a server review",
+  "tools": [
+    {
+      "name": "query",
+      "readOnlyHint": true,
+      "operations": ["http_get"]
+    },
+    {
+      "name": "export_probe",
+      "readOnlyHint": false,
+      "operations": ["http_get"]
+    },
+    {
+      "name": "admin_note",
+      "readOnlyHint": null,
+      "operations": ["http_post"]
+    }
+  ]
+}

@@ -2591,6 +2591,103 @@
       "expectedStatuses": [
         "invalid"
       ]
+    },
+    {
+      "id": "hint-readonly-matched-read",
+      "skill": "undominated-hint-vs-handler",
+      "why": "A true read-only hint passes only when every supplied operation is a read.",
+      "input": {
+        "label": "synthetic hints, not a server review",
+        "tools": [
+          {
+            "name": "query",
+            "readOnlyHint": true,
+            "operations": [
+              "http_get"
+            ]
+          },
+          {
+            "name": "admin_note",
+            "readOnlyHint": null,
+            "operations": [
+              "http_post"
+            ]
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "tools.0.form": "matched",
+        "tools.1.form": "not-claimed"
+      }
+    },
+    {
+      "id": "hint-readonly-contradicted-by-writes",
+      "skill": "undominated-hint-vs-handler",
+      "why": "A true read-only hint is contradicted by supplied write operations even when the tool name is calm.",
+      "input": {
+        "label": "synthetic hint contradicted by writes, not a server review",
+        "tools": [
+          {
+            "name": "rules_probe",
+            "readOnlyHint": true,
+            "operations": [
+              "mkdir",
+              "write_file",
+              "remove"
+            ]
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "tools.0.form": "contradicted"
+      }
+    },
+    {
+      "id": "hint-readonly-empty-operations",
+      "skill": "undominated-hint-vs-handler",
+      "why": "An empty operation list cannot support a true read-only hint.",
+      "input": {
+        "label": "synthetic empty operations, not a server review",
+        "tools": [
+          {
+            "name": "query",
+            "readOnlyHint": true,
+            "operations": []
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "tools.0.form": "unsupported"
+      }
+    },
+    {
+      "id": "hint-unknown-operation",
+      "skill": "undominated-hint-vs-handler",
+      "why": "An operation outside the allowlist is invalid input, not a quiet pass.",
+      "input": {
+        "label": "synthetic unknown operation, not a server review",
+        "tools": [
+          {
+            "name": "query",
+            "readOnlyHint": true,
+            "operations": [
+              "curl"
+            ]
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
     }
   ]
 }

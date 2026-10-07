@@ -3596,7 +3596,7 @@
     {
       "id": "status-ok",
       "skill": "undominated-status-not-page",
-      "why": "Integer 200 supports a page-read and nothing else.",
+      "why": "Integer200 meets the conservative status gate but does not prove a body was received or read.",
       "input": {
         "label": "synthetic status, not a fetch",
         "role": "page-read",
@@ -3606,16 +3606,17 @@
         "pass"
       ],
       "expectedFields": {
-        "form": "read",
-        "httpStatus": 200
+        "form": "status-eligible",
+        "httpStatus": 200,
+        "bodyVerified": false
       }
     },
     {
       "id": "status-redirect",
       "skill": "undominated-status-not-page",
-      "why": "A 308 did not return the page.",
+      "why": "A308 requires review; status alone does not prove what content was received.",
       "input": {
-        "label": "a redirect did not return the page",
+        "label": "a redirect requires review; content was not verified",
         "role": "page-read",
         "status": 308
       },
@@ -3623,8 +3624,9 @@
         "review"
       ],
       "expectedFields": {
-        "form": "not-read",
-        "httpStatus": 308
+        "form": "unverified",
+        "httpStatus": 308,
+        "bodyVerified": false
       }
     },
     {
@@ -3858,6 +3860,307 @@
       "expectedStatuses": [
         "invalid"
       ]
+    },
+    {
+      "id": "latest-four-path-invalid-0",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": " /pricing",
+            "finalPath": "/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-path-invalid-1",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": "/pricing ",
+            "finalPath": "/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-path-invalid-2",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": "\t/pricing",
+            "finalPath": "/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-path-invalid-3",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": "/pricing\n",
+            "finalPath": "/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-path-invalid-4",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": "//",
+            "finalPath": "/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-path-top-amount",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": "/pricing",
+            "finalPath": "/pricing"
+          }
+        ],
+        "amount": "1"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-path-top-price",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": "/pricing",
+            "finalPath": "/pricing"
+          }
+        ],
+        "price": "1"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-path-root",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": "/",
+            "finalPath": "/"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-path-one-slash",
+      "skill": "undominated-final-path",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic path evidence",
+        "responses": [
+          {
+            "id": "path",
+            "requestedPath": "/pricing/",
+            "finalPath": "/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-status-page-204",
+      "skill": "undominated-status-not-page",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic status",
+        "role": "page-read",
+        "status": 204
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "form": "unverified",
+        "bodyVerified": false
+      }
+    },
+    {
+      "id": "latest-four-status-page-206",
+      "skill": "undominated-status-not-page",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic status",
+        "role": "page-read",
+        "status": 206
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "form": "unverified",
+        "bodyVerified": false
+      }
+    },
+    {
+      "id": "latest-four-status-quote-206",
+      "skill": "undominated-status-not-page",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic status",
+        "role": "quote",
+        "status": 206
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "form": "not-claimed",
+        "bodyVerified": false
+      }
+    },
+    {
+      "id": "latest-four-schema-detect-8",
+      "skill": "undominated-schema-not-quote",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic wording",
+        "role": "model-rate",
+        "excerpt": "This is not a schema"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "schemaWording": true,
+        "form": "schema"
+      }
+    },
+    {
+      "id": "latest-four-schema-role-control-8",
+      "skill": "undominated-schema-not-quote",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic wording",
+        "role": "schema",
+        "excerpt": "This is not a schema"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "form": "not-claimed"
+      }
+    },
+    {
+      "id": "latest-four-header-missing-row",
+      "skill": "undominated-header-not-row",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic",
+        "headerUnit": "per_token",
+        "rows": [
+          {
+            "id": "row",
+            "claimedUnit": "per_token"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
+    },
+    {
+      "id": "latest-four-header-duplicate",
+      "skill": "undominated-header-not-row",
+      "why": "Keep recorded-path validation and status-only evidence bounded; preserve positive controls and structured refusals.",
+      "input": {
+        "label": "synthetic",
+        "headerUnit": "per_token",
+        "rows": [
+          {
+            "id": "row",
+            "claimedUnit": "per_token",
+            "rowUnit": "per_token"
+          },
+          {
+            "id": "row",
+            "claimedUnit": "per_token",
+            "rowUnit": "per_token"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ],
+      "expectedFields": {}
     }
   ]
 }

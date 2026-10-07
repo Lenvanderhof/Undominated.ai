@@ -46,8 +46,10 @@ the MIT License in their respective LICENSE files:
 - skills/undominated-eval-contamination-audit/
 - skills/undominated-evidence-audit/
 - skills/undominated-freshness-budget/
+- skills/undominated-hint-vs-handler/
 - skills/undominated-identity-dedup/
 - skills/undominated-licence-boundary/
+- skills/undominated-meter-scope/
 - skills/undominated-migration-preflight/
 - skills/undominated-plan-quote/
 - skills/undominated-population-denominator/

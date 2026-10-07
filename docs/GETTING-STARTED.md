@@ -23,11 +23,13 @@ npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --skill undominated-evide
 
 Follow the installer prompts for your assistant and installation scope. For an explicit Codex project copy, add `--agent codex --copy --yes`. This selects a client and accepts installer prompts; it does not verify the resource's suitability for your task.
 
-To pin the six-skill source release instead of following `main`:
+To pin the corrected source verified on 2026-10-07 instead of following `main`:
 
 ```sh
-npx --yes skills@1.7.1 add https://github.com/Lenvanderhof/Undominated.ai/tree/f730988d8c55fb7bd134da8c03ffbcf33a8b6738/skills --skill undominated-evidence-audit --agent codex --copy --yes
+npx --yes skills@1.7.1 add https://github.com/Lenvanderhof/Undominated.ai/tree/bf1c18ed2468d1015c727909806937b4aeb60412/skills --skill undominated-evidence-audit --agent codex --copy --yes
 ```
+
+That pinned source was copied into a clean Codex project: 31 skill directories, 139 matching files and 30 passing synthetic examples. This verifies installation and those fixtures; read each contract before using it.
 
 Skills CLI can discover the separate legacy `undominated` quote-only skill as well. It is not one of the original validator skills bundled in the Undominated installer.
 

@@ -1,6 +1,6 @@
 # Original resource library
 
-Choose a resource for a concrete task, read its contract, and check its installation coverage below. These are Undominated-authored instructions and tools. The website's [71 skills](https://undominated.ai/skills/), [72 agents](https://undominated.ai/agents/) and [89 MCP servers](https://undominated.ai/mcp-servers/) are a broader reviewed directory, including third-party projects; counts were checked on 2026-10-07.
+Choose a resource for a concrete task, read its contract, and check its installation coverage below. These are Undominated-authored instructions and tools. The website's [131 skills](https://undominated.ai/skills/), [101 agents](https://undominated.ai/agents/) and [128 MCP servers](https://undominated.ai/mcp-servers/) are a broader reviewed directory, including third-party projects; counts were checked on 2026-10-07.
 
 ## Version and availability map
 
@@ -11,10 +11,14 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Published; archive equality, 18 installations, 11 synthetic checks and 43 boundary and control cases verified |
 | `undominated-check@0.4.0` | 11 | 6 | 1 bundled server | Published; exact archive and anonymous installation verified, with native adapters and cross-platform installer checks. [Evidence](EVIDENCE.md#installer-integration--040) |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
-| GitHub source | 48 | 11 | 1 server | Eleven skills and six profiles are the npm-mapped set. Thirty-seven skills and five profiles are source-only. Skills CLI acquisition, 139 installed file hashes and 30 synthetic checks were verified at pinned corrected source `bf1c18e`; semantic review is separate. The later meter-scope, hint-versus-handler, spelled-meter, single-base, source-pin, slug-is-not-body, multiplier-aside, indicative-rate, final-host, final-path, status-not-page, schema-not-quote, and header-not-row additions are outside that pinned proof. |
-| Website original entries | 6 | 4 | 1 server | Included in the 2026-10-07 website directory release |
+| GitHub source | 48 | 11 | 1 server | Eleven skills and six profiles are the npm-mapped set; 37 skills and five profiles are source-only. Pinned acquisition and file equality were freshly verified for the 26 website-listed skills, not every source directory. |
+| Website original entries | 26 | 6 | 1 server | Eleven skills, six profiles and the MCP server are in npm 0.4.0; 15 further skills use pinned GitHub installation and complete website downloads |
 
-The npm rows count the installation map, not every directory. Thirty-seven further skills and five further profiles are source-only and are listed below. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside both groups. Skills CLI 1.7.1 discovered and copied all 31 skill directories at [`bf1c18e`](https://github.com/Lenvanderhof/Undominated.ai/tree/bf1c18ed2468d1015c727909806937b4aeb60412): the 30 validator skills plus that legacy skill. All 139 installed files matched the pinned source, and 30 installed synthetic examples returned structured passes. This establishes installation and fixture behaviour at that revision, not semantic completeness. The later meter-scope, hint-versus-handler, spelled-meter, single-base, source-pin, slug-is-not-body, multiplier-aside, indicative-rate, final-host, final-path, status-not-page, schema-not-quote, and header-not-row additions are outside that install receipt.
+The npm rows count the version's installation map, not every source directory. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside the 48-validator count.
+
+Fresh Skills CLI 1.7.1 acquisition at corrected source [`a67bd9b`](https://github.com/Lenvanderhof/Undominated.ai/tree/a67bd9b86fca7455ed208403d9ea6f9fe847cd99) copied all **26 website-listed skills**, matched all **159 installed files**, and passed all 26 synthetic examples. The installed copies also passed the six-skill 85-case review, four-skill 213-case review and five-skill 125-case suite. These are distinct bounded suites, not a claim of 423 unique cases or vendor-truth verification. The reviewed source was merged in [PR #8](https://github.com/Lenvanderhof/Undominated.ai/pull/8) with an identical source tree.
+
+Earlier pinned acquisition covered 30 validator skills and the legacy skill at `bf1c18e`; the correction and installation history is retained in [Evidence](EVIDENCE.md). Installation and deterministic fixture behaviour do not establish native host activation or general effectiveness.
 
 A website review is not proof that a third-party resource is bundled here. `resources list` is the authority for a specific installed CLI version. [Installation guide](GETTING-STARTED.md) · [release verification and limits](EVIDENCE.md).
 
@@ -54,9 +58,9 @@ A profile is a role, workflow and output contract. The default export is portabl
 | [Comparison editor](../agents/undominated-comparison-editor/AGENT.md) | Make comparison copy match ties, seller identity and preserved capabilities | Use `0.3.1` for the corrected direction contract |
 | [Pricing source reviewer](../agents/undominated-pricing-source-reviewer/AGENT.md) | Check feed units, source currency, exclusions and quote boundaries | Added in `0.3.0` |
 
-## Source-only additions
+## Additional resources outside npm
 
-These directories can be installed from GitHub source with a pinned Skills CLI command. They are not in `undominated-check@0.2.0`, `@0.3.0`, `@0.3.1`, or `@0.4.0`. On 2026-10-07 each skill's `examples/synthetic.json` was run with its own `scripts/check.py` and exited 0. Those inputs are synthetic. A passing check is not a vendor quote and is not an install receipt. The pinned `bf1c18e` Skills CLI check described above verified acquisition and file identity for all 19 source-only skills, including the two added in `c47ac12`, after the recorded corrections. The later meter-scope, hint-versus-handler, spelled-meter, single-base, source-pin, slug-is-not-body, multiplier-aside, indicative-rate, final-host, final-path, status-not-page, schema-not-quote, and header-not-row additions have supplied synthetic and refusal examples but are outside that installation and independent semantic-review scope. The five profiles were not registered as native subagents.
+These 37 skills can be installed from GitHub source with a pinned Skills CLI command; the five profiles are portable instructions for manual loading or adaptation. They are outside the immutable npm bundle through `0.4.0`. All 48 source validator synthetic examples passed on the reviewed source. Fifteen of these source-only skills also belong to the 26-skill website set covered by the fresh `a67bd9b` installation proof above. Other source skills retain the dated, bounded evidence recorded in [Evidence](EVIDENCE.md); meter-scope, hint-versus-handler and spelled-meter remain outside the pinned installation and independent semantic reviews described there. The five extra profiles were not registered as native subagents.
 
 | Resource | Contract | Limit |
 |---|---|---|
@@ -89,7 +93,7 @@ These directories can be installed from GitHub source with a pinned Skills CLI c
 | [Indicative-rate audit](../skills/undominated-indicative-rate/SKILL.md) | Refuse a global-rate claim when the excerpt says the figure varies, is a floor, or is a list price beside a credit. | Negation is not parsed. It does not read amounts or pick a country. |
 | [Final-host audit](../skills/undominated-final-host/SKILL.md) | Refuse a quote when the final host you recorded is not the host you requested. | `www` is not stripped. It sends no request and does not read a body. |
 | [Final-path audit](../skills/undominated-final-path/SKILL.md) | Refuse a page claim when the final path is not the path you requested. | One trailing slash is collapsed. A host is a different checker. It sends no request. |
-| [Status-not-page audit](../skills/undominated-status-not-page/SKILL.md) | Refuse a page-read claim unless the recorded status is the integer 200. | A quote claim is review at every status, including 200. It sends no request. |
+| [Status-not-page audit](../skills/undominated-status-not-page/SKILL.md) | Check whether a recorded integer status meets the conservative 200-only eligibility rule. | Every result keeps `bodyVerified: false`; status never establishes a body or a quote. It sends no request. |
 | [Schema-not-quote audit](../skills/undominated-schema-not-quote/SKILL.md) | Refuse a model-rate claim when the excerpt describes a field or a schema. | Negation is not parsed. It does not read amounts or copy the excerpt. |
 | [Header-not-row audit](../skills/undominated-header-not-row/SKILL.md) | Refuse a unit claim borrowed from a display header the row does not state. | The header is ignored. It does not convert units or read amounts. |
 | [Crawl auditor](../agents/undominated-crawl-auditor/AGENT.md) | Review a sitemap or `llms.txt` before publication, including locale prefixes and markdown siblings. | Portable instructions. It does not register a native subagent or fetch the live site to replace a missing file. |
@@ -100,7 +104,7 @@ These directories can be installed from GitHub source with a pinned Skills CLI c
 
 ## Five consistency checks added after independent review
 
-These five skills use version `1.0.1` and remain **source-only, outside the immutable 18-resource npm bundle through `0.4.0`**. Their local CLI suite contains 125 boundary and control cases; a separate reviewer exercised 78 cases. All passed. Source publication, Skills CLI acquisition and website inclusion are separate steps; this record makes no new installation claim. [Correction details](EVIDENCE.md#five-consistency-checks-correction-record--2026-10-07).
+These five skills use version `1.0.1` and remain **source-only, outside the immutable 18-resource npm bundle through `0.4.0`**. Their local CLI suite contains 125 boundary and control cases; a separate reviewer exercised 78 cases. All passed. Their pinned Skills CLI acquisition is included in the 26-skill proof above; website inclusion does not expand the npm bundle. [Correction details](EVIDENCE.md#five-consistency-checks-correction-record--2026-10-07).
 
 | Skill | Contract | Limit |
 |---|---|---|

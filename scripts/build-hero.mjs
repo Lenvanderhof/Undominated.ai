@@ -10,10 +10,10 @@
  * most prominent wrong claim the project makes.
  *
  * WHAT IT DRAWS. Every rated, priced model as one dot: quality up, effective
- * price right (log). The frontier — the models nothing beats on both axes at
- * once — is the staircase. Everything below and right of it is a strictly worse
- * deal, and that shape IS the thesis: you cannot argue with a scatter plot of
- * published prices.
+ * price right (log). The frontier is the staircase: no other model scores at
+ * least as high for less, or higher for the same price. For each off-frontier
+ * point, another point improves at least one axis without worsening the other;
+ * capability requirements must still be checked separately.
  *
  * No axis is invented and no dot is placed by hand. If /data/frontier.json and
  * /data/catalogue.json disagree with this image, the image is regenerated.
@@ -213,7 +213,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" wid
   <text x="${PAD.left}" y="${H - 26}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13">← cheaper</text>
   <text x="${W - PAD.right}" y="${H - 26}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13" text-anchor="end">${
     n(s.models)
-  } models · ${n(s.providers)} providers · effective $/M, balanced workload · LMArena · as of ${asOf}</text>
+  } listings · ${n(s.providers)} providers · effective $/M, balanced workload · LMArena · as of ${asOf}</text>
   <text x="${PAD.left - 14}" y="${PAD.top - 8}" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="13" transform="rotate(-90 ${
     PAD.left - 14
   } ${PAD.top - 8})" text-anchor="end">better →</text>

@@ -1,0 +1,17 @@
+{
+  "label": "synthetic overreach, not a vendor quote",
+  "rows": [
+    {
+      "id": "inference",
+      "meter": "serverless-inference",
+      "claimedUnit": "per_thousand_tokens"
+    }
+  ],
+  "notes": [
+    {
+      "id": "knowledge-base-invoice",
+      "appliesTo": ["knowledge-base"],
+      "invoiceUnit": "per_thousand_tokens"
+    }
+  ]
+}

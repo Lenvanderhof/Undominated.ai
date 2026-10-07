@@ -2501,6 +2501,96 @@
       "expectedStatuses": [
         "invalid"
       ]
+    },
+    {
+      "id": "meter-scope-matched-notes",
+      "skill": "undominated-meter-scope",
+      "why": "A claimed unit passes only when the note that names that meter states the same unit.",
+      "input": {
+        "label": "synthetic meters, not a vendor quote",
+        "rows": [
+          {
+            "id": "inference",
+            "meter": "serverless-inference",
+            "claimedUnit": "per_million_tokens"
+          }
+        ],
+        "notes": [
+          {
+            "id": "inference-header",
+            "appliesTo": [
+              "serverless-inference"
+            ],
+            "invoiceUnit": "per_million_tokens"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "rows.0.form": "matched",
+        "rows.0.supportedUnit": "per_million_tokens"
+      }
+    },
+    {
+      "id": "meter-scope-note-does-not-name-meter",
+      "skill": "undominated-meter-scope",
+      "why": "A note for one meter must not support a unit claim on a different meter.",
+      "input": {
+        "label": "synthetic overreach, not a vendor quote",
+        "rows": [
+          {
+            "id": "inference",
+            "meter": "serverless-inference",
+            "claimedUnit": "per_thousand_tokens"
+          }
+        ],
+        "notes": [
+          {
+            "id": "knowledge-base-invoice",
+            "appliesTo": [
+              "knowledge-base"
+            ],
+            "invoiceUnit": "per_thousand_tokens"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "rows.0.form": "unsupported",
+        "rows.0.supportedUnit": null
+      },
+      "expectedCounts": {
+        "issues": 2
+      }
+    },
+    {
+      "id": "meter-scope-empty-applies-to",
+      "skill": "undominated-meter-scope",
+      "why": "An empty appliesTo list is invalid input, not a global unit rule.",
+      "input": {
+        "label": "synthetic empty scope, not a vendor quote",
+        "rows": [
+          {
+            "id": "inference",
+            "meter": "serverless-inference",
+            "claimedUnit": "per_million_tokens"
+          }
+        ],
+        "notes": [
+          {
+            "id": "blank",
+            "appliesTo": [],
+            "invoiceUnit": "per_million_tokens"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
     }
   ]
 }

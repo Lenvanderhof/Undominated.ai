@@ -55,19 +55,19 @@ npx skills add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
 
 For portable agent profiles, see [agents/](agents/). They define evidence review, migration planning, resource curation and release verification roles. Loading a profile is host-specific; a Markdown file does not register a native subagent by itself.
 
-The expanded `undominated-check` **0.2.0 is prepared in source; npm publication is separate**. Its resource installer works from this checkout:
+[`undominated-check@0.2.0`](https://www.npmjs.com/package/undominated-check/v/0.2.0) is published on npm. It requires Node.js 22.12 or newer; the offline skill checks need Python 3. Inspect and install the bundled resources with a pinned version:
 
 ```sh
-cd packages/undominated-check
-npm run resources:build
-node bin/undominated-check.mjs resources list
-node bin/undominated-check.mjs resources inspect undominated-evidence-audit
-node bin/undominated-check.mjs resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+npx --yes undominated-check@0.2.0 resources list
+npx --yes undominated-check@0.2.0 resources inspect undominated-evidence-audit
+npx --yes undominated-check@0.2.0 resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
 ```
 
 Remove `--dry-run` to copy the inspected resource. Skills go to `.agents/skills/` by default, or `.claude/skills/` with `--target claude`. Agent profiles go to `.undominated/agents/`. Installing `undominated-mcp` writes its source and a separate MCP configuration file under `.undominated/mcp/`; import that configuration into your client. The installer refuses existing destinations, verifies bundled file hashes and does not execute downloaded code or edit existing client configuration.
 
-[The MCP package](packages/undominated-mcp/) quotes published model evidence and adds read-only `search_resources` and `get_resource` tools. Resource detail queries require the corresponding website data release; missing data is reported as unpublished. Its standalone npm publication is also separate.
+[`undominated-mcp@0.1.0`](https://www.npmjs.com/package/undominated-mcp/v/0.1.0) is published on npm. Configure your MCP client to run `npx --yes undominated-mcp@0.1.0`; [the package README](packages/undominated-mcp/) includes client configuration examples. The server quotes published model evidence and adds read-only `search_resources` and `get_resource` tools. Resource detail queries require the corresponding website data release; missing data is reported as unpublished.
+
+Both npm versions were verified on 2026-10-07 by matching the downloaded archives to the tested release candidates and running them in fresh consumers. The CLI release candidate was checked by copying all eleven bundled resources, verifying file hashes and running the six installed synthetic checks. The published CLI was separately exercised with a skill, an agent profile and the bundled MCP server. The MCP verification covers stdio initialization, all five tool definitions and a live frontier response. These checks do not certify every client integration or the quality of downstream decisions.
 
 
 ## Copy a badge
@@ -83,10 +83,10 @@ The SVG is the published verdict. Swap the slug for the model you ship.
 ## Check a model
 
 ```sh
-npx --yes undominated-check google/gemini-3.7-flash
+npx --yes undominated-check@0.2.0 google/gemini-3.7-flash
 ```
 
-Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key. Package: [`undominated-check@0.1.1`](https://www.npmjs.com/package/undominated-check) (MIT, 2026-09-09). GitHub remains an installable source: `npx --yes github:Lenvanderhof/Undominated.ai google/gemini-3.7-flash`.
+Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key. Package: [`undominated-check@0.2.0`](https://www.npmjs.com/package/undominated-check/v/0.2.0) (MIT, verified 2026-10-07). GitHub remains an installable source: `npx --yes github:Lenvanderhof/Undominated.ai google/gemini-3.7-flash`.
 
 ## Warn on a dominated model (GitHub Action)
 
@@ -114,7 +114,7 @@ Warns. Never fails the job. Do not add it to required checks.
 [`skills/undominated/SKILL.md`](skills/undominated/SKILL.md) — fetch published dominance JSON; never invent a price, score, or rank. Unrated is not zero.
 
 ```sh
-npx undominated-check@0.1.1 <provider/model>
+npx --yes undominated-check@0.2.0 <provider/model>
 ```
 
 ---

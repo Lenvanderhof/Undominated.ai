@@ -47,6 +47,8 @@ const [catalogue, frontier] = await Promise.all([
   json('/data/frontier.json'),
 ])
 const s = catalogue.stats ?? {}
+// Listing rows include service variants; they cannot supply a model-coverage denominator.
+const coverage = catalogue.integrity?.coverage
 
 /**
  * One entry per marker. Each returns a STRING exactly as it should read, or
@@ -61,7 +63,7 @@ const need = (value, name) => {
 }
 
 const FIGURES = {
-  /** Models on the value frontier: nothing beats them on quality and price at once. */
+  /** No other model scores at least as high for less, or higher for the same price. */
   frontier: () => String(need(frontier.members?.length, 'frontier size')),
   /** Every purchasable row in the catalogue, all variants. */
   models: () => String(need(s.models, 'stats.models')),
@@ -73,8 +75,11 @@ const FIGURES = {
   /** "122 of 132" — stated together so the denominator can never drift away. */
   dominatedOfRated: () =>
     `${need(s.dominatedCount, 'stats.dominatedCount')} of ${need(s.ratedPriced ?? s.rated, 'stats.ratedPriced')}`,
-  unrated: () => String(need(s.unrated, 'stats.unrated')),
-  unratedPct: () => `${Math.round((100 * need(s.unrated, 'stats.unrated')) / need(s.models, 'stats.models'))}%`,
+  /** Fail closed until the public API provides this explicit population. */
+  standardModels: () => String(need(coverage?.total, 'integrity.coverage.total')),
+  unrated: () => String(need(coverage?.unrated, 'integrity.coverage.unrated')),
+  unratedPct: () => `${need(coverage?.unratedPct, 'integrity.coverage.unratedPct')}%`,
+  variantRows: () => String(need(coverage?.variantRows, 'integrity.coverage.variantRows')),
   /**
    * Dearest ÷ cheapest INPUT price. The site publishes this one; a blended-price
    * spread over the same catalogue is a different number (15,306× on the day

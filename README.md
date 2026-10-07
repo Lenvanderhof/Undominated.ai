@@ -30,7 +30,7 @@
 | Find instructions, agents or integrations | [Skills](https://undominated.ai/skills/) · [Agents](https://undominated.ai/agents/) · [MCP servers](https://undominated.ai/mcp-servers/) · [Coding tools](https://undominated.ai/tools/) |
 | Check the method or challenge a claim | [Benchmarks](https://undominated.ai/benchmarks/) · [Methodology](https://undominated.ai/methodology/) · [Corrections](https://undominated.ai/corrections/) |
 
-The website directories contain **71 skills, 72 agent definitions and 89 MCP servers**, checked on **2026-10-07**. Those 232 reviews include third-party resources with their own licences and installation methods. The smaller original library hosted here has its own [version and availability map](docs/RESOURCES.md).
+The website directories contain **131 skills, 101 agent definitions and 128 MCP servers**, checked on **2026-10-07**. Those 360 reviews include third-party resources with their own licences and installation methods. The smaller original library hosted here has its own [version and availability map](docs/RESOURCES.md).
 
 ## Use a skill
 

@@ -1,0 +1,20 @@
+{
+  "baseline": {
+    "price-move-under-5pct": 1,
+    "new-model-added": 3,
+    "context-cut": 3,
+    "quote-not-in-source": 3,
+    "modality-loss": 3,
+    "tier-ladder-flattened": 2,
+    "batch-mixed-with-sync": 2
+  },
+  "candidate": {
+    "price-move-under-5pct": 1,
+    "new-model-added": 2,
+    "context-cut": 3,
+    "quote-not-in-source": 4,
+    "tier-ladder-flattened": 0,
+    "batch-mixed-with-sync": 2.5
+  },
+  "newRules": ["modality-loss"]
+}

@@ -1,0 +1,8 @@
+{
+  "label": "synthetic/stack",
+  "operation": "sum",
+  "amounts": [
+    {"id": "synthetic/a", "currency": "USD", "amount": "1.50"},
+    {"id": "synthetic/b", "currency": "USD", "amount": "2.50"}
+  ]
+}

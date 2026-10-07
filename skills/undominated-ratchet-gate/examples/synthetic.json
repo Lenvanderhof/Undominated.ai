@@ -1,0 +1,16 @@
+{
+  "baseline": {
+    "price-move-under-5pct": 1,
+    "new-model-added": 2,
+    "context-cut": 3,
+    "quote-not-in-source": 3
+  },
+  "candidate": {
+    "price-move-under-5pct": 1,
+    "new-model-added": 2,
+    "context-cut": 4,
+    "quote-not-in-source": 3,
+    "modality-loss": 4
+  },
+  "newRules": ["modality-loss"]
+}

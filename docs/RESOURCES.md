@@ -10,10 +10,10 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | `undominated-check@0.3.0` | 11 | 6 | 1 bundled server | Published; later review identified checker correctness defects. Use the six-skill `0.2.0` release while the correction is prepared. |
 | `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Corrected source and local archive verified; npm publication pending |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
-| GitHub source | 11 | 6 | 1 server | Source may contain corrections newer than immutable npm releases; inspect the commit you install |
+| GitHub source | 28 | 10 | 1 server | Eleven skills and six profiles are the npm-mapped set. Seventeen skills and four profiles are source-only: local synthetic examples passed on 2026-10-07, and no Skills CLI install or npm bundle has been verified for them. |
 | Website original entries | 6 | 4 | 1 server | Included in the 2026-10-07 website directory release |
 
-The eleven original skills and six profiles are unique directories, not counts of package versions. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside those eleven. Standard Skills CLI discovery includes it.
+The npm rows count the installation map, not every directory. Seventeen further skills and four further profiles are source-only and are listed below. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside both groups. Skills CLI discovery of this repository can see the legacy skill and the source-only directories. That discovery was not executed.
 
 A website review is not proof that a third-party resource is bundled here. `resources list` is the authority for a specific installed CLI version. [Installation guide](GETTING-STARTED.md) · [release verification and limits](EVIDENCE.md).
 
@@ -52,6 +52,34 @@ A profile is a role, workflow and output contract. It does not register a native
 | [Release verifier](../agents/undominated-release-verifier/AGENT.md) | Separate a passing build from publication and observed use | `0.2.0` and later |
 | [Comparison editor](../agents/undominated-comparison-editor/AGENT.md) | Make comparison copy match ties, seller identity and preserved capabilities | Added in `0.3.0`; inspect later source corrections |
 | [Pricing source reviewer](../agents/undominated-pricing-source-reviewer/AGENT.md) | Check feed units, source currency, exclusions and quote boundaries | Added in `0.3.0` |
+
+## Source-only additions
+
+These directories are in this repository so a later pinned install can name them. They are not in `undominated-check@0.2.0`, `@0.3.0`, or `@0.3.1`. On 2026-10-07 each skill's `examples/synthetic.json` was run with its own `scripts/check.py` and exited 0. Those inputs are synthetic. A passing check is not a vendor quote and is not an install receipt. The Skills CLI was not run. The four profiles were not registered as native subagents.
+
+| Resource | Contract | Limit |
+|---|---|---|
+| [Cache-tier billing audit](../skills/undominated-cache-tier-billing/SKILL.md) | Bill a request against the cache tier that applies to it, so a cached prefix is not charged at the base input rate. | One supplied rate set. It does not walk a context-tier ladder or apply batch, off-peak, or subscription rules. |
+| [Currency isolation audit](../skills/undominated-currency-isolate/SKILL.md) | Refuse to add, average, or rank amounts whose currencies differ. | It does not convert currencies or fetch an exchange rate. |
+| [Decimal determinism audit](../skills/undominated-decimal-determinism/SKILL.md) | Require a published rate, a computed bill, and a displayed figure to agree as decimals. | It does not fetch vendor prices. |
+| [Eval contamination and judge audit](../skills/undominated-eval-contamination-audit/SKILL.md) | Check supplied evaluation text for overlap and judge-prompt skew. | It does not crawl an external corpus. |
+| [Upstream freshness budget](../skills/undominated-freshness-budget/SKILL.md) | Compare each supplied fetch time and content hash with that source's declared staleness budget. | It does not fetch or refresh the source. |
+| [Identity dedup audit](../skills/undominated-identity-dedup/SKILL.md) | Collapse duplicate identities inside one supplied population before a count. | It does not resolve upstream aliases. |
+| [Population denominator](../skills/undominated-population-denominator/SKILL.md) | Require the stated population, the computed population, and the claimed count to be the same set. | It does not compute a correlation, a price, or a rank. |
+| [Precision prompt cost estimator](../skills/undominated-prompt-cost-estimator/SKILL.md) | Add supplied token counts and a supplied price ladder, including cache and reasoning rows when they are present. | It does not invent a missing discount. |
+| [Quantisation label](../skills/undominated-quantisation-label/SKILL.md) | Keep an unknown quantisation labelled unknown. | It does not inspect weights or treat float16 and fp16 as the same label. |
+| [Quote-join audit](../skills/undominated-quote-join/SKILL.md) | Join a vendor quote to a catalogue model only when the provider and the model id match exactly. | A case fold is not an identity, and a join is not a price or quality claim. |
+| [Review-gate ratchet](../skills/undominated-ratchet-gate/SKILL.md) | Check that a review gate moved stricter and not looser. | It does not edit the gate or run it. |
+| [Rate-unit audit](../skills/undominated-rate-unit/SKILL.md) | Refuse a token-price conversion until the currency and the unit are both explicit. | It does not guess that M means million. A scaled figure is not a new vendor quote. |
+| [Read-only claim audit](../skills/undominated-readonly-claim/SKILL.md) | Reject a read-only label when a listed tool name contains a mutation token. | A passing name list is not proof the handlers are read-only. |
+| [Context-rung selection](../skills/undominated-rung-select/SKILL.md) | Select the context-tier rung that contains a request's input length. | It does not model marginal block pricing or fetch vendor rates. |
+| [Rendered-surface and payload agreement](../skills/undominated-surface-agreement/SKILL.md) | Compare a rendered snapshot and a JSON snapshot field by field. | It does not fetch either surface. |
+| [Throughput benchmark audit](../skills/undominated-throughput-benchmark-audit/SKILL.md) | Check that a supplied throughput claim names its concurrency and batch conditions. | It does not run a benchmark. |
+| [Unrated sentinel](../skills/undominated-unrated-sentinel/SKILL.md) | Keep a missing score out of a ranked list. | Unrated is not scored zero. |
+| [Eval harness auditor](../agents/undominated-eval-harness-auditor/AGENT.md) | Review an evaluation harness for leaks, judge-prompt skew, and scoring rules you supply. | Portable instructions. It does not register a native subagent. |
+| [Population reviewer](../agents/undominated-population-reviewer/AGENT.md) | Review a count, rank, or correlation against the population the sentence names. | Portable instructions. It does not register a native subagent. |
+| [Quote identity reviewer](../agents/undominated-quote-identity-reviewer/AGENT.md) | Review a proposed join and refuse any match that is not exact. | Portable instructions. It does not register a native subagent. |
+| [Stack cost optimizer](../agents/undominated-stack-cost-optimizer/AGENT.md) | Review a proposed stack change against supplied prices and the requirements that must survive. | Portable instructions. It does not register a native subagent or invent a saving. |
 
 ## Read-only MCP server
 

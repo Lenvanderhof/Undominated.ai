@@ -1,0 +1,46 @@
+{
+  "slug": "lab/aa-bait",
+  "name": "AA Bait",
+  "provider": "Lab",
+  "openWeights": true,
+  "contextWindow": 128000,
+  "pricing": {
+    "currency": "USD",
+    "unit": "per_million_tokens",
+    "input": 1,
+    "output": 2,
+    "blendedPerMillion": 1.5,
+    "longContextPenalty": { "inputMultiple": 4, "outputMultiple": 2.67 },
+    "tierThreshold": 32000,
+    "hasTieredContext": true,
+    "hasPricing": true,
+    "pricingKind": "fixed",
+    "isFree": false,
+    "tiers": [
+      { "minPromptTokens": 0, "input": 1, "output": 2, "cachedInput": null },
+      { "minPromptTokens": 32000, "input": 3.33, "output": 6.66 },
+      { "minPromptTokens": 256000, "input": 6.67, "output": 13.34 }
+    ],
+    "notes": "costs 39% less than the other one"
+  },
+  "benchmarks": {
+    "intelligence": 62.1,
+    "coding": 76.5,
+    "agentic": 56.6,
+    "lmarena": 1490.2,
+    "lmarenaEffort": "high",
+    "lmarenaCi": { "lower": 1482.08, "upper": 1498.34, "halfWidth": 8.13 },
+    "designArena": [{ "category": "coding", "elo": 2000, "win_rate": 1, "rank": 1 }],
+    "measuredAxes": ["intelligence", "coding", "agentic", "lmarena"],
+    "sources": ["artificial_analysis", "lmarena"]
+  },
+  "provenance": {
+    "source": "openrouter/models",
+    "sourceUrl": "https://example.test/vendor",
+    "fetchedAt": "2026-08-31",
+    "confidence": "verified",
+    "benchmarkCoverage": ["intelligence", "coding", "agentic"],
+    "arenaSource": "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset",
+    "arenaLicence": "cc-by-4.0"
+  }
+}

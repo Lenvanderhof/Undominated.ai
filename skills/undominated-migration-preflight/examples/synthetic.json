@@ -1,0 +1,46 @@
+{
+  "current": "synthetic/current",
+  "candidate": {
+    "id": "synthetic/candidate",
+    "sourceUrl": "https://example.org/synthetic-only",
+    "observedAt": "2026-01-01",
+    "inputModalities": [
+      "text",
+      "image"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "contextTokens": 8192,
+    "maxOutputTokens": 1024,
+    "tools": true,
+    "structuredOutput": true
+  },
+  "requirements": {
+    "inputModalities": [
+      "text",
+      "image"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "contextTokens": 4096,
+    "maxOutputTokens": 512,
+    "tools": true,
+    "structuredOutput": true,
+    "requiredEvalIds": [
+      "invoice-image",
+      "tool-result"
+    ]
+  },
+  "evaluations": [
+    {
+      "id": "invoice-image",
+      "passed": true
+    },
+    {
+      "id": "tool-result",
+      "passed": true
+    }
+  ]
+}

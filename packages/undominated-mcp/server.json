@@ -1,0 +1,24 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.lenvanderhof/undominated-mcp",
+  "title": "Undominated",
+  "description": "Quote published Undominated.ai verdicts. Unrated is not zero. Not a router.",
+  "repository": {
+    "url": "https://github.com/Lenvanderhof/Undominated.ai",
+    "source": "github",
+    "subfolder": "packages/undominated-mcp"
+  },
+  "version": "0.1.0",
+  "websiteUrl": "https://undominated.ai/check/",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "undominated-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

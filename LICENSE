@@ -14,3 +14,29 @@ quality scores. Those live on https://undominated.ai/. LMArena
 leaderboard data used on the site is CC BY 4.0 from the official dataset.
 Artificial Analysis figures are not published on the site and this
 repository does not grant a sublicence to redistribute them.
+
+Component software licences
+---------------------------
+
+The software in packages/undominated-check/ and packages/undominated-mcp/
+is licensed under the MIT License in each package's LICENSE file.
+
+The following original skill and agent directories are also licensed under
+the MIT License in their respective LICENSE files:
+
+- skills/undominated-benchmark-audit/
+- skills/undominated-evidence-audit/
+- skills/undominated-migration-preflight/
+- skills/undominated-provider-quote-compare/
+- skills/undominated-release-proof/
+- skills/undominated-resource-audit/
+- agents/undominated-evidence-reviewer/
+- agents/undominated-migration-planner/
+- agents/undominated-release-verifier/
+- agents/undominated-resource-curator/
+
+These component licences grant rights to the listed code and resource files.
+They do not grant rights to the Undominated.ai name or brand assets, or
+sublicense data fetched from external publishers. Files outside these listed
+components retain their own applicable terms; this notice does not place the
+entire repository or the live catalogue under MIT.

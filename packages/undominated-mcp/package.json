@@ -1,0 +1,50 @@
+{
+  "name": "undominated-mcp",
+  "version": "0.1.0",
+  "description": "Read-only MCP server: quote published Undominated.ai verdicts, models and the frontier. Refuses rather than approximates. Never returns Artificial Analysis scores.",
+  "keywords": [
+    "mcp",
+    "llm",
+    "pricing",
+    "inference",
+    "openrouter",
+    "lmarena"
+  ],
+  "homepage": "https://undominated.ai/check/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lenvanderhof/Undominated.ai.git",
+    "directory": "packages/undominated-mcp"
+  },
+  "bugs": "https://github.com/Lenvanderhof/Undominated.ai/issues",
+  "license": "MIT",
+  "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "mcpName": "io.github.lenvanderhof/undominated-mcp",
+  "bin": {
+    "undominated-mcp": "bin/undominated-mcp.mjs"
+  },
+  "exports": {
+    ".": "./src/quote.mjs",
+    "./tools": "./src/tools.mjs",
+    "./server": "./src/server.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "start": "node bin/undominated-mcp.mjs",
+    "prepublishOnly": "node ./prepublish.mjs"
+  }
+}

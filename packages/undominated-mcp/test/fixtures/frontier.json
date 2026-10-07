@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "lens": "lmarena",
+  "workload": "balanced",
+  "asOf": "2026-08-01",
+  "methodologySha": "abc123",
+  "licence": "LMArena Elo under CC BY 4.0 from the official dataset. This file does not contain Artificial Analysis scores.",
+  "members": [
+    { "slug": "lab/apex", "score": 1500, "price": 10 },
+    { "slug": "lab/thrift", "score": 1400, "price": 1 }
+  ]
+}

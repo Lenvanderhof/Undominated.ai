@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "slug": "lab/unmeasured",
+  "lens": "lmarena",
+  "workload": "balanced",
+  "asOf": "2026-08-26",
+  "methodologySha": "abc123",
+  "licence": "LMArena Elo under CC BY 4.0 from the official dataset. This file does not contain Artificial Analysis scores.",
+  "status": "unrated",
+  "by": null,
+  "dq": 0,
+  "savingPct": 0,
+  "losses": []
+}

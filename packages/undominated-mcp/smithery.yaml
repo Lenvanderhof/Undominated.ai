@@ -1,0 +1,8 @@
+name: undominated
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction: |-
+    (config) => ({ command: 'npx', args: ['-y', 'undominated-mcp@0.1.0'] })

@@ -9,6 +9,7 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 import { dress, wantsChrome } from './mark.mjs'
+import { resourceMain } from './resources.mjs'
 import {
   ORIGIN,
   STATUS,
@@ -25,6 +26,7 @@ export const USAGE = `undominated-check — is a model beaten by something bette
 Usage
   npx undominated-check <model-slug>
   npx undominated-check --frontier
+  npx undominated-check resources --help
 
 Options
   --local <dir>   Read from a local directory instead of the network. Point it at
@@ -55,8 +57,8 @@ Exit codes
   same finding as a model being beaten, and a gate that conflates them will
   eventually approve a swap no evidence supports.
 
-This tool is read-only. It fetches published JSON, sends nothing, and stores
-nothing. It is not a router: it does not pick a model, hold keys, or execute
+Model-check commands are read-only: they fetch published JSON and store nothing.
+The separate resources install command copies bundled files to an explicit project. It is not a router: it does not pick a model, hold keys, or execute
 inference. Without --exit-code it is warn-never-fail — a printed verdict exits 0.
 Every figure it prints carries the lens, the workload and the date the snapshot
 was taken.`
@@ -113,7 +115,7 @@ export function locate(kind, opts) {
 class Missing extends Error {}
 
 /** Identifies this CLI to the origin. Node's default fetch sends no UA. */
-export const FETCH_UA = 'undominated-check/0.1.1 (+https://undominated.ai/check/)'
+export const FETCH_UA = 'undominated-check/0.2.0 (+https://undominated.ai/check/)'
 
 async function load({ source, local }, fetchImpl) {
   if (local) {
@@ -151,6 +153,7 @@ async function load({ source, local }, fetchImpl) {
  * @returns {Promise<{ code: number, out: string, err: string }>}
  */
 export async function main(argv, deps = {}) {
+  if (argv[0] === 'resources') return resourceMain(argv.slice(1))
   const fetchImpl = deps.fetch ?? globalThis.fetch
   const opts = parseArgs(argv)
   const chrome = wantsChrome(opts, { tty: deps.tty, env: deps.env ?? {} })

@@ -1,7 +1,7 @@
 {
   "name": "undominated-check",
-  "version": "0.1.1",
-  "description": "Read-only CLI: is a model beaten by something both better and cheaper? Prints the published Undominated.ai verdict with its lens, workload and snapshot date.",
+  "version": "0.2.0",
+  "description": "Quote published AI model verdicts and inspect or install original Undominated skills, agent profiles and its read-only MCP server.",
   "keywords": [
     "llm",
     "pricing",
@@ -34,14 +34,17 @@
     "bin",
     "src",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "resources"
   ],
   "engines": {
     "node": ">=22.12"
   },
   "dependencies": {},
   "scripts": {
-    "test": "node --test ../../scripts/undominated-check.test.mjs",
-    "prepublishOnly": "node ./prepublish.mjs"
+    "test": "node scripts/build-resources.mjs && node --test test/*.test.mjs",
+    "prepublishOnly": "node ./prepublish.mjs",
+    "resources:build": "node scripts/build-resources.mjs",
+    "prepack": "node scripts/build-resources.mjs"
   }
 }

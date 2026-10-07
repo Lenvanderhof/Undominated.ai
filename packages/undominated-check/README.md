@@ -16,8 +16,8 @@ npx undominated-check google/gemini-3.7-flash
 
 One-shot, no install: `npx undominated-check google/gemini-3.7-flash`.
 
-Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the
-verdict, and exits. It sends nothing, stores nothing, and needs no key or account.
+The model-check commands are read-only. They fetch published JSON from [undominated.ai](https://undominated.ai), print the
+verdict, and exit. They send no private data, store nothing, and need no key or account.
 
 **Not a router.** It does not pick a model, hold keys, or execute inference.
 
@@ -27,6 +27,44 @@ must distinguish statuses — and even then, do not make it a merge blocker.
 On a TTY the Pareto staircase and chartreuse paint the **frontier** finding only.
 Pipes, CI, `--json`, and `--plain` stay the same bytes as before — no colour in a log.
 `--color` forces the chrome when you are capturing a screenshot.
+
+## Original resources (0.2.0, unreleased)
+
+This source tree adds six original skills, four portable agent profiles and a local copy of the Undominated MCP server. **The new `resources` commands require this local 0.2.0 build; they are not a claim that npm or GitHub already distributes the release.** Existing published model-check commands remain available separately.
+
+From the repository root:
+
+```sh
+node packages/undominated-check/scripts/build-resources.mjs
+node packages/undominated-check/bin/undominated-check.mjs resources list
+node packages/undominated-check/bin/undominated-check.mjs resources inspect undominated-evidence-audit
+node packages/undominated-check/bin/undominated-check.mjs resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+node packages/undominated-check/bin/undominated-check.mjs resources install undominated-evidence-audit --project /absolute/path/to/project
+node packages/undominated-check/bin/undominated-check.mjs resources install undominated-mcp --project /absolute/path/to/project
+```
+
+Use `--json` for machine-readable output, or `--target claude` to put a skill under `.claude/skills` instead of `.agents/skills`. The project directory must already exist and its path must contain no symlinks. Installation checks bundled SHA-256 hashes, rejects path traversal and symlinks, and refuses existing destinations, including empty directories. It does not run scripts, install dependencies, fetch packages, use credentials or edit existing client configuration. A filesystem write failure can leave a partial new destination; inspect it before removing it and retrying. Do not install into a directory concurrently controlled by an untrusted process.
+
+Agent profiles are exported under `.undominated/agents/<id>/AGENT.md`; load the file into your agent or adapt it to your client's native format. Exporting Markdown does not automatically register a subagent. The MCP export goes under `.undominated/mcp/undominated-mcp/` and includes a separate `mcp-config.json` with absolute Node and server paths. Import that configuration manually; the installer does not start the server. Running the MCP server accesses public Undominated endpoints without credentials. Its new resource tools require the corresponding website data release.
+
+Each skill has an MIT license, scoped workflow, dependency-free Python 3.10+ validator and clearly labeled synthetic example. From the installed skill directory:
+
+```sh
+python3 scripts/check.py examples/synthetic.json
+```
+
+The evidence-audit and release-proof examples include local files their checks hash. Exit 0 means the supplied check passed within its scope; it is not source truth, security certification, or permission to release anything.
+
+### Standard skills CLI
+
+The source directories follow the [Agent Skills specification](https://agentskills.io/specification). The [official skills CLI](https://github.com/vercel-labs/skills) supports local discovery and named skill selection:
+
+```sh
+npx skills add ./skills --list
+npx skills add ./skills --skill undominated-evidence-audit --agent codex --copy
+```
+
+After the new skill directories are actually published to the public repository, the equivalent source will be `Lenvanderhof/Undominated.ai`. Verify that remote discovery lists the exact skill before promoting a remote install line. These local checks do not establish a skills.sh listing.
 
 ## README badge
 

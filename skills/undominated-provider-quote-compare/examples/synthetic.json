@@ -1,0 +1,45 @@
+{
+  "workload": {
+    "inputTokens": 4000,
+    "outputTokens": 1000
+  },
+  "quotes": [
+    {
+      "seller": "Synthetic A",
+      "model": "synthetic/model-v1",
+      "precision": "bf16",
+      "currency": "USD",
+      "serviceTier": "standard",
+      "sourceUrl": "https://example.org/synthetic-a",
+      "observedAt": "2026-01-01",
+      "tiers": [
+        {
+          "maxInputTokens": 2048,
+          "inputPerMillion": "1",
+          "outputPerMillion": "2"
+        },
+        {
+          "maxInputTokens": null,
+          "inputPerMillion": "3",
+          "outputPerMillion": "4"
+        }
+      ]
+    },
+    {
+      "seller": "Synthetic B",
+      "model": "synthetic/model-v1",
+      "precision": "bf16",
+      "currency": "USD",
+      "serviceTier": "standard",
+      "sourceUrl": "https://example.org/synthetic-b",
+      "observedAt": "2026-01-01",
+      "tiers": [
+        {
+          "maxInputTokens": null,
+          "inputPerMillion": "2",
+          "outputPerMillion": "3"
+        }
+      ]
+    }
+  ]
+}

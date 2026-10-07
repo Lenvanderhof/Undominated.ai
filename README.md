@@ -32,6 +32,44 @@
 
 ---
 
+
+## Original skills, agent profiles and MCP server
+
+This source tree contains six original skills with offline Python checks, four portable specialist agent profiles, and a read-only MCP server. Each resource keeps its licence and supporting files together. The examples use synthetic inputs; passing them does not certify performance on your tasks.
+
+List or install a named skill with the standard Skills CLI:
+
+```sh
+npx skills add Lenvanderhof/Undominated.ai --list
+npx skills add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
+```
+
+| Skill | Job |
+|---|---|
+| `undominated-evidence-audit` | Check evidence identity, denominators and arithmetic |
+| `undominated-migration-preflight` | Check required capabilities and evaluation results |
+| `undominated-provider-quote-compare` | Compare explicit workloads across distinct sellers and complete tier ladders |
+| `undominated-benchmark-audit` | Inspect matched cohorts, missing scores and descriptive correlations |
+| `undominated-resource-audit` | Review provenance, licences, permissions and verification evidence |
+| `undominated-release-proof` | Check artifact hashes and meaningful response receipts |
+
+For portable agent profiles, see [agents/](agents/). They define evidence review, migration planning, resource curation and release verification roles. Loading a profile is host-specific; a Markdown file does not register a native subagent by itself.
+
+The expanded `undominated-check` **0.2.0 is prepared in source; npm publication is separate**. Its resource installer works from this checkout:
+
+```sh
+cd packages/undominated-check
+npm run resources:build
+node bin/undominated-check.mjs resources list
+node bin/undominated-check.mjs resources inspect undominated-evidence-audit
+node bin/undominated-check.mjs resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+```
+
+Remove `--dry-run` to copy the inspected resource. Skills go to `.agents/skills/` by default, or `.claude/skills/` with `--target claude`. Agent profiles go to `.undominated/agents/`. Installing `undominated-mcp` writes its source and a separate MCP configuration file under `.undominated/mcp/`; import that configuration into your client. The installer refuses existing destinations, verifies bundled file hashes and does not execute downloaded code or edit existing client configuration.
+
+[The MCP package](packages/undominated-mcp/) quotes published model evidence and adds read-only `search_resources` and `get_resource` tools. Resource detail queries require the corresponding website data release; missing data is reported as unpublished. Its standalone npm publication is also separate.
+
+
 ## Copy a badge
 
 The SVG is the published verdict. Swap the slug for the model you ship.

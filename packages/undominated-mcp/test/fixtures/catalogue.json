@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "stats": { "updatedAt": "2026-08-31", "models": 2, "frontierSize": 2 },
+  "rows": [
+    { "id": "lab/apex-dated", "s": "lab/apex", "n": "Apex", "q": null, "ar": 1500 },
+    { "id": "lab/thrift-dated", "s": "lab/thrift", "n": "Thrift", "q": 62.1, "ar": 1400 }
+  ]
+}

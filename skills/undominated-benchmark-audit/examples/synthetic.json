@@ -1,0 +1,31 @@
+{
+  "population": "All four synthetic models in this fixture",
+  "selection": "Complete synthetic demonstration; not market measurements",
+  "sourceUrls": [
+    "https://example.org/synthetic-a",
+    "https://example.org/synthetic-b"
+  ],
+  "observedAt": "2026-01-01",
+  "rows": [
+    {
+      "id": "synthetic/a",
+      "a": 1,
+      "b": 2
+    },
+    {
+      "id": "synthetic/b",
+      "a": 2,
+      "b": 4
+    },
+    {
+      "id": "synthetic/c",
+      "a": 3,
+      "b": 6
+    },
+    {
+      "id": "synthetic/d",
+      "a": 4,
+      "b": 8
+    }
+  ]
+}

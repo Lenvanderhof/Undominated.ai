@@ -4,7 +4,7 @@ description: Check a price-spread multiple against distinct seller owners, so on
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Seller-spread audit
@@ -33,6 +33,8 @@ Exit codes: `0` the claimed multiple matches the distinct-owner multiple; `1` re
 ## Input contract
 
 `model` and `currency` (three uppercase letters) apply to every row. `rate` is `inputPerMillion` or `outputPerMillion`. `claimedMultiple` is a non-negative decimal string. `rows` has at least two objects with `seller`, `sellerOwner`, `serviceTier`, the selected rate as a decimal string, an HTTPS `sourceUrl`, and an ISO `observedAt`. Rates are not booleans or binary floats.
+
+Claim matching uses exact ratios. A rounded headline requires review; no rounding tolerance is inferred. Displayed repeating ratios are rounded to 28 significant digits and are not used to establish equality.
 
 ## Deliverable and limits
 

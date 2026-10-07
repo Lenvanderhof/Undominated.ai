@@ -4,7 +4,7 @@ description: Check a "past this length" price multiple against every rung of a c
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Context-tier ladder audit
@@ -32,7 +32,9 @@ Exit codes: `0` the claimed multiple matches that boundary; `1` review required;
 
 ## Input contract
 
-`model` and `currency` (three uppercase letters) apply to the whole ladder. `side` is `input` or `output`. `claim.pastTokens` is a positive integer and `claim.multiple` is a non-negative decimal string. `rungs` is ordered. Each rung has `inputPerMillion` and `outputPerMillion` as decimal strings, not booleans or binary floats. Every finite `maxInputTokens` is a strictly increasing positive integer. The last rung uses null.
+`model` and `currency` (three uppercase letters) apply to the whole ladder. `side` is `input` or `output`. `claim.pastTokens` is a positive integer and `claim.multiple` is a non-negative decimal string. `rungs` is ordered. Each rung has `inputPerMillion` and `outputPerMillion` as decimal strings, not booleans or binary floats. Every finite `maxInputTokens` is a strictly increasing positive integer. Every rung must explicitly include `maxInputTokens`. The last rung uses null; an omitted cap is unknown and rejected, not treated as infinity.
+
+Claim matching uses exact ratios. A rounded headline requires review; no rounding tolerance is inferred. Displayed repeating ratios are rounded to 28 significant digits and are not used to establish equality.
 
 ## Deliverable and limits
 

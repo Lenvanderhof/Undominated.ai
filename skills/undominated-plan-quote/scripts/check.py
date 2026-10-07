@@ -5,7 +5,7 @@ import json
 import re
 import sys
 from datetime import date
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -56,7 +56,14 @@ def check(data):
     prose = [ident for ident in included if known[ident] is None]
     if prose:
         issues.append("monthly ceiling includes a plan that is not verified USD")
-    total = sum((known[ident] for ident in included if known[ident] is not None), Decimal(0))
+    amounts = [known[ident] for ident in included if known[ident] is not None]
+    # Decimal's default 28 digits can erase a supplied amount before equality is checked.
+    # Reserve every input digit, the largest fractional scale and a carry for the sum.
+    integer_digits = max((max(value.adjusted() + 1, 1) for value in amounts), default=1)
+    fractional_digits = max((max(-value.as_tuple().exponent, 0) for value in amounts), default=0)
+    with localcontext() as context:
+        context.prec = integer_digits + fractional_digits + len(str(len(amounts))) + 1
+        total = sum(amounts, Decimal(0))
     if total != ceiling:
         issues.append("monthly ceiling does not equal the sum of included verified amounts")
     return {

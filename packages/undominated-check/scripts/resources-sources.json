@@ -21,7 +21,7 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-migration-preflight",
@@ -45,7 +45,7 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-provider-quote-compare",
@@ -69,7 +69,7 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-benchmark-audit",
@@ -93,7 +93,7 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-resource-audit",
@@ -118,7 +118,7 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-release-proof",
@@ -142,7 +142,7 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-evidence-reviewer",
@@ -167,7 +167,7 @@
       "read:assigned-sources",
       "write:assigned-workspace"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-migration-planner",
@@ -192,7 +192,7 @@
       "read:assigned-sources",
       "write:assigned-workspace"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-resource-curator",
@@ -218,7 +218,7 @@
       "read:assigned-sources",
       "write:assigned-workspace"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-release-verifier",
@@ -243,14 +243,14 @@
       "read:assigned-sources",
       "write:assigned-workspace"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-seller-spread",
     "kind": "skill",
     "name": "Seller-spread audit",
     "description": "Check a price-spread multiple against distinct seller owners, so one vendor's own service tiers are not counted as competition.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "author": "Undominated.ai",
     "path": "skills/undominated-seller-spread",
@@ -267,14 +267,14 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-dominance-wording",
     "kind": "skill",
     "name": "Dominance wording audit",
     "description": "Classify a two-model comparison before publishing it, so a tie or a dropped requirement is not called both better and cheaper.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "author": "Undominated.ai",
     "path": "skills/undominated-dominance-wording",
@@ -291,14 +291,14 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-plan-quote",
     "kind": "skill",
     "name": "Plan-quote hygiene",
     "description": "Keep unverified subscription quotes out of a USD monthly ceiling. A source sentence is not a price.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "author": "Undominated.ai",
     "path": "skills/undominated-plan-quote",
@@ -315,14 +315,14 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-licence-boundary",
     "kind": "skill",
     "name": "Licence-boundary audit",
     "description": "Check a redistribution claim against the licence evidence you recorded. A public page is not a licence.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "author": "Undominated.ai",
     "path": "skills/undominated-licence-boundary",
@@ -339,14 +339,14 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-context-tier",
     "kind": "skill",
     "name": "Context-tier ladder audit",
     "description": "Check a past-this-length price multiple against every rung, so the dearest rung is not applied at the first boundary.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "author": "Undominated.ai",
     "path": "skills/undominated-context-tier",
@@ -363,14 +363,14 @@
     "permissions": [
       "read:user-selected-local-file"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-comparison-editor",
     "kind": "agent",
     "name": "Comparison editor",
     "description": "Edit model-comparison copy so ties, same-seller tiers and dropped requirements are not published as dominance.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "author": "Undominated.ai",
     "path": "agents/undominated-comparison-editor",
@@ -388,7 +388,7 @@
       "read:assigned-sources",
       "write:assigned-workspace"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-pricing-source-reviewer",
@@ -413,7 +413,7 @@
       "read:assigned-sources",
       "write:assigned-workspace"
     ],
-    "status": "local-tested-unreleased"
+    "status": "fixture-tested"
   },
   {
     "id": "undominated-mcp",
@@ -428,6 +428,7 @@
     "permissions": [
       "network:https://undominated.ai"
     ],
-    "limitations": "Host configuration import is manual; installing does not run or register the server. Data tool availability depends on published endpoints."
+    "limitations": "Host configuration import is manual; installing does not run or register the server. Data tool availability depends on published endpoints.",
+    "status": "fixture-tested"
   }
 ]

@@ -115,7 +115,7 @@ export function locate(kind, opts) {
 class Missing extends Error {}
 
 /** Identifies this CLI to the origin. Node's default fetch sends no UA. */
-export const FETCH_UA = 'undominated-check/0.3.0 (+https://undominated.ai/check/)'
+export const FETCH_UA = 'undominated-check/0.3.1 (+https://undominated.ai/check/)'
 
 async function load({ source, local }, fetchImpl) {
   if (local) {

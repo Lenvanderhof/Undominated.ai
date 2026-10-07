@@ -5,6 +5,7 @@ import json
 import re
 import sys
 from decimal import Decimal
+from fractions import Fraction
 from pathlib import Path
 
 
@@ -35,7 +36,9 @@ def check(data):
     for index, rung in enumerate(rungs):
         if not isinstance(rung, dict):
             raise ValueError("each rung must be an object")
-        cap = rung.get("maxInputTokens")
+        if "maxInputTokens" not in rung:
+            raise ValueError("each rung must explicitly state maxInputTokens; null means unbounded")
+        cap = rung["maxInputTokens"]
         if index == len(rungs) - 1:
             if cap is not None:
                 raise ValueError("the final rung must be unbounded")
@@ -58,7 +61,7 @@ def check(data):
         match = next((item for item in boundaries if item["pastTokens"] == past), None)
         if match is None:
             issues.append("claimed boundary is not a rung in this ladder")
-        elif Decimal(match["multiple"]) != claimed:
+        elif Fraction(Decimal(match["rate"])) != Fraction(claimed) * Fraction(base):
             issues.append("claimed multiple does not match the base-relative multiple at that boundary")
     return {
         "status": "review" if issues else "pass",

@@ -1,0 +1,5 @@
+{
+  "statedUnit": "per_thousand_tokens",
+  "scaledUnit": "per_million_tokens",
+  "factor": "1000"
+}

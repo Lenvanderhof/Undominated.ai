@@ -122,6 +122,12 @@ All 125 cases in the dedicated [five-checker boundary/control suite](../scripts/
 
 The source inventory is now 48 validator skills and 11 portable profiles, plus the legacy quote-only skill and one MCP server. The npm `0.4.0` installation map remains exactly 18 resources and 69 source files, excluding these five. [PR #8](https://github.com/Lenvanderhof/Undominated.ai/pull/8) merged the reviewed source; its merge tree matches the installation pin `a67bd9b`. Fresh acquisition repeated the 125-case suite against the installed copies. Neither source review nor these installation checks establish live source truth, unrestricted task effectiveness or native activation.
 
+## Four publication-boundary checkers — 2026-10-08
+
+The following commit adds suggest-not-redirect, withheld-provider, announced-not-safe, and unit-not-scaled. The source inventory moves from 48 to 52 validator skills. The 11 profiles, the legacy skill, and the MCP server are unchanged. These four supply synthetic passes and refusal or invalid examples. They are outside the `a67bd9b` Skills CLI receipt and the npm map through `0.4.0`. The published `0.3.1` figure of 43 boundary and control cases remains the npm bundle's case count. Fifty-two validator skills are not that figure.
+
+The public boundary suite contains 173 cases after adding 25 controls, including an absent Accept-Language redirect, the two withheld names, a safety claim from `unknown`, and a per-thousand unit restated per million. All 173 cases passed, as did all 52 source synthetic examples. These checks use supplied JSON. They do not send a request, publish a provider, or read a price.
+
 ## Catalogue figures and comparison wording
 
 The older [PR #4](https://github.com/Lenvanderhof/Undominated.ai/pull/4) identified two distinct errors: counting unscored service listings as unmeasured models, and describing weak Pareto dominance as requiring both a higher score and a lower price. Current hero wording preserves ties: no lower score, no higher cost, with at least one strict gain. Recorded capability requirements remain a separate check.

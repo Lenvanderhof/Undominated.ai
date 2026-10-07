@@ -4162,5 +4162,386 @@
       ],
       "expectedFields": {}
     }
+,
+    {
+      "id": "suggest-absent",
+      "skill": "undominated-suggest-not-redirect",
+      "why": "An absent Accept-Language header with action suggest is not a redirect.",
+      "input": {
+        "acceptLanguage": null,
+        "action": "suggest",
+        "location": null
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "action": "suggest",
+        "acceptLanguageAbsent": true
+      }
+    },
+    {
+      "id": "suggest-present-none",
+      "skill": "undominated-suggest-not-redirect",
+      "why": "A present language header with action none is still not a redirect.",
+      "input": {
+        "acceptLanguage": "en",
+        "action": "none",
+        "location": null
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "action": "none",
+        "acceptLanguageAbsent": false
+      }
+    },
+    {
+      "id": "suggest-redirect-absent",
+      "skill": "undominated-suggest-not-redirect",
+      "why": "An absent Accept-Language header does not authorize a redirect.",
+      "input": {
+        "acceptLanguage": null,
+        "action": "redirect",
+        "location": "/nl/"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "suggest-redirect-present",
+      "skill": "undominated-suggest-not-redirect",
+      "why": "A language preference does not authorize a redirect.",
+      "input": {
+        "acceptLanguage": "nl",
+        "action": "redirect",
+        "location": "/nl/"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "suggest-located",
+      "skill": "undominated-suggest-not-redirect",
+      "why": "A location on a non-redirect action is invalid.",
+      "input": {
+        "acceptLanguage": null,
+        "action": "suggest",
+        "location": "/nl/"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "suggest-bool",
+      "skill": "undominated-suggest-not-redirect",
+      "why": "A boolean is not an action.",
+      "input": {
+        "acceptLanguage": null,
+        "action": true,
+        "location": null
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "withheld-stealth-off",
+      "skill": "undominated-withheld-provider",
+      "why": "Stealth left unpublished passes.",
+      "input": {
+        "name": "Stealth",
+        "publishable": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "withheld": true,
+        "publishable": false
+      }
+    },
+    {
+      "id": "withheld-fake-on",
+      "skill": "undominated-withheld-provider",
+      "why": "FakeProvider marked publishable is a review.",
+      "input": {
+        "name": "FakeProvider",
+        "publishable": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "withheld-stealth-on",
+      "skill": "undominated-withheld-provider",
+      "why": "Stealth marked publishable is a review.",
+      "input": {
+        "name": "Stealth",
+        "publishable": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "withheld-other",
+      "skill": "undominated-withheld-provider",
+      "why": "Another literal name is outside this withhold and is not approved by the pass.",
+      "input": {
+        "name": "ExampleProvider",
+        "publishable": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "withheld": false,
+        "name": "ExampleProvider"
+      }
+    },
+    {
+      "id": "withheld-folded",
+      "skill": "undominated-withheld-provider",
+      "why": "A different case is not the literal withheld name.",
+      "input": {
+        "name": "stealth",
+        "publishable": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "withheld": false
+      }
+    },
+    {
+      "id": "withheld-number",
+      "skill": "undominated-withheld-provider",
+      "why": "The JSON number 1 is not the boolean true.",
+      "input": {
+        "name": "Stealth",
+        "publishable": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "announced-null",
+      "skill": "undominated-announced-not-safe",
+      "why": "A null safety claim stays unestablished.",
+      "input": {
+        "label": "none-announced",
+        "claimedSafe": null
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "established": false,
+        "claimedSafe": null
+      }
+    },
+    {
+      "id": "announced-false",
+      "skill": "undominated-announced-not-safe",
+      "why": "A false claim is not rewritten into safe.",
+      "input": {
+        "label": "unrated",
+        "claimedSafe": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "established": false
+      }
+    },
+    {
+      "id": "announced-true",
+      "skill": "undominated-announced-not-safe",
+      "why": "unknown does not establish safe.",
+      "input": {
+        "label": "unknown",
+        "claimedSafe": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "announced-unrated-true",
+      "skill": "undominated-announced-not-safe",
+      "why": "unrated does not establish safe.",
+      "input": {
+        "label": "unrated",
+        "claimedSafe": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "established": false
+      }
+    },
+    {
+      "id": "announced-bad-label",
+      "skill": "undominated-announced-not-safe",
+      "why": "A label outside the three non-verdicts is invalid for this checker.",
+      "input": {
+        "label": "announced-safe",
+        "claimedSafe": null
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "announced-string",
+      "skill": "undominated-announced-not-safe",
+      "why": "A string is not a boolean safety claim.",
+      "input": {
+        "label": "none-announced",
+        "claimedSafe": "true"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "unit-stated",
+      "skill": "undominated-unit-not-scaled",
+      "why": "A stated per-thousand unit with no scale passes.",
+      "input": {
+        "statedUnit": "per_thousand_tokens",
+        "scaledUnit": null,
+        "factor": null
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "statedUnit": "per_thousand_tokens",
+        "factorRefused": false
+      }
+    },
+    {
+      "id": "unit-same",
+      "skill": "undominated-unit-not-scaled",
+      "why": "Repeating the same unit without a factor passes.",
+      "input": {
+        "statedUnit": "per_million_tokens",
+        "scaledUnit": "per_million_tokens",
+        "factor": null
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "factorRefused": false,
+        "scaledUnit": "per_million_tokens"
+      }
+    },
+    {
+      "id": "unit-restated",
+      "skill": "undominated-unit-not-scaled",
+      "why": "A per-thousand invoice is not restated per million, and a factor is not applied.",
+      "input": {
+        "statedUnit": "per_thousand_tokens",
+        "scaledUnit": "per_million_tokens",
+        "factor": "1000"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "factorRefused": true
+      },
+      "expectedCounts": {
+        "issues": 2
+      }
+    },
+    {
+      "id": "unit-factor",
+      "skill": "undominated-unit-not-scaled",
+      "why": "A factor of one on the same unit is still a scale.",
+      "input": {
+        "statedUnit": "per_hour",
+        "scaledUnit": "per_hour",
+        "factor": "1"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "factorRefused": true
+      },
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "unit-zero-factor",
+      "skill": "undominated-unit-not-scaled",
+      "why": "A zero factor is not applied.",
+      "input": {
+        "statedUnit": "per_token",
+        "scaledUnit": null,
+        "factor": "0"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "factorRefused": true
+      }
+    },
+    {
+      "id": "unit-bad",
+      "skill": "undominated-unit-not-scaled",
+      "why": "per_1m is not an allowlisted unit and is not expanded.",
+      "input": {
+        "statedUnit": "per_1m",
+        "scaledUnit": null,
+        "factor": null
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "unit-number",
+      "skill": "undominated-unit-not-scaled",
+      "why": "A JSON number is not a decimal-string factor.",
+      "input": {
+        "statedUnit": "per_thousand_tokens",
+        "scaledUnit": null,
+        "factor": 1000
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    }
   ]
 }

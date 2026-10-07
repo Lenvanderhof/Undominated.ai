@@ -1,0 +1,1450 @@
+{
+  "schemaVersion": 1,
+  "scope": "Synthetic boundary and control cases; no market data",
+  "cases": [
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "model-score-match",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": "100"
+      },
+      "status": "pass",
+      "expect": {
+        "expectedScore": "100"
+      }
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "mode-score-match",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "mode",
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": "95"
+      },
+      "status": "pass",
+      "expect": {
+        "expectedScore": "95"
+      }
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "other-object-score",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": "95"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "model-field-absent-value",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": null,
+        "modeScore": "95",
+        "claimedScore": "95"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "unknown-claim",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": null
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "mode-without-identity",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": null,
+        "claimSubject": "mode",
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": "95"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "unattributed-extra-mode-score",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": null,
+        "claimSubject": "model",
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": "100"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "model-only-known",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": null,
+        "claimSubject": "model",
+        "modelScore": "100",
+        "modeScore": null,
+        "claimedScore": "100"
+      },
+      "status": "pass"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "zero-is-score",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": "0",
+        "modeScore": "95",
+        "claimedScore": "0.00"
+      },
+      "status": "pass"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "equal-values-do-not-change-subject",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "mode",
+        "modelScore": "100",
+        "modeScore": "100.0",
+        "claimedScore": "100"
+      },
+      "status": "pass"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "decimal-tail-is-not-equal",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": "100.0000000000000000000000000001"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "wrong-subject-type",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": [],
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "score-number",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": 100,
+        "modeScore": "95",
+        "claimedScore": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "unknown-mode-score",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "mode",
+        "modelScore": "100",
+        "modeScore": null,
+        "claimedScore": "100"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "subsequence",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": [
+          "a",
+          "c"
+        ]
+      },
+      "status": "pass"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "empty-filter",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": []
+      },
+      "status": "pass",
+      "expect": {
+        "filtered": 0
+      }
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "both-empty",
+      "input": {
+        "unfiltered": [],
+        "filtered": []
+      },
+      "status": "pass"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "empty-population-invented-id",
+      "input": {
+        "unfiltered": [],
+        "filtered": [
+          "a"
+        ]
+      },
+      "status": "review",
+      "expect": {
+        "missing": [
+          "a"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "reordered",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": [
+          "c",
+          "a"
+        ]
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "unknown-id",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": [
+          "a",
+          "d"
+        ]
+      },
+      "status": "review",
+      "expect": {
+        "missing": [
+          "d"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "case-sensitive",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": [
+          "A"
+        ]
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "duplicate-full",
+      "input": {
+        "unfiltered": [
+          "a",
+          "a"
+        ],
+        "filtered": [
+          "a",
+          "c"
+        ]
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "duplicate-filter",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": [
+          "a",
+          "a"
+        ]
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "whitespace-id",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": [
+          " a"
+        ]
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "numeric-id",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": [
+          1
+        ]
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "exact-three-periods",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "pass",
+      "expect": {
+        "recomputedPeriods": "3",
+        "exactRatio": {
+          "numerator": "3",
+          "denominator": "1"
+        }
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "wrong-bill-denominator",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "0.3",
+        "wholeBill": "100"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "zero-saving",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "0",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "review",
+      "expect": {
+        "recomputedPeriods": null,
+        "exactRatio": null
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "zero-over-zero-not-instant",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "0",
+        "savingPerPeriod": "0",
+        "claimedPeriods": "0",
+        "wholeBill": "100"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "zero-cost-positive-saving",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "0",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "0.000",
+        "wholeBill": "100"
+      },
+      "status": "pass",
+      "expect": {
+        "recomputedPeriods": "0"
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "equivalent-decimal-spellings",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "1.0",
+        "savingPerPeriod": "0.5",
+        "claimedPeriods": "2.00",
+        "wholeBill": "100"
+      },
+      "status": "pass",
+      "expect": {
+        "recomputedPeriods": "2"
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "rounded-third-is-not-exact",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "1",
+        "savingPerPeriod": "3",
+        "claimedPeriods": "0.3333333333333333333333333333",
+        "wholeBill": "100"
+      },
+      "status": "review",
+      "expect": {
+        "recomputedPeriods": null,
+        "exactRatio": {
+          "numerator": "1",
+          "denominator": "3"
+        }
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "high-precision-tail-retained",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "1.0000000000000000000000000001",
+        "savingPerPeriod": "1",
+        "claimedPeriods": "1",
+        "wholeBill": "100"
+      },
+      "status": "review",
+      "expect": {
+        "recomputedPeriods": "1.0000000000000000000000000001"
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "high-precision-tail-exact",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "1.0000000000000000000000000001",
+        "savingPerPeriod": "1",
+        "claimedPeriods": "1.0000000000000000000000000001",
+        "wholeBill": "100"
+      },
+      "status": "pass"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "eighth-terminates",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "1",
+        "savingPerPeriod": "8",
+        "claimedPeriods": "0.125",
+        "wholeBill": "100"
+      },
+      "status": "pass",
+      "expect": {
+        "recomputedPeriods": "0.125",
+        "exactRatio": {
+          "numerator": "1",
+          "denominator": "8"
+        }
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "one-twentieth-terminates",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "1",
+        "savingPerPeriod": "20",
+        "claimedPeriods": "0.05",
+        "wholeBill": "100"
+      },
+      "status": "pass",
+      "expect": {
+        "recomputedPeriods": "0.05"
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "sixth-repeats",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "1",
+        "savingPerPeriod": "6",
+        "claimedPeriods": "0.1666666666666666666666666667",
+        "wholeBill": "100"
+      },
+      "status": "review",
+      "expect": {
+        "recomputedPeriods": null,
+        "exactRatio": {
+          "numerator": "1",
+          "denominator": "6"
+        }
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "tiny-decimal-retained",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
+        "savingPerPeriod": "1",
+        "claimedPeriods": "0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
+        "wholeBill": "100"
+      },
+      "status": "pass",
+      "expect": {
+        "recomputedPeriods": "0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001"
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "large-exact-output",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "savingPerPeriod": "1",
+        "claimedPeriods": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "wholeBill": "100"
+      },
+      "status": "pass",
+      "expect": {
+        "recomputedPeriods": "10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "unknown-claim",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": null,
+        "wholeBill": "100"
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "bill-unknown",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "3",
+        "wholeBill": null
+      },
+      "status": "pass"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "currency-number",
+      "input": {
+        "currency": 123,
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "currency-lowercase",
+      "input": {
+        "currency": "usd",
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "json-number",
+      "input": {
+        "currency": "USD",
+        "switchingCost": 30,
+        "savingPerPeriod": "10",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "negative-saving-outside-contract",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "-1",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "non-finite",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "NaN",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "exponent",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "1e2",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "unicode-digits",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "1\u0662",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "leading-zero",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "01",
+        "claimedPeriods": "3",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "number-too-long",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+        "wholeBill": "100"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "all-null",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {
+          "rank": null,
+          "band": null
+        }
+      },
+      "status": "pass",
+      "expect": {
+        "checkedDependents": 2,
+        "residue": []
+      }
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "zero-is-residue",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {
+          "rank": "0"
+        }
+      },
+      "status": "review",
+      "expect": {
+        "residue": [
+          "rank"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "decimal-zero-is-residue",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {
+          "rank": "0.00"
+        }
+      },
+      "status": "review",
+      "expect": {
+        "residue": [
+          "rank"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "value-not-withdrawn",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": "100",
+        "dependents": {
+          "rank": null,
+          "band": null
+        }
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "zero-not-withdrawn",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": "0",
+        "dependents": {
+          "rank": null,
+          "band": null
+        }
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "empty-coverage",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {}
+      },
+      "status": "review",
+      "expect": {
+        "checkedDependents": 0
+      }
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "two-residual-fields",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {
+          "rank": "1",
+          "band": "2"
+        }
+      },
+      "status": "review",
+      "expect": {
+        "residue": [
+          "rank",
+          "band"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "own-dependent",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {
+          "score": null
+        }
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "empty-name",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {
+          "": null
+        }
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "boolean-not-absence",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {
+          "rank": false
+        }
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "missing-collection",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": null
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "one-target",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "concrete": [
+          "synthetic/v1"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "duplicate-consistent-observations",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          },
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          }
+        ]
+      },
+      "status": "pass",
+      "expect": {
+        "concrete": [
+          "synthetic/v1"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "two-identities",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          },
+          {
+            "id": "synthetic/v2",
+            "concrete": true
+          }
+        ]
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "unresolved-candidate-not-ignored",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          },
+          {
+            "id": "synthetic/other",
+            "concrete": false
+          }
+        ]
+      },
+      "status": "review",
+      "expect": {
+        "unresolved": [
+          "synthetic/other"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "conflicting-declarations",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          },
+          {
+            "id": "synthetic/v1",
+            "concrete": false
+          }
+        ]
+      },
+      "status": "review",
+      "expect": {
+        "conflicts": [
+          "synthetic/v1"
+        ]
+      }
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "self-target-with-another",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          },
+          {
+            "id": "synthetic/latest",
+            "concrete": true
+          }
+        ]
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "nonconcrete-self",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/latest",
+            "concrete": false
+          }
+        ]
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "zero-targets",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": []
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "case-distinct-targets",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          },
+          {
+            "id": "synthetic/V1",
+            "concrete": true
+          }
+        ]
+      },
+      "status": "review"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "whitespace-alias",
+      "input": {
+        "alias": " synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          }
+        ]
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "string-boolean",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": "true"
+          }
+        ]
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "null-target",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          null
+        ]
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "non-object-root",
+      "input": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "missing-fields",
+      "input": {},
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "unknown-field",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": "100",
+        "modeScore": "95",
+        "claimedScore": "100",
+        "unreviewed": true
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "malformed-json",
+      "raw": "{",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "duplicate-root-key",
+      "raw": "{\"a\":1,\"a\":2}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "duplicate-nested-key",
+      "raw": "{\"outer\":{\"a\":1,\"a\":2}}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "non-json-constant",
+      "raw": "{\"a\":NaN}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "bad-utf8",
+      "hex": "ff",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "missing-cli-input",
+      "args": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "unknown-cli-flag",
+      "args": [
+        "--unknown"
+      ],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "non-object-root",
+      "input": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "missing-fields",
+      "input": {},
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "unknown-field",
+      "input": {
+        "unfiltered": [
+          "a",
+          "b",
+          "c"
+        ],
+        "filtered": [
+          "a",
+          "c"
+        ],
+        "unreviewed": true
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "malformed-json",
+      "raw": "{",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "duplicate-root-key",
+      "raw": "{\"a\":1,\"a\":2}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "duplicate-nested-key",
+      "raw": "{\"outer\":{\"a\":1,\"a\":2}}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "non-json-constant",
+      "raw": "{\"a\":NaN}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "bad-utf8",
+      "hex": "ff",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "missing-cli-input",
+      "args": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-filter-invariance",
+      "name": "unknown-cli-flag",
+      "args": [
+        "--unknown"
+      ],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "non-object-root",
+      "input": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "missing-fields",
+      "input": {},
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "unknown-field",
+      "input": {
+        "currency": "USD",
+        "switchingCost": "30",
+        "savingPerPeriod": "10",
+        "claimedPeriods": "3",
+        "wholeBill": "100",
+        "unreviewed": true
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "malformed-json",
+      "raw": "{",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "duplicate-root-key",
+      "raw": "{\"a\":1,\"a\":2}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "duplicate-nested-key",
+      "raw": "{\"outer\":{\"a\":1,\"a\":2}}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "non-json-constant",
+      "raw": "{\"a\":NaN}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "bad-utf8",
+      "hex": "ff",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "missing-cli-input",
+      "args": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-payback-basis",
+      "name": "unknown-cli-flag",
+      "args": [
+        "--unknown"
+      ],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "non-object-root",
+      "input": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "missing-fields",
+      "input": {},
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "unknown-field",
+      "input": {
+        "withdrawnField": "score",
+        "withdrawnValue": null,
+        "dependents": {
+          "rank": null,
+          "band": null
+        },
+        "unreviewed": true
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "malformed-json",
+      "raw": "{",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "duplicate-root-key",
+      "raw": "{\"a\":1,\"a\":2}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "duplicate-nested-key",
+      "raw": "{\"outer\":{\"a\":1,\"a\":2}}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "non-json-constant",
+      "raw": "{\"a\":NaN}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "bad-utf8",
+      "hex": "ff",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "missing-cli-input",
+      "args": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "unknown-cli-flag",
+      "args": [
+        "--unknown"
+      ],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "non-object-root",
+      "input": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "missing-fields",
+      "input": {},
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "unknown-field",
+      "input": {
+        "alias": "synthetic/latest",
+        "targets": [
+          {
+            "id": "synthetic/v1",
+            "concrete": true
+          }
+        ],
+        "unreviewed": true
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "malformed-json",
+      "raw": "{",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "duplicate-root-key",
+      "raw": "{\"a\":1,\"a\":2}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "duplicate-nested-key",
+      "raw": "{\"outer\":{\"a\":1,\"a\":2}}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "non-json-constant",
+      "raw": "{\"a\":NaN}",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "bad-utf8",
+      "hex": "ff",
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "missing-cli-input",
+      "args": [],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-alias-resolution",
+      "name": "unknown-cli-flag",
+      "args": [
+        "--unknown"
+      ],
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-serving-attribution",
+      "name": "explicit-observation-required",
+      "input": {
+        "model": "synthetic/model",
+        "servingMode": "batch",
+        "claimSubject": "model",
+        "modelScore": "100",
+        "modeScore": "95"
+      },
+      "status": "invalid"
+    },
+    {
+      "skill": "undominated-withdrawal-residue",
+      "name": "explicit-observation-required",
+      "input": {
+        "withdrawnField": "score",
+        "dependents": {
+          "rank": null,
+          "band": null
+        }
+      },
+      "status": "invalid"
+    }
+  ]
+}

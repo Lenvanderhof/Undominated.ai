@@ -1,0 +1,7 @@
+{
+  "currency": "USD",
+  "switchingCost": "30",
+  "savingPerPeriod": "10",
+  "claimedPeriods": "3",
+  "wholeBill": "100"
+}

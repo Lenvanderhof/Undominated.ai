@@ -61,3 +61,5 @@ jobs:
           PY
       - name: Source skill boundary and control cases
         run: python3 -B scripts/source-skill-boundaries.test.py
+      - name: Attribution, filtering, payback, withdrawal and alias boundaries
+        run: python3 -B scripts/five-original-boundaries.test.py

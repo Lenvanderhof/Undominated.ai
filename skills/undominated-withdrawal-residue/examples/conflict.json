@@ -1,0 +1,8 @@
+{
+  "withdrawnField": "arenaScore",
+  "dependents": {
+    "rank": "4",
+    "band": null
+  },
+  "withdrawnValue": null
+}

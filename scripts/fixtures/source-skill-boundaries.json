@@ -2688,6 +2688,123 @@
       "expectedStatuses": [
         "invalid"
       ]
+    },
+    {
+      "id": "spelled-meter-matched-words",
+      "skill": "undominated-spelled-meter",
+      "why": "USD and the word million in the excerpt support that claim. The excerpt is not copied out.",
+      "input": {
+        "label": "synthetic spelled words, not a vendor quote",
+        "claims": [
+          {
+            "id": "usd-million",
+            "currency": "USD",
+            "unit": "million",
+            "excerpt": "All prices are in USD per million tokens."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "claims.0.form": "matched",
+        "claims.0.currencyForm": "spelled",
+        "claims.0.unitForm": "spelled"
+      }
+    },
+    {
+      "id": "spelled-meter-symbol-and-1m",
+      "skill": "undominated-spelled-meter",
+      "why": "A dollar sign is not USD and 1M is not the word million.",
+      "input": {
+        "label": "synthetic symbols, not a vendor quote",
+        "claims": [
+          {
+            "id": "symbol-row",
+            "currency": "USD",
+            "unit": "million",
+            "excerpt": "Prices are $ per 1M tokens."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "unsupported",
+        "claims.0.currencyForm": "absent",
+        "claims.0.unitForm": "absent"
+      },
+      "expectedCounts": {
+        "issues": 2
+      }
+    },
+    {
+      "id": "spelled-meter-yuan-character",
+      "skill": "undominated-spelled-meter",
+      "why": "The character \u5143 does not spell CNY. The word million still counts.",
+      "input": {
+        "label": "synthetic yuan character, not a vendor quote",
+        "claims": [
+          {
+            "id": "yuan-row",
+            "currency": "CNY",
+            "unit": "million",
+            "excerpt": "\u5355\u4f4d\u767e\u4e07 tokens\uff0c\u5355\u5143\u683c\u4f7f\u7528\u5143\u3002"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "unsupported",
+        "claims.0.currencyForm": "absent",
+        "claims.0.unitForm": "spelled"
+      },
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "spelled-meter-empty-excerpt",
+      "skill": "undominated-spelled-meter",
+      "why": "An empty excerpt is invalid input, not a quiet pass.",
+      "input": {
+        "label": "synthetic empty excerpt, not a vendor quote",
+        "claims": [
+          {
+            "id": "blank",
+            "currency": "USD",
+            "unit": "million",
+            "excerpt": "   "
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "spelled-meter-amount-field",
+      "skill": "undominated-spelled-meter",
+      "why": "An amount field is invalid so the checker cannot look like it priced the excerpt.",
+      "input": {
+        "label": "synthetic amount field, not a vendor quote",
+        "claims": [
+          {
+            "id": "priced",
+            "currency": "GBP",
+            "unit": "thousand",
+            "excerpt": "Prices are in GBP per thousand tokens.",
+            "amount": "1.00"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
     }
   ]
 }

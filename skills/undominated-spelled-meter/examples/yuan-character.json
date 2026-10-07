@@ -1,0 +1,11 @@
+{
+  "label": "the character 元 is not CNY",
+  "claims": [
+    {
+      "id": "yuan-row",
+      "currency": "CNY",
+      "unit": "million",
+      "excerpt": "单位百万 tokens，单元格使用元。"
+    }
+  ]
+}

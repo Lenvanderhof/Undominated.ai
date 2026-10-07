@@ -1,0 +1,23 @@
+{
+  "label": "synthetic excerpts, not a vendor quote",
+  "claims": [
+    {
+      "id": "usd-million",
+      "currency": "USD",
+      "unit": "million",
+      "excerpt": "All prices are in USD per million tokens."
+    },
+    {
+      "id": "cny-characters",
+      "currency": "CNY",
+      "unit": "million",
+      "excerpt": "价格以人民币计，单位是百万 tokens。"
+    },
+    {
+      "id": "eur-thousand",
+      "currency": "EUR",
+      "unit": "thousand",
+      "excerpt": "The invoice unit is EUR per thousand tokens."
+    }
+  ]
+}

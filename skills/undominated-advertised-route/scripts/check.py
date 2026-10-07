@@ -11,6 +11,18 @@ LOCALE = re.compile(r"^[a-z]{2}$")
 ROUTE = re.compile(r"^/(?:[A-Za-z0-9][A-Za-z0-9._-]*/)*$")
 
 
+def https_origin(parts):
+    # A non-empty netloc alone accepted absent hosts and ports that no URL client can use.
+    if parts.scheme != "https" or not parts.hostname:
+        raise ValueError("URL must have an explicit https scheme and hostname")
+    if parts.username is not None or parts.password is not None:
+        raise ValueError("credentials are not permitted in a crawl-list origin or URL")
+    if parts.netloc.endswith(":"):
+        raise ValueError("an explicit port separator must be followed by a numeric port")
+    parts.port  # urllib validates port syntax and the allowed numeric range on access.
+    return f"{parts.scheme}://{parts.netloc}"
+
+
 def file_for(pathname, markdown):
     name = "index.md" if markdown else "index.html"
     if pathname == "/":
@@ -21,9 +33,9 @@ def file_for(pathname, markdown):
 def check(data):
     site = data.get("site")
     parsed_site = urlsplit(site) if isinstance(site, str) else urlsplit("")
-    if parsed_site.scheme != "https" or not parsed_site.netloc or parsed_site.path not in ("", "/") or parsed_site.query or parsed_site.fragment:
+    origin = https_origin(parsed_site)
+    if parsed_site.path not in ("", "/") or parsed_site.query or parsed_site.fragment:
         raise ValueError("site must be an https origin")
-    origin = f"{parsed_site.scheme}://{parsed_site.netloc}"
     english = data.get("englishOnly")
     locales = data.get("locales")
     advertised = data.get("advertised")
@@ -47,11 +59,10 @@ def check(data):
             raise ValueError("each advertised URL must be unique text")
         seen.add(url)
         parts = urlsplit(url)
-        if parts.scheme != "https" or not parts.netloc:
-            raise ValueError(f"advertised URL must be https: {url}")
+        advertised_origin = https_origin(parts)
         row = {"url": url, "serves": None}
         local = []
-        if f"{parts.scheme}://{parts.netloc}" != origin:
+        if advertised_origin != origin:
             local.append("off-origin URL does not belong in this site's crawl list")
         elif parts.fragment:
             local.append("a fragment is not a separate page")

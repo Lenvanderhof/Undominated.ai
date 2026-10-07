@@ -4,7 +4,7 @@ description: Refuse a crawl-list URL whose English-only path gained a locale pre
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Advertised-route audit
@@ -33,7 +33,9 @@ Exit codes: `0` every supplied URL maps to a supplied file and no English-only p
 
 ## Input contract
 
-`site` is an `https` origin. `englishOnly` is a non-empty list of unique paths that end with `/`. `locales` is a non-empty list of unique two-letter codes. `advertised` is an array of unique `https` URLs. `files` is an array of unique relative paths with no `..` segment.
+`site` is an `https` origin. Both the origin and every advertised URL require a hostname, no username/password, and a valid numeric port in `0..65535` when present. An omitted port is allowed. `englishOnly` is a non-empty list of unique paths that end with `/`. `locales` is a non-empty list of unique two-letter codes. `advertised` is an array of unique `https` URLs. `files` is an array of unique relative paths with no `..` segment.
+
+Version 1.0.1 rejects missing hosts, malformed/out-of-range ports and embedded credentials that the original source-only checker accepted. This is local URL-structure validation, not a DNS, TLS or live-response check.
 
 ## Deliverable and limits
 

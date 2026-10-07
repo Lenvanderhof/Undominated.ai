@@ -2383,6 +2383,124 @@
         "invalid",
         "review"
       ]
+    },
+    {
+      "id": "route-invalid-port",
+      "skill": "undominated-advertised-route",
+      "why": "An HTTPS origin requires a hostname, valid port and no credentials; a netloc alone is not sufficient.",
+      "input": {
+        "site": "https://example.test:not-a-port",
+        "englishOnly": [
+          "/docs/"
+        ],
+        "locales": [
+          "nl"
+        ],
+        "advertised": [
+          "https://example.test:not-a-port/docs/"
+        ],
+        "files": [
+          "docs/index.html"
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "route-missing-host",
+      "skill": "undominated-advertised-route",
+      "why": "An HTTPS origin requires a hostname, valid port and no credentials; a netloc alone is not sufficient.",
+      "input": {
+        "site": "https://:443",
+        "englishOnly": [
+          "/docs/"
+        ],
+        "locales": [
+          "nl"
+        ],
+        "advertised": [
+          "https://:443/docs/"
+        ],
+        "files": [
+          "docs/index.html"
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "route-credentials-not-origin",
+      "skill": "undominated-advertised-route",
+      "why": "An HTTPS origin requires a hostname, valid port and no credentials; a netloc alone is not sufficient.",
+      "input": {
+        "site": "https://user:password@example.test",
+        "englishOnly": [
+          "/docs/"
+        ],
+        "locales": [
+          "nl"
+        ],
+        "advertised": [
+          "https://user:password@example.test/docs/"
+        ],
+        "files": [
+          "docs/index.html"
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "route-explicit-valid-port-control",
+      "skill": "undominated-advertised-route",
+      "why": "An explicit valid HTTPS origin port remains accepted when the advertised URL and file agree.",
+      "input": {
+        "site": "https://example.test:8443",
+        "englishOnly": [
+          "/docs/"
+        ],
+        "locales": [
+          "nl"
+        ],
+        "advertised": [
+          "https://example.test:8443/docs/"
+        ],
+        "files": [
+          "docs/index.html"
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "rows.0.serves": "docs/index.html"
+      }
+    },
+    {
+      "id": "route-empty-port",
+      "skill": "undominated-advertised-route",
+      "why": "An explicit port separator without a numeric port violates the declared origin contract.",
+      "input": {
+        "site": "https://example.test:",
+        "englishOnly": [
+          "/docs/"
+        ],
+        "locales": [
+          "nl"
+        ],
+        "advertised": [
+          "https://example.test:/docs/"
+        ],
+        "files": [
+          "docs/index.html"
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
     }
   ]
 }

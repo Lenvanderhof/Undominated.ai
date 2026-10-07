@@ -1,0 +1,5 @@
+{
+  "label": "a schema role is not a rate claim",
+  "role": "schema",
+  "excerpt": "The pricing object values are in a documented unit."
+}

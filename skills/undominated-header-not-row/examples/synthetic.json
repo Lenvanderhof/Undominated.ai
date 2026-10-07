@@ -1,0 +1,11 @@
+{
+  "label": "synthetic units, not a price",
+  "headerUnit": "per_million_tokens",
+  "rows": [
+    {
+      "id": "row",
+      "claimedUnit": "per_thousand_tokens",
+      "rowUnit": "per_thousand_tokens"
+    }
+  ]
+}

@@ -3346,6 +3346,392 @@
       "expectedStatuses": [
         "invalid"
       ]
+    },
+    {
+      "id": "final-path-trailing-slash",
+      "skill": "undominated-final-path",
+      "why": "One trailing slash does not make a different path.",
+      "input": {
+        "label": "synthetic paths, not a fetch",
+        "responses": [
+          {
+            "id": "slash",
+            "requestedPath": "/docs/pricing/",
+            "finalPath": "/docs/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "responses.0.form": "same",
+        "responses.0.finalPath": "/docs/pricing"
+      }
+    },
+    {
+      "id": "final-path-homepage",
+      "skill": "undominated-final-path",
+      "why": "The site root is not the pricing path that was requested.",
+      "input": {
+        "label": "a homepage is not the requested path",
+        "responses": [
+          {
+            "id": "home",
+            "requestedPath": "/pricing",
+            "finalPath": "/"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "responses.0.form": "redirected",
+        "responses.0.finalPath": "/"
+      }
+    },
+    {
+      "id": "final-path-case",
+      "skill": "undominated-final-path",
+      "why": "Path case is not folded.",
+      "input": {
+        "label": "case is a different path",
+        "responses": [
+          {
+            "id": "case",
+            "requestedPath": "/Pricing",
+            "finalPath": "/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "responses.0.form": "redirected"
+      }
+    },
+    {
+      "id": "final-path-query",
+      "skill": "undominated-final-path",
+      "why": "A query string is invalid. The checker does not strip one into a path.",
+      "input": {
+        "label": "a query is not a path",
+        "responses": [
+          {
+            "id": "query",
+            "requestedPath": "/pricing?plan=a",
+            "finalPath": "/pricing"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "final-path-dot",
+      "skill": "undominated-final-path",
+      "why": "A dot segment is not resolved into the requested path.",
+      "input": {
+        "label": "dot segments are invalid",
+        "responses": [
+          {
+            "id": "dot",
+            "requestedPath": "/pricing/../secret",
+            "finalPath": "/secret"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "final-path-amount",
+      "skill": "undominated-final-path",
+      "why": "An amount field is invalid. Paths are not prices.",
+      "input": {
+        "label": "an amount is not a path",
+        "responses": [
+          {
+            "id": "amount",
+            "requestedPath": "/pricing",
+            "finalPath": "/pricing",
+            "amount": "1"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "status-ok",
+      "skill": "undominated-status-not-page",
+      "why": "Integer 200 supports a page-read and nothing else.",
+      "input": {
+        "label": "synthetic status, not a fetch",
+        "role": "page-read",
+        "status": 200
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "form": "read",
+        "httpStatus": 200
+      }
+    },
+    {
+      "id": "status-redirect",
+      "skill": "undominated-status-not-page",
+      "why": "A 308 did not return the page.",
+      "input": {
+        "label": "a redirect did not return the page",
+        "role": "page-read",
+        "status": 308
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "form": "not-read",
+        "httpStatus": 308
+      }
+    },
+    {
+      "id": "status-quote",
+      "skill": "undominated-status-not-page",
+      "why": "A 200 status does not support a quote.",
+      "input": {
+        "label": "a status is not a quote",
+        "role": "quote",
+        "status": 200
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "form": "not-claimed"
+      }
+    },
+    {
+      "id": "status-bool",
+      "skill": "undominated-status-not-page",
+      "why": "A boolean is not coerced into a status integer.",
+      "input": {
+        "label": "a boolean is not a status",
+        "role": "page-read",
+        "status": true
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "status-string",
+      "skill": "undominated-status-not-page",
+      "why": "A digit string is not an integer status.",
+      "input": {
+        "label": "a digit string is not a status",
+        "role": "page-read",
+        "status": "200"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "schema-plain",
+      "skill": "undominated-schema-not-quote",
+      "why": "An excerpt without schema wording can support a model-rate role. It is still not a quote by itself.",
+      "input": {
+        "label": "synthetic excerpt, not a rate card",
+        "role": "model-rate",
+        "excerpt": "One model has its own meter on this card."
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "form": "plain",
+        "schemaWording": false
+      }
+    },
+    {
+      "id": "schema-object",
+      "skill": "undominated-schema-not-quote",
+      "why": "A pricing-object sentence is a field description.",
+      "input": {
+        "label": "a field description is not a model rate",
+        "role": "model-rate",
+        "excerpt": "The pricing object values are in a documented unit."
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "form": "schema",
+        "schemaWording": true
+      }
+    },
+    {
+      "id": "schema-denial",
+      "skill": "undominated-schema-not-quote",
+      "why": "Negation is not parsed. The word schema still counts.",
+      "input": {
+        "label": "negation is not parsed",
+        "role": "model-rate",
+        "excerpt": "This sentence is not a schema."
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "form": "schema"
+      }
+    },
+    {
+      "id": "schema-role",
+      "skill": "undominated-schema-not-quote",
+      "why": "A schema role is not a rate claim, even when the wording matches.",
+      "input": {
+        "label": "a schema role is not a rate claim",
+        "role": "schema",
+        "excerpt": "The pricing object values are in a documented unit."
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "form": "not-claimed",
+        "schemaWording": true
+      }
+    },
+    {
+      "id": "schema-amount",
+      "skill": "undominated-schema-not-quote",
+      "why": "An amount field is invalid. The excerpt is not priced.",
+      "input": {
+        "label": "an amount is not wording",
+        "role": "model-rate",
+        "excerpt": "One model has its own meter on this card.",
+        "amount": "1"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "header-row",
+      "skill": "undominated-header-not-row",
+      "why": "The row's own unit supports the claim. The display header is ignored.",
+      "input": {
+        "label": "synthetic units, not a price",
+        "headerUnit": "per_million_tokens",
+        "rows": [
+          {
+            "id": "row",
+            "claimedUnit": "per_thousand_tokens",
+            "rowUnit": "per_thousand_tokens"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "headerIgnored": true,
+        "rows.0.form": "row",
+        "rows.0.supportedUnit": "per_thousand_tokens"
+      }
+    },
+    {
+      "id": "header-borrowed",
+      "skill": "undominated-header-not-row",
+      "why": "A blank row unit cannot be filled from the header, even when the claim matches the header.",
+      "input": {
+        "label": "a header cannot fill a blank row",
+        "headerUnit": "per_million_tokens",
+        "rows": [
+          {
+            "id": "blank",
+            "claimedUnit": "per_million_tokens",
+            "rowUnit": null
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "headerIgnored": true,
+        "rows.0.form": "borrowed",
+        "rows.0.supportedUnit": null
+      }
+    },
+    {
+      "id": "header-mismatch",
+      "skill": "undominated-header-not-row",
+      "why": "A claim that follows the header against the row unit is review.",
+      "input": {
+        "label": "a claim that follows the header against the row is review",
+        "headerUnit": "per_million_tokens",
+        "rows": [
+          {
+            "id": "mixed",
+            "claimedUnit": "per_million_tokens",
+            "rowUnit": "per_thousand_tokens"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "rows.0.form": "mismatch"
+      }
+    },
+    {
+      "id": "header-bad-unit",
+      "skill": "undominated-header-not-row",
+      "why": "per M is not an allowlisted unit and is not expanded.",
+      "input": {
+        "label": "per M is not an allowlisted unit",
+        "headerUnit": "per_1m",
+        "rows": [
+          {
+            "id": "bad",
+            "claimedUnit": "per_token",
+            "rowUnit": "per_token"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "header-amount",
+      "skill": "undominated-header-not-row",
+      "why": "An amount field is invalid. Units are not prices.",
+      "input": {
+        "label": "an amount is not a unit",
+        "headerUnit": "per_million_tokens",
+        "rows": [
+          {
+            "id": "amount",
+            "claimedUnit": "per_token",
+            "rowUnit": "per_token",
+            "amount": "1"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
     }
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "label": "synthetic paths, not a fetch",
+  "responses": [
+    {
+      "id": "slash",
+      "requestedPath": "/docs/pricing/",
+      "finalPath": "/docs/pricing"
+    },
+    {
+      "id": "root",
+      "requestedPath": "/",
+      "finalPath": "/"
+    }
+  ]
+}

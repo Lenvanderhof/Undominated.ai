@@ -1,0 +1,10 @@
+{
+  "label": "a query is not a path",
+  "responses": [
+    {
+      "id": "query",
+      "requestedPath": "/pricing?plan=a",
+      "finalPath": "/pricing"
+    }
+  ]
+}

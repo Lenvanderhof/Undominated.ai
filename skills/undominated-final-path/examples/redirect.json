@@ -1,0 +1,10 @@
+{
+  "label": "a homepage is not the requested path",
+  "responses": [
+    {
+      "id": "home",
+      "requestedPath": "/pricing",
+      "finalPath": "/"
+    }
+  ]
+}

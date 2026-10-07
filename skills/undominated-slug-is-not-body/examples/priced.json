@@ -1,0 +1,12 @@
+{
+  "label": "synthetic amount field, not a vendor quote",
+  "claims": [
+    {
+      "id": "priced",
+      "asserts": "both",
+      "excerpt": "Prices are in USD per million tokens.",
+      "locator": "https://example.invalid/pricing",
+      "amount": "1.00"
+    }
+  ]
+}

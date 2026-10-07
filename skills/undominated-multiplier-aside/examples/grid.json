@@ -1,0 +1,10 @@
+{
+  "label": "a pixel grid is not a multiplier token",
+  "claims": [
+    {
+      "id": "grid",
+      "role": "base",
+      "excerpt": "The image note mentions a 128x128 grid and one on-demand rate."
+    }
+  ]
+}

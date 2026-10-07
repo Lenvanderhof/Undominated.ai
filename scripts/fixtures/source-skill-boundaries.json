@@ -2805,6 +2805,547 @@
       "expectedStatuses": [
         "invalid"
       ]
+    },
+    {
+      "id": "single-base-cache-split",
+      "skill": "undominated-single-base",
+      "why": "Cache hit and cache miss are not one base rate.",
+      "input": {
+        "label": "cache hit and cache miss are not one base",
+        "claims": [
+          {
+            "id": "collapsed",
+            "role": "single-base",
+            "excerpt": "The table lists cache hit and cache miss on separate rows."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "split",
+        "claims.0.splits.0": "cache"
+      },
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "single-base-off-peak-word",
+      "skill": "undominated-single-base",
+      "why": "The word peak inside off-peak is not a second side.",
+      "input": {
+        "label": "peak inside off-peak is not a second side",
+        "claims": [
+          {
+            "id": "off-peak-only",
+            "role": "single-base",
+            "excerpt": "The note describes the off-peak window only."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "claims.0.form": "unsplit",
+        "claims.0.splits": []
+      }
+    },
+    {
+      "id": "single-base-schedule-split",
+      "skill": "undominated-single-base",
+      "why": "Off-peak and peak are not one base rate.",
+      "input": {
+        "label": "peak and off-peak are not one base",
+        "claims": [
+          {
+            "id": "both-windows",
+            "role": "single-base",
+            "excerpt": "Off-peak is half of the peak rate."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "split",
+        "claims.0.splits.0": "schedule"
+      },
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "single-base-amount-field",
+      "skill": "undominated-single-base",
+      "why": "An amount field is invalid so the checker cannot look like it priced the excerpt.",
+      "input": {
+        "label": "synthetic amount field, not a vendor quote",
+        "claims": [
+          {
+            "id": "priced",
+            "role": "single-base",
+            "excerpt": "The listed rate is one on-demand token rate.",
+            "price": "1.00"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "source-pin-folded-hex",
+      "skill": "undominated-source-pin",
+      "why": "A mixed-case 40-hex revision stays pinned and is reported in lowercase. The ref stays a label.",
+      "input": {
+        "label": "synthetic revisions, not a repository review",
+        "sources": [
+          {
+            "id": "full",
+            "revision": "0123456789abcdef0123456789ABCDEF01234567",
+            "ref": "v7"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "sources.0.form": "pinned",
+        "sources.0.revision": "0123456789abcdef0123456789abcdef01234567",
+        "sources.0.ref": "v7"
+      }
+    },
+    {
+      "id": "source-pin-branch",
+      "skill": "undominated-source-pin",
+      "why": "A tag name is not a 40-hex pin.",
+      "input": {
+        "label": "a branch name is not a pin",
+        "sources": [
+          {
+            "id": "moving",
+            "revision": "v7",
+            "ref": "v7"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "sources.0.form": "unpinned",
+        "sources.0.revision": null,
+        "sources.0.ref": "v7"
+      },
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "source-pin-short",
+      "skill": "undominated-source-pin",
+      "why": "A 16-hex prefix is not a pin.",
+      "input": {
+        "label": "a short SHA is not a pin",
+        "sources": [
+          {
+            "id": "short",
+            "revision": "0123456789abcdef",
+            "ref": "main"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "sources.0.form": "unpinned",
+        "sources.0.revision": null
+      }
+    },
+    {
+      "id": "source-pin-missing-revision",
+      "skill": "undominated-source-pin",
+      "why": "A missing revision is invalid, not an unpinned review.",
+      "input": {
+        "label": "no revision key",
+        "sources": [
+          {
+            "id": "blank",
+            "ref": "HEAD"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "slug-locator-only",
+      "skill": "undominated-slug-is-not-body",
+      "why": "Words in a locator do not support a body claim.",
+      "input": {
+        "label": "words in the locator are not the body",
+        "claims": [
+          {
+            "id": "slug",
+            "asserts": "both",
+            "excerpt": "See the table.",
+            "locator": "https://example.invalid/pricing-details-usd per million tokens"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "unsupported",
+        "claims.0.currencyForm": "absent",
+        "claims.0.quantityForm": "absent",
+        "claims.0.locatorIgnored": true
+      }
+    },
+    {
+      "id": "slug-symbols-with-words-in-locator",
+      "skill": "undominated-slug-is-not-body",
+      "why": "A dollar sign and 1M are not spelled words, even when the locator spells them.",
+      "input": {
+        "label": "symbols in the body and words in the slug",
+        "claims": [
+          {
+            "id": "symbol-row",
+            "asserts": "both",
+            "excerpt": "Prices are $ per 1M tokens.",
+            "locator": "USD per million tokens"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "unsupported",
+        "claims.0.currencyForm": "absent",
+        "claims.0.quantityForm": "absent"
+      }
+    },
+    {
+      "id": "slug-empty-excerpt",
+      "skill": "undominated-slug-is-not-body",
+      "why": "An empty excerpt is invalid input.",
+      "input": {
+        "label": "synthetic empty excerpt, not a vendor quote",
+        "claims": [
+          {
+            "id": "blank",
+            "asserts": "currency",
+            "excerpt": "   ",
+            "locator": "https://example.invalid/pricing-details-usd"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "slug-amount-field",
+      "skill": "undominated-slug-is-not-body",
+      "why": "An amount field is invalid so the checker cannot look like it priced the excerpt.",
+      "input": {
+        "label": "synthetic amount field, not a vendor quote",
+        "claims": [
+          {
+            "id": "priced",
+            "asserts": "both",
+            "excerpt": "Prices are in USD per million tokens.",
+            "amount": "1.00"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "multiplier-priority",
+      "skill": "undominated-multiplier-aside",
+      "why": "A multiplier is not the base rate. The digits are not read as a price.",
+      "input": {
+        "label": "a multiplier is not the base rate",
+        "claims": [
+          {
+            "id": "priority",
+            "role": "base",
+            "excerpt": "Priority is a 2x multiplier on the on-demand rate."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "multiplied"
+      },
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "multiplier-denial",
+      "skill": "undominated-multiplier-aside",
+      "why": "Negation is not parsed. Naming a multiplier still needs review.",
+      "input": {
+        "label": "negation is not parsed",
+        "claims": [
+          {
+            "id": "denial",
+            "role": "base",
+            "excerpt": "This on-demand rate is not a multiplier."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "multiplied"
+      }
+    },
+    {
+      "id": "multiplier-pixel-grid",
+      "skill": "undominated-multiplier-aside",
+      "why": "A digit glued inside 128x128 is not a multiplier token.",
+      "input": {
+        "label": "a pixel grid is not a multiplier token",
+        "claims": [
+          {
+            "id": "grid",
+            "role": "base",
+            "excerpt": "The image note mentions a 128x128 grid and one on-demand rate."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "claims.0.form": "plain"
+      }
+    },
+    {
+      "id": "multiplier-amount-field",
+      "skill": "undominated-multiplier-aside",
+      "why": "An amount field is invalid so the checker cannot look like it priced the excerpt.",
+      "input": {
+        "label": "synthetic amount field, not a vendor quote",
+        "claims": [
+          {
+            "id": "priced",
+            "role": "base",
+            "excerpt": "The listed rate is the on-demand token rate.",
+            "price": "1.00"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "indicative-varies-by-country",
+      "skill": "undominated-indicative-rate",
+      "why": "A country split is not one global rate.",
+      "input": {
+        "label": "a country split is not one global rate",
+        "claims": [
+          {
+            "id": "regions",
+            "role": "global",
+            "excerpt": "Prices vary by country."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "qualified"
+      }
+    },
+    {
+      "id": "indicative-floor",
+      "skill": "undominated-indicative-rate",
+      "why": "A starting-at floor is not one global rate.",
+      "input": {
+        "label": "a floor is not one global rate",
+        "claims": [
+          {
+            "id": "floor",
+            "role": "global",
+            "excerpt": "Plans start at a monthly fee."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "qualified"
+      }
+    },
+    {
+      "id": "indicative-list-beside-credit",
+      "skill": "undominated-indicative-rate",
+      "why": "A list price beside a credit is not one global rate.",
+      "input": {
+        "label": "a list price beside a credit is not one global rate",
+        "claims": [
+          {
+            "id": "credit",
+            "role": "global",
+            "excerpt": "The list price is separate from the new-user credit."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "claims.0.form": "qualified"
+      }
+    },
+    {
+      "id": "indicative-list-alone",
+      "skill": "undominated-indicative-rate",
+      "why": "The words list price, with no promotion beside them, are not a qualifier.",
+      "input": {
+        "label": "list price alone is not a qualifier",
+        "claims": [
+          {
+            "id": "list-alone",
+            "role": "global",
+            "excerpt": "The list price is the on-demand rate."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "claims.0.form": "plain"
+      }
+    },
+    {
+      "id": "indicative-amount-field",
+      "skill": "undominated-indicative-rate",
+      "why": "An amount field is invalid so the checker cannot look like it priced the excerpt.",
+      "input": {
+        "label": "synthetic amount field, not a vendor quote",
+        "claims": [
+          {
+            "id": "priced",
+            "role": "global",
+            "excerpt": "The page lists one on-demand rate for this model.",
+            "price": "1.00"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "final-host-folded",
+      "skill": "undominated-final-host",
+      "why": "Case and one trailing dot do not make a different host. www is not involved.",
+      "input": {
+        "label": "synthetic hosts, not a fetch",
+        "responses": [
+          {
+            "id": "folded",
+            "requestedHost": "Example.COM.",
+            "finalHost": "example.com"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "responses.0.form": "same",
+        "responses.0.requestedHost": "example.com",
+        "responses.0.finalHost": "example.com"
+      }
+    },
+    {
+      "id": "final-host-www",
+      "skill": "undominated-final-host",
+      "why": "www is a different host and is not stripped.",
+      "input": {
+        "label": "www is a different host",
+        "responses": [
+          {
+            "id": "www",
+            "requestedHost": "example.com",
+            "finalHost": "www.example.com"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "responses.0.form": "redirected",
+        "responses.0.finalHost": "www.example.com"
+      }
+    },
+    {
+      "id": "final-host-other-name",
+      "skill": "undominated-final-host",
+      "why": "A different host is not the vendor that was requested.",
+      "input": {
+        "label": "a different registrable name is a redirect",
+        "responses": [
+          {
+            "id": "other",
+            "requestedHost": "api.vendor.example",
+            "finalHost": "login.other.example"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "responses.0.form": "redirected"
+      },
+      "expectedCounts": {
+        "issues": 1
+      }
+    },
+    {
+      "id": "final-host-url",
+      "skill": "undominated-final-host",
+      "why": "A URL is invalid input. The checker does not parse one into a host.",
+      "input": {
+        "label": "a URL is not a hostname",
+        "responses": [
+          {
+            "id": "url",
+            "requestedHost": "https://example.com/pricing",
+            "finalHost": "example.com"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
     }
   ]
 }

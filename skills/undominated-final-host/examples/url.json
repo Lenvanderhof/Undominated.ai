@@ -1,0 +1,10 @@
+{
+  "label": "a URL is not a hostname",
+  "responses": [
+    {
+      "id": "url",
+      "requestedHost": "https://example.com/pricing",
+      "finalHost": "example.com"
+    }
+  ]
+}

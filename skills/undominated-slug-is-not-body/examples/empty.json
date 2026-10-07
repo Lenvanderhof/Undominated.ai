@@ -1,0 +1,11 @@
+{
+  "label": "synthetic empty excerpt, not a vendor quote",
+  "claims": [
+    {
+      "id": "blank",
+      "asserts": "currency",
+      "excerpt": "   ",
+      "locator": "https://example.invalid/pricing-details-usd"
+    }
+  ]
+}

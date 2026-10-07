@@ -60,6 +60,8 @@ A later source-only commit, [`c47ac12`](https://github.com/Lenvanderhof/Undomina
 
 Subsequent source-only additions, [`meter-scope`](https://github.com/Lenvanderhof/Undominated.ai/commit/60f14150d8c3301d7a62e760bd1d60b503d0b9be) and [`hint-versus-handler`](https://github.com/Lenvanderhof/Undominated.ai/commit/51d4df079ebfa21a5e2dfa1c30c818522b1a6010), bring the source inventory to 32 validator skills and 11 profiles, plus the legacy skill and MCP server. They supply synthetic and refusal examples, and remain outside the pinned `bf1c18e` installation proof and the independent semantic review described here.
 
+[`spelled-meter`](https://github.com/Lenvanderhof/Undominated.ai/commit/417c348c019451dff5f4b199bc47824bb24d0512) brought that validator inventory to 33. The following commit adds single-base, source-pin, slug-is-not-body, multiplier-aside, indicative-rate, and final-host, which brings it to 39 validator skills. The 11 profiles, the legacy skill, and the MCP server are unchanged. These checkers supply synthetic passes and refusal or invalid examples. They remain outside the pinned `bf1c18e` installation proof, the npm map through `0.4.0`, and the independent semantic review described here. The published `0.3.1` figure of 43 boundary and control cases is the npm bundle's figure. The public source suite is a different, larger set.
+
 ## Source-only correction record — 2026-10-07
 
 The 17 newly published skills at `8087a25` all passed their synthetic examples. A separate review then found **20 unexpected outcomes among 37 targeted cases**; that count is outcomes, not distinct bugs. The affected contracts were corrected in source while the published npm `0.3.1` bundle remained unchanged.

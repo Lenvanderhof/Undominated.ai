@@ -1,0 +1,15 @@
+{
+  "label": "synthetic excerpts, not a vendor quote",
+  "claims": [
+    {
+      "id": "one-sentence",
+      "role": "single-base",
+      "excerpt": "The listed rate is one on-demand token rate."
+    },
+    {
+      "id": "named-component",
+      "role": "component",
+      "excerpt": "Cache hit and cache miss are billed apart, and off-peak is half of peak."
+    }
+  ]
+}

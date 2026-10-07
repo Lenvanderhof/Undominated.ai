@@ -1,0 +1,10 @@
+{
+  "label": "a different registrable name is a redirect",
+  "responses": [
+    {
+      "id": "other",
+      "requestedHost": "api.vendor.example",
+      "finalHost": "login.other.example"
+    }
+  ]
+}

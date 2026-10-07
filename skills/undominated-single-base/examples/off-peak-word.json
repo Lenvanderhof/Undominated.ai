@@ -1,0 +1,10 @@
+{
+  "label": "peak inside off-peak is not a second side",
+  "claims": [
+    {
+      "id": "off-peak-only",
+      "role": "single-base",
+      "excerpt": "The note describes the off-peak window only."
+    }
+  ]
+}

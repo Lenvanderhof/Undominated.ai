@@ -1,0 +1,11 @@
+{
+  "label": "words in the locator are not the body",
+  "claims": [
+    {
+      "id": "slug",
+      "asserts": "both",
+      "excerpt": "See the table.",
+      "locator": "https://example.invalid/pricing-details-usd per million tokens"
+    }
+  ]
+}

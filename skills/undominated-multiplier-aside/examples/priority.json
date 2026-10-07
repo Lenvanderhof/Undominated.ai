@@ -1,0 +1,10 @@
+{
+  "label": "a multiplier is not the base rate",
+  "claims": [
+    {
+      "id": "priority",
+      "role": "base",
+      "excerpt": "Priority is a 2x multiplier on the on-demand rate."
+    }
+  ]
+}

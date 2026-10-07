@@ -1,0 +1,14 @@
+{
+  "label": "synthetic revisions, not a repository review",
+  "sources": [
+    {
+      "id": "full",
+      "revision": "0123456789abcdef0123456789ABCDEF01234567",
+      "ref": "v7"
+    },
+    {
+      "id": "no-label",
+      "revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

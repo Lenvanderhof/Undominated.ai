@@ -1,0 +1,17 @@
+{
+  "label": "synthetic excerpts, not a vendor quote",
+  "claims": [
+    {
+      "id": "body-words",
+      "asserts": "both",
+      "excerpt": "All prices are in USD per million tokens.",
+      "locator": "https://example.invalid/pricing-details-usd"
+    },
+    {
+      "id": "currency-only",
+      "asserts": "currency",
+      "excerpt": "The note says GBP and leaves the unit in a header.",
+      "locator": "per-1M"
+    }
+  ]
+}

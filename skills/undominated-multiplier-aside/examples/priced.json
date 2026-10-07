@@ -1,0 +1,11 @@
+{
+  "label": "synthetic amount field, not a vendor quote",
+  "claims": [
+    {
+      "id": "priced",
+      "role": "base",
+      "excerpt": "The listed rate is the on-demand token rate.",
+      "price": "1.00"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "label": "synthetic amount field, not a vendor quote",
+  "claims": [
+    {
+      "id": "priced",
+      "role": "global",
+      "excerpt": "The page lists one on-demand rate for this model.",
+      "price": "1.00"
+    }
+  ]
+}

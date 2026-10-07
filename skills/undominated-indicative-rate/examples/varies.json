@@ -1,0 +1,10 @@
+{
+  "label": "a country split is not one global rate",
+  "claims": [
+    {
+      "id": "regions",
+      "role": "global",
+      "excerpt": "Prices vary by country."
+    }
+  ]
+}

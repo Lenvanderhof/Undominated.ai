@@ -1,0 +1,10 @@
+{
+  "label": "a short SHA is not a pin",
+  "sources": [
+    {
+      "id": "short",
+      "revision": "0123456789abcdef",
+      "ref": "main"
+    }
+  ]
+}

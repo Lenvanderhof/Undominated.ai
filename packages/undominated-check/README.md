@@ -28,16 +28,17 @@ On a TTY the Pareto staircase and chartreuse paint the **frontier** finding only
 Pipes, CI, `--json`, and `--plain` stay the same bytes as before — no colour in a log.
 `--color` forces the chrome when you are capturing a screenshot.
 
-## Original resources (0.2.0)
+## Original resources (0.3.0)
 
-Version 0.2.0 includes six original skills, four portable agent profiles and a local copy of the Undominated MCP server. Inspect a resource before installing it into an explicit project:
+Version 0.3.0 includes eleven original skills, six portable agent profiles and a local copy of the Undominated MCP server. `undominated-check@0.2.0` remains the earlier release: six skills, four agents and the MCP server. Do not republish 0.2.0. Inspect a resource before installing it into an explicit project:
 
 ```sh
-npx --yes undominated-check@0.2.0 resources list
-npx --yes undominated-check@0.2.0 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.2.0 resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
-npx --yes undominated-check@0.2.0 resources install undominated-evidence-audit --project /absolute/path/to/project
-npx --yes undominated-check@0.2.0 resources install undominated-mcp --project /absolute/path/to/project
+npx --yes undominated-check@0.3.0 resources list
+npx --yes undominated-check@0.3.0 resources inspect undominated-evidence-audit
+npx --yes undominated-check@0.3.0 resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+npx --yes undominated-check@0.3.0 resources install undominated-evidence-audit --project /absolute/path/to/project
+npx --yes undominated-check@0.3.0 resources install undominated-context-tier --project /absolute/path/to/project
+npx --yes undominated-check@0.3.0 resources install undominated-mcp --project /absolute/path/to/project
 ```
 
 From a source checkout, run `node packages/undominated-check/scripts/build-resources.mjs` at the repository root, then use `node packages/undominated-check/bin/undominated-check.mjs` in place of the npx prefix.

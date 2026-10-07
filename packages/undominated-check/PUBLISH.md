@@ -1,24 +1,24 @@
 # Publishing `undominated-check`
 
-**Published and verified 2026-10-07:** [`undominated-check@0.2.0`](https://registry.npmjs.org/undominated-check/0.2.0) is available on npm. Its downloaded archive matches the tested release candidate; the pinned package was also exercised in a fresh consumer.
+**Published and verified 2026-10-07:** [`undominated-check@0.3.0`](https://registry.npmjs.org/undominated-check/0.3.0) is available on npm. The downloaded registry archive SHA-256 is `05f17f7578b02309b60b12d97b6a42fe82345731ed5b8ee85e5330657022741e` and matches the tested candidate (78 files, sha1 `387bfa5f5d02954dc277167ee9a6cac6560eb531`). `npm exec --yes -- undominated-check@0.3.0 resources list` returned eleven skills, six agents and the MCP server, including `undominated-context-tier`, `undominated-seller-spread`, `undominated-dominance-wording`, `undominated-plan-quote`, `undominated-licence-boundary`, `undominated-comparison-editor` and `undominated-pricing-source-reviewer`. A fresh install of `undominated-context-tier` passed its synthetic ladder. The same installed package printed a live dominance verdict for `google/gemini-3.7-flash`.
 
-**Do not republish `0.2.0`.** [Published npm name/version pairs cannot be reused](https://docs.npmjs.com/cli/v11/commands/npm-publish/#description). Any later source or resource changes require a new version and a new release candidate.
+**Do not republish `0.3.0` or `0.2.0`.** [Published npm name/version pairs cannot be reused](https://docs.npmjs.com/cli/v11/commands/npm-publish/#description). Any later source or resource changes require a new version and a new release candidate. `0.2.0` remains the earlier release of six skills, four agents and the MCP server. Its archive SHA-256 is `974509ea1fdbf08c32c391596169dd61991df9e978d2c7e53f9f5c15e6af3f06`, reviewed from [`f730988`](https://github.com/Lenvanderhof/Undominated.ai/commit/f730988d8c55fb7bd134da8c03ffbcf33a8b6738).
 
 | Field | Value |
 |---|---|
 | Name | `undominated-check` |
-| Published version | `0.2.0` |
+| Published version | `0.3.0` |
 | Licence | MIT, as specified in this package's `LICENSE` |
 | Registry | `https://registry.npmjs.org/` |
 | Access | `public` |
-| Published archive SHA-256 | `974509ea1fdbf08c32c391596169dd61991df9e978d2c7e53f9f5c15e6af3f06` |
-| Reviewed runtime source | [`f730988`](https://github.com/Lenvanderhof/Undominated.ai/commit/f730988d8c55fb7bd134da8c03ffbcf33a8b6738) |
+| Published archive SHA-256 | `05f17f7578b02309b60b12d97b6a42fe82345731ed5b8ee85e5330657022741e` |
+| npm integrity | `sha512-/XfQn6AoXDkKBYus4YG7HBVOO0AYHuCC4q8DhtcQH+nbFDasCt8e21+dGTrUIWP/nsIRxkEPnoEj3gMq7rzOCQ==` |
 
 Verify the existing release without publishing anything:
 
 ```sh
-npm view undominated-check@0.2.0 name version dist.integrity
-npx --yes undominated-check@0.2.0 --help
+npm view undominated-check@0.3.0 name version dist.integrity
+npx --yes undominated-check@0.3.0 resources list
 ```
 
 ## Prepare a future release

@@ -1,0 +1,22 @@
+{
+  "plans": [
+    {
+      "id": "synthetic-verified",
+      "verifiedUsd": true,
+      "amount": "20.00",
+      "recordedQuote": null,
+      "sourceUrl": "https://example.org/synthetic-verified",
+      "observedAt": "2026-01-01"
+    },
+    {
+      "id": "synthetic-recorded",
+      "verifiedUsd": false,
+      "amount": null,
+      "recordedQuote": "about twenty units on the vendor page",
+      "sourceUrl": "https://example.org/synthetic-recorded",
+      "observedAt": "2026-01-01"
+    }
+  ],
+  "monthlyCeilingUsd": "20.00",
+  "includedPlanIds": ["synthetic-verified"]
+}

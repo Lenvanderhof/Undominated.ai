@@ -1,0 +1,24 @@
+{
+  "model": "synthetic/model-v1",
+  "currency": "USD",
+  "rate": "inputPerMillion",
+  "claimedMultiple": "2",
+  "rows": [
+    {
+      "seller": "Synthetic North",
+      "sellerOwner": "Synthetic North",
+      "serviceTier": "standard",
+      "inputPerMillion": "1.00",
+      "sourceUrl": "https://example.org/synthetic-north",
+      "observedAt": "2026-01-01"
+    },
+    {
+      "seller": "Synthetic South",
+      "sellerOwner": "Synthetic South",
+      "serviceTier": "standard",
+      "inputPerMillion": "2.00",
+      "sourceUrl": "https://example.org/synthetic-south",
+      "observedAt": "2026-01-01"
+    }
+  ]
+}

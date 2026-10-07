@@ -26,10 +26,10 @@ async function mutateManifest(root, change) {
 }
 const skill = 'undominated-evidence-audit'
 
-test('lists six skills, four portable agents and the first-party MCP bundle', async () => {
+test('lists eleven skills, six portable agents and the first-party MCP bundle', async () => {
   const resources = await loadResources()
-  assert.equal(resources.filter(x => x.kind === 'skill').length, 6)
-  assert.equal(resources.filter(x => x.kind === 'agent').length, 4)
+  assert.equal(resources.filter(x => x.kind === 'skill').length, 11)
+  assert.equal(resources.filter(x => x.kind === 'agent').length, 6)
   assert.equal(resources.filter(x => x.kind === 'mcp-server').length, 1)
   for (const item of resources) await inspectResource(item.id)
 })
@@ -173,7 +173,7 @@ async function runFixture(t, slug, mutate) {
   return { code: result.status, data: JSON.parse(result.stdout) }
 }
 
-for (const slug of ['evidence-audit', 'migration-preflight', 'provider-quote-compare', 'benchmark-audit', 'resource-audit', 'release-proof']) {
+for (const slug of ['evidence-audit', 'migration-preflight', 'provider-quote-compare', 'benchmark-audit', 'resource-audit', 'release-proof', 'seller-spread', 'dominance-wording', 'plan-quote', 'licence-boundary', 'context-tier']) {
   test(`synthetic ${slug} example executes successfully`, async t => {
     const result = await runFixture(t, slug)
     assert.equal(result.code, 0, JSON.stringify(result.data))
@@ -272,7 +272,7 @@ test('evidence and release validators reject traversal, absolute paths and symli
 })
 
 test('all validators return structured invalid input errors for a malformed object', async t => {
-  for (const slug of ['evidence-audit', 'migration-preflight', 'provider-quote-compare', 'benchmark-audit', 'resource-audit', 'release-proof']) {
+  for (const slug of ['evidence-audit', 'migration-preflight', 'provider-quote-compare', 'benchmark-audit', 'resource-audit', 'release-proof', 'seller-spread', 'dominance-wording', 'plan-quote', 'licence-boundary', 'context-tier']) {
     const result = await runFixture(t, slug, data => { for (const key of Object.keys(data)) delete data[key] })
     assert.equal(result.code, 2)
     assert.equal(result.data.status, 'invalid')
@@ -300,6 +300,77 @@ test('benchmark Spearman uses average tie ranks and measures nonidentical orderi
   assert.ok(Math.abs(swapped.data.spearman - 0.8) < 1e-12)
   const tied = await runFixture(t, 'benchmark-audit', data => { data.rows[1].a = 1 })
   assert.ok(Math.abs(tied.data.spearman - 0.9486832980505138) < 1e-12)
+})
+
+test('seller spread refuses same-owner tiers, zero rates and a mismatched headline', async t => {
+  const collapsed = await runFixture(t, 'seller-spread', data => {
+    data.claimedMultiple = '7.2'
+    data.rows[0].inputPerMillion = '1.00'
+    data.rows[1].inputPerMillion = '2.00'
+    data.rows.push({ ...data.rows[0], seller: 'Synthetic North Priority', serviceTier: 'priority', inputPerMillion: '7.20', sourceUrl: 'https://example.org/synthetic-priority' })
+  })
+  assert.equal(collapsed.code, 1)
+  assert.equal(collapsed.data.sellerOwners, 2)
+  assert.equal(collapsed.data.ownerMultiple, '2')
+  assert.equal(collapsed.data.rowMultiple, '7.2')
+  assert.equal((await runFixture(t, 'seller-spread', data => { data.rows[1].sellerOwner = data.rows[0].sellerOwner })).code, 1)
+  assert.equal((await runFixture(t, 'seller-spread', data => { data.rows[0].inputPerMillion = '0' })).code, 1)
+  assert.equal((await runFixture(t, 'seller-spread', data => { data.rows[0].inputPerMillion = true })).code, 2)
+  assert.equal((await runFixture(t, 'seller-spread', data => { data.rows[1].sellerOwner = ' Synthetic NORTH ' })).code, 1)
+})
+
+test('dominance wording keeps ties and dropped requirements out of a both-better claim', async t => {
+  const tied = await runFixture(t, 'dominance-wording', data => { data.claim = 'both-better-and-cheaper' })
+  assert.equal(tied.code, 1)
+  assert.equal(tied.data.verdict, 'cheaper-at-equal-score')
+  assert.equal((await runFixture(t, 'dominance-wording', data => { data.claim = 'weak-pareto' })).code, 0)
+  const blind = await runFixture(t, 'dominance-wording', data => { data.candidate.capabilities.imageInput = false })
+  assert.equal(blind.code, 1)
+  assert.equal(blind.data.verdict, 'capability-loss')
+  const shorter = await runFixture(t, 'dominance-wording', data => { data.candidate.capabilities.contextTokens = 64000 })
+  assert.equal(shorter.data.verdict, 'capability-loss')
+  const unrated = await runFixture(t, 'dominance-wording', data => { data.candidate.score = null; data.claim = 'incomparable' })
+  assert.equal(unrated.code, 0)
+  assert.equal(unrated.data.verdict, 'incomparable')
+  assert.equal((await runFixture(t, 'dominance-wording', data => { data.candidate.score = false })).code, 2)
+})
+
+test('plan ceilings ignore recorded quotes and licence notes reject a public page as a licence', async t => {
+  const smuggled = await runFixture(t, 'plan-quote', data => { data.includedPlanIds.push('synthetic-recorded') })
+  assert.equal(smuggled.code, 1)
+  assert.match(smuggled.data.issues[0], /not verified USD/)
+  assert.equal((await runFixture(t, 'plan-quote', data => { data.monthlyCeilingUsd = '40.00' })).code, 1)
+  assert.equal((await runFixture(t, 'plan-quote', data => { data.plans[1].amount = '20.00' })).code, 2)
+  assert.equal((await runFixture(t, 'plan-quote', data => { data.plans[0].amount = 20 })).code, 2)
+  const page = await runFixture(t, 'licence-boundary', data => { data.publicPageTreatedAsLicence = true })
+  assert.equal(page.code, 1)
+  assert.match(page.data.issues[0], /public page/)
+  const favourable = await runFixture(t, 'licence-boundary', data => { data.claim = 'redistributable' })
+  assert.equal(favourable.code, 1)
+  const grant = await runFixture(t, 'licence-boundary', data => {
+    Object.assign(data, { claim: 'redistributable', redistributionEvidence: 'explicit-grant', licenceName: 'Example grant', licenceUrl: 'https://example.org/license', evidenceQuote: 'You may redistribute with attribution.', attributionRequired: true, attributionPresent: false })
+  })
+  assert.equal(grant.code, 1)
+  assert.match(grant.data.issues[0], /attribution/)
+})
+
+test('context tier keeps the top rung off the first boundary', async t => {
+  const flattened = await runFixture(t, 'context-tier', data => { data.claim.multiple = '6.67' })
+  assert.equal(flattened.code, 1)
+  assert.equal(flattened.data.boundaries[0].multiple, '3.33')
+  assert.equal(flattened.data.boundaries[1].multiple, '6.67')
+  assert.match(flattened.data.issues[0], /that boundary/)
+  const top = await runFixture(t, 'context-tier', data => { data.claim.pastTokens = 262144; data.claim.multiple = '6.67' })
+  assert.equal(top.code, 0)
+  const one = await runFixture(t, 'context-tier', data => { data.rungs = [data.rungs.at(-1)] })
+  assert.equal(one.code, 1)
+  assert.match(one.data.issues[0], /no pricing boundary/)
+  assert.equal((await runFixture(t, 'context-tier', data => { data.rungs[0].inputPerMillion = false })).code, 2)
+  assert.equal((await runFixture(t, 'context-tier', data => { data.rungs.at(-1).maxInputTokens = 999999 })).code, 2)
+  const output = await runFixture(t, 'context-tier', data => { data.side = 'output' })
+  assert.equal(output.code, 1)
+  assert.equal(output.data.boundaries[0].multiple, '2')
+  assert.equal((await runFixture(t, 'context-tier', data => { data.rungs[0].inputPerMillion = '0' })).code, 1)
 })
 
 test('extreme finite benchmark magnitudes cannot turn an inverse relationship into a positive one', async t => {

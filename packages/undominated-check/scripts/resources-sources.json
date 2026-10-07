@@ -246,6 +246,176 @@
     "status": "local-tested-unreleased"
   },
   {
+    "id": "undominated-seller-spread",
+    "kind": "skill",
+    "name": "Seller-spread audit",
+    "description": "Check a price-spread multiple against distinct seller owners, so one vendor's own service tiers are not counted as competition.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-seller-spread",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "pricing",
+      "sellers",
+      "spread",
+      "comparison"
+    ],
+    "whenToUse": "Check a price-spread multiple against distinct seller owners, so one vendor's own service tiers are not counted as competition.",
+    "limitations": "Deterministic local checks over supplied rows and caller-assigned seller owners; not a guarantee of source truth or market coverage.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "local-tested-unreleased"
+  },
+  {
+    "id": "undominated-dominance-wording",
+    "kind": "skill",
+    "name": "Dominance wording audit",
+    "description": "Classify a two-model comparison before publishing it, so a tie or a dropped requirement is not called both better and cheaper.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-dominance-wording",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "dominance",
+      "wording",
+      "capabilities",
+      "comparison"
+    ],
+    "whenToUse": "Classify a two-model comparison before publishing it, so a tie or a dropped requirement is not called both better and cheaper.",
+    "limitations": "Deterministic local checks over one supplied pair and the listed requirements; not a guarantee of source truth.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "local-tested-unreleased"
+  },
+  {
+    "id": "undominated-plan-quote",
+    "kind": "skill",
+    "name": "Plan-quote hygiene",
+    "description": "Keep unverified subscription quotes out of a USD monthly ceiling. A source sentence is not a price.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-plan-quote",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "plans",
+      "quotes",
+      "currency",
+      "pricing"
+    ],
+    "whenToUse": "Keep unverified subscription quotes out of a USD monthly ceiling. A source sentence is not a price.",
+    "limitations": "Deterministic local checks over a supplied plan table; not a guarantee that a vendor page still matches.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "local-tested-unreleased"
+  },
+  {
+    "id": "undominated-licence-boundary",
+    "kind": "skill",
+    "name": "Licence-boundary audit",
+    "description": "Check a redistribution claim against the licence evidence you recorded. A public page is not a licence.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-licence-boundary",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "licensing",
+      "redistribution",
+      "attribution",
+      "curation"
+    ],
+    "whenToUse": "Check a redistribution claim against the licence evidence you recorded. A public page is not a licence.",
+    "limitations": "Deterministic consistency check of a filled licence note; it does not interpret licence text or fetch the licence.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "local-tested-unreleased"
+  },
+  {
+    "id": "undominated-context-tier",
+    "kind": "skill",
+    "name": "Context-tier ladder audit",
+    "description": "Check a past-this-length price multiple against every rung, so the dearest rung is not applied at the first boundary.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-context-tier",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "pricing",
+      "context",
+      "tiers",
+      "claims"
+    ],
+    "whenToUse": "A headline says a model becomes N times dearer past one input length.",
+    "limitations": "Deterministic local check of a supplied ladder; it does not fetch vendor prices or model marginal block billing.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "local-tested-unreleased"
+  },
+  {
+    "id": "undominated-comparison-editor",
+    "kind": "agent",
+    "name": "Comparison editor",
+    "description": "Edit model-comparison copy so ties, same-seller tiers and dropped requirements are not published as dominance.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "agents/undominated-comparison-editor",
+    "entrypoint": "AGENT.md",
+    "category": "engineering",
+    "tags": [
+      "comparison",
+      "wording",
+      "pricing",
+      "dominance"
+    ],
+    "whenToUse": "A headline, table caption, FAQ or badge is about to say one model is better and cheaper, or that a price spread measures competition.",
+    "limitations": "Portable profile; manually load or adapt to a native agent format. No automatic subagent registration or permission grants.",
+    "permissions": [
+      "read:assigned-sources",
+      "write:assigned-workspace"
+    ],
+    "status": "local-tested-unreleased"
+  },
+  {
+    "id": "undominated-pricing-source-reviewer",
+    "kind": "agent",
+    "name": "Pricing source reviewer",
+    "description": "Review a provider price feed before any rate is admitted, including units, currency, tiers and prose quotes that are not USD.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "agents/undominated-pricing-source-reviewer",
+    "entrypoint": "AGENT.md",
+    "category": "engineering",
+    "tags": [
+      "pricing",
+      "providers",
+      "provenance",
+      "plans"
+    ],
+    "whenToUse": "A new provider catalogue, a changed billing page, or a subscription total is proposed for publication.",
+    "limitations": "Portable profile; manually load or adapt to a native agent format. No automatic subagent registration or permission grants.",
+    "permissions": [
+      "read:assigned-sources",
+      "write:assigned-workspace"
+    ],
+    "status": "local-tested-unreleased"
+  },
+  {
     "id": "undominated-mcp",
     "kind": "mcp-server",
     "name": "Undominated MCP server",

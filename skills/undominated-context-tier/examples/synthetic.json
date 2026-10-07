@@ -1,0 +1,26 @@
+{
+  "model": "synthetic/model-v1",
+  "currency": "USD",
+  "side": "input",
+  "claim": {
+    "pastTokens": 32768,
+    "multiple": "3.33"
+  },
+  "rungs": [
+    {
+      "maxInputTokens": 32768,
+      "inputPerMillion": "1.00",
+      "outputPerMillion": "4.00"
+    },
+    {
+      "maxInputTokens": 262144,
+      "inputPerMillion": "3.33",
+      "outputPerMillion": "8.00"
+    },
+    {
+      "maxInputTokens": null,
+      "inputPerMillion": "6.67",
+      "outputPerMillion": "12.00"
+    }
+  ]
+}

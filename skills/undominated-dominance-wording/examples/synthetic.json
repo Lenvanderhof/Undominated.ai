@@ -1,0 +1,17 @@
+{
+  "claim": "cheaper-at-equal-score",
+  "population": "one synthetic pair",
+  "required": ["imageInput", "contextTokens"],
+  "baseline": {
+    "id": "synthetic/base",
+    "score": 80,
+    "cost": "1.00",
+    "capabilities": { "imageInput": true, "contextTokens": 128000 }
+  },
+  "candidate": {
+    "id": "synthetic/candidate",
+    "score": 80,
+    "cost": "0.50",
+    "capabilities": { "imageInput": true, "contextTokens": 128000 }
+  }
+}

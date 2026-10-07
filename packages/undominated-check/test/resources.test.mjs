@@ -6,6 +6,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
 import { inspectResource, installResource, loadResources, resourceMain, RESOURCE_ROOT } from '../src/resources.mjs'
+import { main } from '../src/cli.mjs'
 
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
 async function temporary(t) {
@@ -121,21 +122,49 @@ test('rejects duplicate manifest identity and duplicate file paths', async t => 
   await assert.rejects(loadResources(other), /duplicate resource file/)
 })
 
-test('Claude skill target is explicit; profiles remain portable', async t => {
+test('supports target directories for universal, claude, and codex skills', async t => {
   const project = await temporary(t)
-  const installed = await installResource(skill, { project, target: 'claude' })
-  assert.equal(installed.destination, join(project, '.claude', 'skills', skill))
-  const agent = await installResource('undominated-evidence-reviewer', { project, target: 'claude' })
-  assert.equal(agent.destination, join(project, '.undominated', 'agents', agent.id))
-  assert.match(agent.note, /no native agent was registered/)
+  const universal = await installResource(skill, { project, target: 'universal' })
+  assert.equal(universal.destination, join(project, '.agents', 'skills', skill))
+  const defaultTarget = await installResource('undominated-migration-preflight', { project })
+  assert.equal(defaultTarget.destination, join(project, '.agents', 'skills', 'undominated-migration-preflight'))
+  const claude = await installResource('undominated-provider-quote-compare', { project, target: 'claude' })
+  assert.equal(claude.destination, join(project, '.claude', 'skills', 'undominated-provider-quote-compare'))
+  const codex = await installResource('undominated-benchmark-audit', { project, target: 'codex' })
+  assert.equal(codex.destination, join(project, '.codex', 'skills', 'undominated-benchmark-audit'))
 })
 
-test('MCP export leaves host config untouched and installed server answers initialize/tools-list offline', async t => {
+test('supports portable agent target directories for universal, claude, github, and undominated', async t => {
+  const project = await temporary(t)
+  const universalAgent = await installResource('undominated-evidence-reviewer', { project, target: 'universal' })
+  assert.equal(universalAgent.destination, join(project, '.agents', 'undominated-evidence-reviewer'))
+  assert.match(universalAgent.note, /no native agent was registered/)
+
+  const claudeAgent = await installResource('undominated-migration-planner', { project, target: 'claude' })
+  assert.equal(claudeAgent.destination, join(project, '.claude', 'agents', 'undominated-migration-planner'))
+  assert.match(claudeAgent.note, /no native agent was registered/)
+
+  const githubAgent = await installResource('undominated-resource-curator', { project, target: 'github' })
+  assert.equal(githubAgent.destination, join(project, '.github', 'agents', 'undominated-resource-curator'))
+  assert.match(githubAgent.note, /no native agent was registered/)
+
+  const undomAgent = await installResource('undominated-release-verifier', { project, target: 'undominated' })
+  assert.equal(undomAgent.destination, join(project, '.undominated', 'agents', 'undominated-release-verifier'))
+  assert.match(undomAgent.note, /no native agent was registered/)
+})
+
+test('MCP export leaves host config untouched, provides helpers, and server answers offline', async t => {
   const project = await temporary(t)
   const existing = '{"existing":"host configuration"}\n'
   await writeFile(join(project, '.mcp.json'), existing)
   const result = await installResource('undominated-mcp', { project })
   assert.equal(await readFile(join(project, '.mcp.json'), 'utf8'), existing)
+  assert.ok(result.helpers)
+  assert.match(result.helpers.claudeCommand, /^claude mcp add undominated node /)
+  assert.equal(result.helpers.cursorConfig.mcpServers.undominated.command, 'node')
+  assert.equal(result.helpers.vscodeConfig.mcp.servers.undominated.command, 'node')
+  assert.equal(result.helpers.configPath, join(result.destination, 'mcp-config.json'))
+
   const config = JSON.parse(await readFile(join(result.destination, 'mcp-config.json'), 'utf8'))
   assert.equal(config.mcpServers.undominated.command, process.execPath)
   const child = spawnSync(process.execPath, config.mcpServers.undominated.args, { encoding: 'utf8', input: [
@@ -146,6 +175,71 @@ test('MCP export leaves host config untouched and installed server answers initi
   const messages = child.stdout.trim().split('\n').map(line => JSON.parse(line))
   assert.equal(messages[0].result.serverInfo.name, 'undominated-mcp')
   assert.ok(messages[1].result.tools.some(tool => tool.name === 'search_resources'))
+})
+
+test('CLI install alias routes directly to resource installer and displays helpers', async t => {
+  const project = await temporary(t)
+  // Direct alias install of skill
+  const skillRes = await main(['install', skill, '--project', project])
+  assert.equal(skillRes.code, 0)
+  assert.match(skillRes.out, new RegExp(`Installed ${skill}`))
+
+  // Direct alias with target claude
+  const claudeRes = await main(['install', 'undominated-migration-preflight', '--project', project, '--target', 'claude'])
+  assert.equal(claudeRes.code, 0)
+  assert.match(claudeRes.out, /\.claude\/skills\/undominated-migration-preflight/)
+
+  // Direct alias with target codex
+  const codexRes = await main(['install', 'undominated-plan-quote', '--project', project, '--target', 'codex'])
+  assert.equal(codexRes.code, 0)
+  assert.match(codexRes.out, /\.codex\/skills\/undominated-plan-quote/)
+
+  // Direct alias of agent with target github
+  const agentRes = await main(['install', 'undominated-evidence-reviewer', '--project', project, '--target', 'github'])
+  assert.equal(agentRes.code, 0)
+  assert.match(agentRes.out, /\.github\/agents\/undominated-evidence-reviewer/)
+
+  // Direct alias of MCP server outputs setup helpers
+  const mcpRes = await main(['install', 'undominated-mcp', '--project', project])
+  assert.equal(mcpRes.code, 0)
+  assert.match(mcpRes.out, /claude mcp add undominated node/)
+  assert.match(mcpRes.out, /\.cursor\/mcp\.json/)
+  assert.match(mcpRes.out, /\.vscode\/settings\.json/)
+
+  // Direct alias of MCP server with --json outputs helpers structure
+  const project2 = await temporary(t)
+  const mcpJsonRes = await main(['install', 'undominated-mcp', '--project', project2, '--json'])
+  assert.equal(mcpJsonRes.code, 0)
+  const parsed = JSON.parse(mcpJsonRes.out)
+  assert.ok(parsed.helpers.claudeCommand)
+  assert.ok(parsed.helpers.cursorConfig)
+  assert.ok(parsed.helpers.vscodeConfig)
+
+  // Help output
+  const installHelp = await main(['install', '--help'])
+  assert.equal(installHelp.code, 0)
+  assert.match(installHelp.out, /Targets/)
+  assert.match(installHelp.out, /Examples/)
+  assert.match(installHelp.out, /--target universal/)
+
+  const resHelp = await main(['resources', '--help'])
+  assert.equal(resHelp.code, 0)
+  assert.match(resHelp.out, /Targets/)
+
+  // Error: invalid target
+  const invalidTarget = await main(['install', skill, '--project', project, '--target', 'badtarget'])
+  assert.equal(invalidTarget.code, 1)
+  assert.match(invalidTarget.err, /--target must be universal, claude, codex, github or undominated/)
+
+  // Error: missing project
+  const noProj = await main(['install', skill])
+  assert.equal(noProj.code, 1)
+  assert.match(noProj.err, /--project/)
+
+  // Error: missing resource id
+  const noId = await main(['install'])
+  assert.equal(noId.code, 1)
+  assert.match(noId.err, /expected exactly one resource id/)
 })
 
 test('resource CLI rejects unknown options and shows verified entrypoint text', async () => {

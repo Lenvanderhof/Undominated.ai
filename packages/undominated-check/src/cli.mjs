@@ -26,6 +26,10 @@ export const USAGE = `undominated-check — is a model beaten by something bette
 Usage
   npx undominated-check <model-slug>
   npx undominated-check --frontier
+  npx undominated-check install <id> --project <dir> [--target <target>]
+  npx undominated-check resources list [--json]
+  npx undominated-check resources inspect <id> [--json]
+  npx undominated-check resources install <id> --project <dir> [--target <target>]
   npx undominated-check resources --help
 
 Options
@@ -47,6 +51,9 @@ Examples
   npx undominated-check openai/gpt-5.2 --json
   npx undominated-check --frontier --local static/data
   npx undominated-check anthropic/claude-opus-5 --exit-code
+  npx undominated-check install undominated-evidence-audit --project /path/to/project
+  npx undominated-check install undominated-evidence-reviewer --project /path/to/project --target claude
+  npx undominated-check install undominated-mcp --project /path/to/project
 
 Exit codes
   0  printed a verdict (or, with --exit-code, the model is on the frontier)
@@ -154,6 +161,7 @@ async function load({ source, local }, fetchImpl) {
  */
 export async function main(argv, deps = {}) {
   if (argv[0] === 'resources') return resourceMain(argv.slice(1))
+  if (argv[0] === 'install') return resourceMain(argv)
   const fetchImpl = deps.fetch ?? globalThis.fetch
   const opts = parseArgs(argv)
   const chrome = wantsChrome(opts, { tty: deps.tty, env: deps.env ?? {} })

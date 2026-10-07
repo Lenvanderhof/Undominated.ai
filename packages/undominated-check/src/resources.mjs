@@ -7,20 +7,53 @@ import { fileURLToPath } from 'node:url'
 export const RESOURCE_ROOT = fileURLToPath(new URL('../resources/', import.meta.url))
 const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const HASH = /^[a-f0-9]{64}$/
-export const RESOURCE_USAGE = `undominated-check resources — original skills, agents and MCP server
+export const RESOURCE_USAGE = `undominated-check resources / install — original skills, agents and MCP server
 
-  resources list [--json]
-  resources inspect <id> [--json]
-  resources install <id> --project <existing-absolute-directory>
-                    [--target universal|claude] [--dry-run] [--json]
+Usage
+  undominated-check resources list [--json]
+  undominated-check resources inspect <id> [--json]
+  undominated-check resources install <id> --project <dir> [--target <target>] [--dry-run] [--json]
+  undominated-check install <id> --project <dir> [--target <target>] [--dry-run] [--json]
 
-Skills: universal -> .agents/skills/<id>; claude -> .claude/skills/<id>.
-Agents: portable profiles in .undominated/agents/<id>; load AGENT.md manually.
-MCP: .undominated/mcp/<id> plus a standalone mcp-config.json; import manually.
-Install copies bundled files only. No downloads, dependency installs, execution,
-credentials or existing-config changes. Existing destinations and symlinks are
-rejected; updates require a separate reviewed removal. --project is mandatory.
-Resource commands are available in this local build; public npm release is separate.`
+Targets
+  Skills:
+    --target universal   -> .agents/skills/<id> (default)
+    --target claude      -> .claude/skills/<id>
+    --target codex       -> .codex/skills/<id>
+  Agents:
+    --target universal   -> .agents/<id> (default)
+    --target claude      -> .claude/agents/<id>
+    --target github      -> .github/agents/<id>
+    --target undominated -> .undominated/agents/<id>
+  MCP servers:
+    Installed to .undominated/mcp/<id> along with mcp-config.json.
+    Generates ready-to-run setup commands and client configuration snippets.
+
+Options
+  --project <dir>   Existing absolute directory (mandatory for install).
+  --target <target> Target environment: universal, claude, codex, github, undominated.
+  --dry-run         Simulate install without creating directories or writing files.
+  --json            Print machine-readable JSON output.
+  --help, -h        Show this help message.
+
+Examples
+  # Install skills across environments
+  npx undominated-check install undominated-evidence-audit --project /abs/path/to/project
+  npx undominated-check install undominated-evidence-audit --project /abs/path/to/project --target claude
+  npx undominated-check install undominated-evidence-audit --project /abs/path/to/project --target codex
+
+  # Install portable agent profiles
+  npx undominated-check install undominated-evidence-reviewer --project /abs/path/to/project
+  npx undominated-check install undominated-evidence-reviewer --project /abs/path/to/project --target claude
+  npx undominated-check install undominated-evidence-reviewer --project /abs/path/to/project --target github
+
+  # Install MCP server with ready-to-run client setup
+  npx undominated-check install undominated-mcp --project /abs/path/to/project
+
+Safety & Behaviour
+  Install copies bundled files only. Zero downloads, dependency installs, code execution,
+  credentials or existing-config changes. Existing destinations and symlinks are strictly
+  rejected; updates require reviewed removal. --project must be an existing absolute path.`
 
 function safeRelative(value) {
   if (typeof value !== 'string' || !value || value.includes('\\') || value.includes('\0') || isAbsolute(value) || value.split('/').some(part => !part || part === '.' || part === '..')) {
@@ -111,26 +144,75 @@ export async function inspectResource(id, { root = RESOURCE_ROOT } = {}) {
   return { item, content }
 }
 
+const VALID_TARGETS = new Set(['universal', 'claude', 'codex', 'github', 'undominated', 'agents'])
+
 export async function installResource(id, { project, target = 'universal', dryRun = false, root = RESOURCE_ROOT } = {}) {
   if (!project || !isAbsolute(project) || project.split(/[\\/]/).includes('..')) throw new Error('--project must be an existing absolute directory without parent traversal')
-  if (!['universal', 'claude'].includes(target)) throw new Error('--target must be universal or claude')
+  if (!VALID_TARGETS.has(target)) throw new Error('--target must be universal, claude, codex, github or undominated')
   await assertDirectories(project)
   const projectRoot = resolve(project)
   const { item, content } = await inspectResource(id, { root })
   const parent = item.kind === 'skill'
-    ? join(projectRoot, target === 'claude' ? '.claude' : '.agents', 'skills')
-    : join(projectRoot, '.undominated', item.kind === 'agent' ? 'agents' : 'mcp')
+    ? (target === 'claude'
+        ? join(projectRoot, '.claude', 'skills')
+        : target === 'codex'
+        ? join(projectRoot, '.codex', 'skills')
+        : target === 'github'
+        ? join(projectRoot, '.github', 'skills')
+        : target === 'undominated'
+        ? join(projectRoot, '.undominated', 'skills')
+        : join(projectRoot, '.agents', 'skills'))
+    : item.kind === 'agent'
+    ? (target === 'claude'
+        ? join(projectRoot, '.claude', 'agents')
+        : target === 'github'
+        ? join(projectRoot, '.github', 'agents')
+        : target === 'undominated'
+        ? join(projectRoot, '.undominated', 'agents')
+        : target === 'codex'
+        ? join(projectRoot, '.codex', 'agents')
+        : join(projectRoot, '.agents'))
+    : join(projectRoot, '.undominated', 'mcp')
   const destination = join(parent, item.id)
   // Dry-run checks existing ancestors without creating them.
   let ancestor = parent
   while (!(await statOrNull(ancestor))) ancestor = dirname(ancestor)
   await assertDirectories(ancestor)
   if (await statOrNull(destination)) throw new Error(`destination already exists; nothing overwritten: ${destination}`)
+  let helpers
   if (item.kind === 'mcp-server') {
-    const config = { mcpServers: { undominated: { command: process.execPath, args: [join(destination, item.entrypoint)] } } }
+    const entrypointPath = join(destination, item.entrypoint)
+    const config = { mcpServers: { undominated: { command: process.execPath, args: [entrypointPath] } } }
     content.push({ path: 'mcp-config.json', body: Buffer.from(`${JSON.stringify(config, null, 2)}\n`) })
+    helpers = {
+      claudeCommand: `claude mcp add undominated node ${entrypointPath}`,
+      cursorConfig: {
+        mcpServers: {
+          undominated: {
+            command: 'node',
+            args: [entrypointPath],
+          },
+        },
+      },
+      vscodeConfig: {
+        mcp: {
+          servers: {
+            undominated: {
+              command: 'node',
+              args: [entrypointPath],
+            },
+          },
+        },
+      },
+      configPath: join(destination, 'mcp-config.json'),
+    }
   }
-  const result = { id, kind: item.kind, destination, dryRun, files: content.map(file => file.path), note: item.kind === 'agent' ? 'Portable profile exported. Load AGENT.md manually; no native agent was registered.' : item.kind === 'mcp-server' ? 'Server copied. Import mcp-config.json into your client manually; server not started.' : 'Skill copied. Client discovery depends on the selected target.' }
+  const note = item.kind === 'agent'
+    ? 'Portable profile exported. Load AGENT.md manually; no native agent was registered.'
+    : item.kind === 'mcp-server'
+    ? 'Server copied. Ready-to-run setup commands and configuration snippets generated; server not started.'
+    : 'Skill copied. Client discovery depends on the selected target.'
+  const result = { id, kind: item.kind, destination, dryRun, files: content.map(file => file.path), note, ...(helpers ? { helpers } : {}) }
   if (dryRun) return result
   await assertDirectories(parent, { create: true })
   // mkdir is exclusive: existing empty directories are also protected against replacement.
@@ -156,6 +238,10 @@ export async function resourceMain(argv, { root = RESOURCE_ROOT } = {}) {
       else if (arg === '--project' || arg === '--target') {
         if (!argv[i + 1] || argv[i + 1].startsWith('-')) throw new Error(`missing value for ${arg}`)
         options[arg.slice(2)] = argv[++i]
+      } else if (arg.startsWith('--project=')) {
+        options.project = arg.slice('--project='.length)
+      } else if (arg.startsWith('--target=')) {
+        options.target = arg.slice('--target='.length)
       } else if (arg.startsWith('-')) throw new Error(`unknown option: ${arg}`)
       else positional.push(arg)
     }
@@ -174,7 +260,31 @@ export async function resourceMain(argv, { root = RESOURCE_ROOT } = {}) {
     }
     if (command === 'install') {
       const result = await installResource(positional[0], options)
-      return { code: 0, out: `${json ? JSON.stringify(result, null, 2) : `${result.dryRun ? 'Would install' : 'Installed'} ${result.id}\n${result.destination}\n${result.note}`}\n`, err: '' }
+      let out
+      if (json) {
+        out = JSON.stringify(result, null, 2)
+      } else {
+        const lines = [
+          `${result.dryRun ? 'Would install' : 'Installed'} ${result.id}`,
+          result.destination,
+          result.note,
+        ]
+        if (result.helpers) {
+          lines.push(
+            '',
+            'Ready-to-run setup command (Claude Code):',
+            `  ${result.helpers.claudeCommand}`,
+            '',
+            'Cursor configuration (.cursor/mcp.json):',
+            JSON.stringify(result.helpers.cursorConfig, null, 2).split('\n').map(l => `  ${l}`).join('\n'),
+            '',
+            'VS Code configuration (.vscode/settings.json):',
+            JSON.stringify(result.helpers.vscodeConfig, null, 2).split('\n').map(l => `  ${l}`).join('\n'),
+          )
+        }
+        out = lines.join('\n')
+      }
+      return { code: 0, out: `${out}\n`, err: '' }
     }
     throw new Error(`unknown resource command: ${command}`)
   } catch (error) {

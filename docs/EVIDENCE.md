@@ -35,6 +35,12 @@ Corrective source for `0.3.1` now rejects those cases. It separates internal-use
 
 The licence checker is a consistency check over a permission record you supply. It does not interpret a licence, verify your reading of it or grant rights. Seller-spread checks group the owners you supply and do not establish equivalent endpoint service. Context-tier checks require the complete supplied whole-request ladder; they do not discover omitted provider terms.
 
+## Repository checks
+
+The public resource workflow runs the standalone CLI, MCP and public GitHub Action suites. At this review, all **54 CLI tests**, **32 MCP tests** and **22 Action tests** passed, including installer boundaries, adverse checker cases, MCP price provenance and warn-only Action behaviour.
+
+The legacy Action suite initially failed because one assertion read `.github/workflows/launch-verdicts.yml`, a private workflow absent from this public repository. That private-repository assertion was removed from the public suite; all 22 public Action assertions were preserved. No production workflow or Action runtime was copied or changed.
+
 ## What a source review means
 
 A resource review records the pinned upstream definition, the applicable licence, the requested permissions, why it was selected and what was not tested. Third-party projects can change after a reviewed revision. A source review is not a security certification, an effectiveness benchmark or a promise that every integration works.

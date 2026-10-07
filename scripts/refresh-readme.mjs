@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Keep every figure in README.md equal to what undominated.ai publishes.
+ * Keep every figure in docs/PLATFORM.md equal to what undominated.ai publishes.
  *
  * WHY THIS EXISTS. On 2026-09-04 the README stated eleven undominated models,
  * "97 of 108" dominated, 409 in the catalogue and 63% unrated. The live figures
@@ -20,7 +20,7 @@
  * rather than deriving one, because a second implementation of a published
  * number is a second thing that can drift.
  *
- *   node scripts/refresh-readme.mjs          # rewrite README.md in place
+ *   node scripts/refresh-readme.mjs          # rewrite docs/PLATFORM.md in place
  *   node scripts/refresh-readme.mjs --check  # exit 1 if any figure is stale
  *
  * `--check` is what CI runs, so a stale README fails a pull request rather than
@@ -31,7 +31,7 @@ import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const README = resolve(ROOT, 'README.md')
+const README = resolve(ROOT, 'docs/PLATFORM.md')
 const ORIGIN = 'https://undominated.ai'
 
 const check = process.argv.includes('--check')
@@ -93,7 +93,7 @@ let occurrences = 0
 
 const next = source.replace(/<!--fig:([a-zA-Z]+)-->([\s\S]*?)<!--\/fig-->/g, (whole, key, current) => {
   const render = FIGURES[key]
-  if (!render) throw new Error(`README names an unknown figure: ${key}`)
+  if (!render) throw new Error(`Platform guide names an unknown figure: ${key}`)
   seen.add(key)
   occurrences += 1
   const value = render()
@@ -126,10 +126,12 @@ const report = (rows) => {
   }
   return [...byReading.values()].map(
     (r) =>
-      `${r.key}: README says "${r.current}", the site says "${r.value}"` +
+      `${r.key}: Platform guide says "${r.current}", the site says "${r.value}"` +
       (r.count > 1 ? ` — in ${r.count} places` : ''),
   )
 }
+
+if (!occurrences) throw new Error('platform guide has no figure markers — refusing an empty freshness check')
 
 const unused = Object.keys(FIGURES).filter((k) => !seen.has(k))
 
@@ -140,12 +142,12 @@ const counted = `${seen.size} figure${seen.size === 1 ? '' : 's'}` +
 
 if (check) {
   if (stale.length) {
-    console.error('README figures are stale:')
+    console.error('Platform guide figures are stale:')
     for (const line of report(stale)) console.error(`  ${line}`)
     console.error('\nRun: node scripts/refresh-readme.mjs')
     process.exit(1)
   }
-  console.log(`README figures agree with ${ORIGIN} (${counted} checked, as of ${FIGURES.asOf()})`)
+  console.log(`Platform guide figures agree with ${ORIGIN} (${counted} checked, as of ${FIGURES.asOf()})`)
   if (unused.length) console.log(`  unused figures available: ${unused.join(', ')}`)
   process.exit(0)
 }
@@ -153,9 +155,9 @@ if (check) {
 writeFileSync(README, next)
 console.log(
   stale.length
-    ? `README updated — ${stale.length} of ${occurrences} statements rewritten:\n` +
+    ? `Platform guide updated — ${stale.length} of ${occurrences} statements rewritten:\n` +
       report(stale)
         .map((l) => `  ${l}`)
         .join('\n')
-    : `README already current (${counted}, as of ${FIGURES.asOf()})`,
+    : `Platform guide already current (${counted}, as of ${FIGURES.asOf()})`,
 )

@@ -4,18 +4,13 @@ Read-only MCP server. It quotes what [undominated.ai](https://undominated.ai) al
 published, as JSON. It does not compute a second frontier, fill in a missing
 score, or pick a provider.
 
-**Publication status, checked 2026-10-07:** the npm registry returns 404 for
-`undominated-mcp`. Use the local checkout command until publication is verified:
-
-```sh
-node packages/undominated-mcp/bin/undominated-mcp.mjs
-```
-
-After publication, the pinned install and the package-based editor examples below apply:
+Run version 0.1.0 through your MCP client:
 
 ```sh
 npx -y undominated-mcp@0.1.0
 ```
+
+From a source checkout, use `node packages/undominated-mcp/bin/undominated-mcp.mjs`.
 
 No key, no account, nothing stored. The process speaks JSON-RPC on stdin and
 stdout. If you run it in a terminal with no pipe, it exits and tells you why.

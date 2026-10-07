@@ -28,20 +28,19 @@ On a TTY the Pareto staircase and chartreuse paint the **frontier** finding only
 Pipes, CI, `--json`, and `--plain` stay the same bytes as before — no colour in a log.
 `--color` forces the chrome when you are capturing a screenshot.
 
-## Original resources (0.2.0, unreleased)
+## Original resources (0.2.0)
 
-This source tree adds six original skills, four portable agent profiles and a local copy of the Undominated MCP server. **The new `resources` commands require this local 0.2.0 build; they are not a claim that npm or GitHub already distributes the release.** Existing published model-check commands remain available separately.
-
-From the repository root:
+Version 0.2.0 includes six original skills, four portable agent profiles and a local copy of the Undominated MCP server. Inspect a resource before installing it into an explicit project:
 
 ```sh
-node packages/undominated-check/scripts/build-resources.mjs
-node packages/undominated-check/bin/undominated-check.mjs resources list
-node packages/undominated-check/bin/undominated-check.mjs resources inspect undominated-evidence-audit
-node packages/undominated-check/bin/undominated-check.mjs resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
-node packages/undominated-check/bin/undominated-check.mjs resources install undominated-evidence-audit --project /absolute/path/to/project
-node packages/undominated-check/bin/undominated-check.mjs resources install undominated-mcp --project /absolute/path/to/project
+npx --yes undominated-check@0.2.0 resources list
+npx --yes undominated-check@0.2.0 resources inspect undominated-evidence-audit
+npx --yes undominated-check@0.2.0 resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+npx --yes undominated-check@0.2.0 resources install undominated-evidence-audit --project /absolute/path/to/project
+npx --yes undominated-check@0.2.0 resources install undominated-mcp --project /absolute/path/to/project
 ```
+
+From a source checkout, run `node packages/undominated-check/scripts/build-resources.mjs` at the repository root, then use `node packages/undominated-check/bin/undominated-check.mjs` in place of the npx prefix.
 
 Use `--json` for machine-readable output, or `--target claude` to put a skill under `.claude/skills` instead of `.agents/skills`. The project directory must already exist and its path must contain no symlinks. Installation checks bundled SHA-256 hashes, rejects path traversal and symlinks, and refuses existing destinations, including empty directories. It does not run scripts, install dependencies, fetch packages, use credentials or edit existing client configuration. A filesystem write failure can leave a partial new destination; inspect it before removing it and retrying. Do not install into a directory concurrently controlled by an untrusted process.
 
@@ -57,14 +56,14 @@ The evidence-audit and release-proof examples include local files their checks h
 
 ### Standard skills CLI
 
-The source directories follow the [Agent Skills specification](https://agentskills.io/specification). The [official skills CLI](https://github.com/vercel-labs/skills) supports local discovery and named skill selection:
+The source directories follow the [Agent Skills specification](https://agentskills.io/specification). The [official skills CLI](https://github.com/vercel-labs/skills) supports discovery and named skill selection:
 
 ```sh
-npx skills add ./skills --list
-npx skills add ./skills --skill undominated-evidence-audit --agent codex --copy
+npx skills add Lenvanderhof/Undominated.ai --list
+npx skills add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit --agent codex --copy
 ```
 
-After the new skill directories are actually published to the public repository, the equivalent source will be `Lenvanderhof/Undominated.ai`. Verify that remote discovery lists the exact skill before promoting a remote install line. These local checks do not establish a skills.sh listing.
+For a local checkout, replace `Lenvanderhof/Undominated.ai` with `./skills`. Repository discovery is separate from a skills.sh marketplace listing.
 
 ## README badge
 

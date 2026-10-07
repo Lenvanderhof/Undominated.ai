@@ -27,13 +27,12 @@ For third-party directory suggestions, link the upstream repository/documentatio
 Use Node.js **22.12+** and Python **3.10+**. These public packages have no runtime npm dependencies. From a checkout:
 
 ```sh
-npm test --prefix packages/undominated-check
-npm test --prefix packages/undominated-mcp
-node --test actions/dominated-warn/index.test.mjs
-python3 -B scripts/source-skill-boundaries.test.py
+npm test
+npm run check
+npm run build
 ```
 
-The CLI test command builds the local bundle and runs installer, verdict and checker tests. Add tests for a reproduced defect or meaningful new boundary; a test that merely repeats an implementation does not establish correctness.
+The root test command runs the CLI, MCP, public Action and source-boundary suites. `check` checks the public JavaScript entrypoints for syntax errors; `build` produces the offline resource bundle. The CLI suite includes installer, verdict and checker tests. The public resource workflow also exercises portable installation on Linux, macOS and Windows. Add tests for a reproduced defect or meaningful new boundary; a test that merely repeats an implementation does not establish correctness.
 
 For generated documentation:
 

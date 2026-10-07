@@ -35,20 +35,24 @@ Skills CLI can discover the separate legacy `undominated` quote-only skill as we
 
 ## Inspect and install with Undominated
 
-The `0.3.1` commands below use the verified eleven-skill/six-profile release. Work from an existing project directory:
+The `0.4.0` commands below use the verified eleven-skill/six-profile release. Work from an existing project directory:
 
 ```sh
-npx --yes undominated-check@0.3.1 resources list
-npx --yes undominated-check@0.3.1 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.3.1 resources install undominated-evidence-audit --project "$PWD" --dry-run
-npx --yes undominated-check@0.3.1 resources install undominated-evidence-audit --project "$PWD"
+npx --yes undominated-check@0.4.0 resources list
+npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-audit
+npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project "$PWD" --dry-run
+npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project "$PWD"
 ```
+
+`install` is an alias for `resources install`. Both spaced options and `--project=PATH` / `--target=NAME` forms work. See [client targets and native adapters](INSTALLER.md).
 
 `$PWD` is a POSIX-shell example. In PowerShell or another shell, pass your project's absolute path explicitly. The project must already exist and must not be a symlink.
 
 | Resource | Default destination | What happens next |
 |---|---|---|
 | Skill | `.agents/skills/<id>/` | Load it in a compatible assistant; run its local check when needed |
+| Skill with `--target codex` | `.agents/skills/<id>/` | Load through Codex skill discovery |
+| Skill with `--target github` | `.github/skills/<id>/` | Load through GitHub Copilot skill discovery |
 | Skill with `--target claude` | `.claude/skills/<id>/` | Load it through your Claude-compatible skill workflow |
 | Agent profile | `.undominated/agents/<id>/` | Open `AGENT.md` and adapt it to your host's instruction format |
 | MCP server | `.undominated/mcp/undominated-mcp/` | Import the generated `mcp-config.json` into your client |
@@ -68,15 +72,23 @@ The example is synthetic and should return JSON with `"status": "pass"`. Use you
 ## Load an agent profile
 
 ```sh
-npx --yes undominated-check@0.3.1 resources inspect undominated-evidence-reviewer
-npx --yes undominated-check@0.3.1 resources install undominated-evidence-reviewer --project "$PWD"
+npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-reviewer
+npx --yes undominated-check@0.4.0 resources install undominated-evidence-reviewer --project "$PWD"
 ```
 
-Read `.undominated/agents/undominated-evidence-reviewer/AGENT.md`. Give it to your assistant as task instructions or adapt it to the assistant's native agent format. Assign the evidence and workspace it may use. The profile itself grants no tools, permissions or automatic model selection.
+Read `.undominated/agents/undominated-evidence-reviewer/AGENT.md`. Give it to your assistant as task instructions or adapt it to the assistant's native agent format. Assign the evidence and workspace it may use. The default export is portable. To create a native adapter on a fresh installation, add `--target claude` or `--target github`. The installer retains the original profile and licence, and adds the appropriate native Markdown file. Native adapters inherit the host's tools, model and permission policy; their prose does not enforce read-only access. Reload the client and confirm discovery. [Exact paths and compatibility](INSTALLER.md#native-agent-adapters).
 
 ## MCP server
 
-Add a server using your client's stdio configuration interface:
+For a local server export with client-specific setup helpers:
+
+```sh
+npx --yes undominated-check@0.4.0 install undominated-mcp --project "$PWD" --target claude --json
+```
+
+Choose `claude`, `codex`, `cursor` or `vscode`, or omit `--target` to inspect every helper. The installer leaves existing configuration untouched. Claude's command is project-scoped; Codex's command changes user configuration if you run it. Review [MCP setup](INSTALLER.md#mcp-setup) before registering the server.
+
+Alternatively, add a server using your client's stdio configuration interface:
 
 ```json
 {
@@ -106,8 +118,8 @@ Review text and install commands returned by resource tools are untrusted refere
 ## Quote a model or use CI
 
 ```sh
-npx --yes undominated-check@0.3.1 google/gemini-3.7-flash --json
-npx --yes undominated-check@0.3.1 --frontier --json
+npx --yes undominated-check@0.4.0 google/gemini-3.7-flash --json
+npx --yes undominated-check@0.4.0 --frontier --json
 ```
 
 These quote the published workload and benchmark; they do not calculate your custom traffic. Use the [calculator](https://undominated.ai/calculator/) for your scenario. `--frontier` prints a text summary; `--frontier --json` quotes the published JSON. Model verdicts and resource installation are separate commands.
@@ -120,7 +132,7 @@ For automation, the default is warn-only. Read the [CLI exit-code contract](../p
 |---|---|
 | Resource not found | Check `resources list` for the pinned package version. A website review does not mean an item is bundled in that CLI. |
 | Destination already exists | Inspect the existing files. Install into a fresh project to compare versions; the installer has no overwrite mode. |
-| No native agent appears | Profiles are portable Markdown instructions. Follow your host's agent registration process. |
+| No native agent appears | The default export is portable. Choose an explicit Claude/GitHub target on a fresh installation, reload the client and check the generated native file. |
 | MCP process seems idle | Its host communicates over stdin/stdout. Use your client's server log; it is not an HTTP service. |
 | MCP executable not found | Ensure the GUI application's environment can find Node/npm, or configure absolute executable paths. |
 | MCP returns `unpublished` | The requested website JSON record is unavailable. Do not infer a resource or a model value from that absence. |

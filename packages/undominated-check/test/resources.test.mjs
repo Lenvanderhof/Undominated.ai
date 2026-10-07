@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises'
+import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rm, rmdir, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { delimiter, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
 import { inspectResource, installResource, loadResources, resourceMain, RESOURCE_ROOT } from '../src/resources.mjs'
@@ -121,11 +121,11 @@ test('rejects duplicate manifest identity and duplicate file paths', async t => 
   await assert.rejects(loadResources(other), /duplicate resource file/)
 })
 
-test('Claude skill target is explicit; profiles remain portable', async t => {
+test('Claude skill target is explicit; default portable-agent destination is preserved', async t => {
   const project = await temporary(t)
   const installed = await installResource(skill, { project, target: 'claude' })
   assert.equal(installed.destination, join(project, '.claude', 'skills', skill))
-  const agent = await installResource('undominated-evidence-reviewer', { project, target: 'claude' })
+  const agent = await installResource('undominated-evidence-reviewer', { project })
   assert.equal(agent.destination, join(project, '.undominated', 'agents', agent.id))
   assert.match(agent.note, /no native agent was registered/)
 })
@@ -405,4 +405,150 @@ test('whitespace-only model, evaluation, count and modality identities are inval
   assert.equal((await runFixture(t, 'migration-preflight', data => { data.candidate.inputModalities.push(' ') })).code, 2)
   assert.equal((await runFixture(t, 'migration-preflight', data => { data.requirements.inputModalities.push(' ') })).code, 2)
   assert.equal((await runFixture(t, 'evidence-audit', data => { data.operation = 'count'; data.items = [' ']; data.expected = 1 })).code, 2)
+})
+
+
+for (const [target, folder] of [['universal', '.agents'], ['codex', '.agents'], ['claude', '.claude'], ['github', '.github'], ['undominated', '.undominated']]) {
+  test(`skill target ${target} copies exact source to ${folder}/skills`, async t => {
+    const project = await temporary(t)
+    const result = await installResource(skill, { project, target })
+    assert.equal(result.target, target)
+    assert.equal(result.destination, join(project, folder, 'skills', skill))
+    for (const file of (await inspectResource(skill)).content) assert.deepEqual(await readFile(join(result.destination, file.path)), file.body)
+  })
+}
+
+for (const target of ['claude', 'github']) {
+  test(`${target} adapter is flat native Markdown; original profile and licence stay byte-exact`, async t => {
+    const project = await temporary(t), id = 'undominated-evidence-reviewer'
+    const preview = await installResource(id, { project, target, dryRun: true })
+    assert.deepEqual(await readdir(project), [])
+    assert.match(preview.adapter.note, /would be written/)
+    const result = await installResource(id, { project, target })
+    assert.equal(result.destination, join(project, '.undominated', 'agents', id))
+    assert.equal(result.adapter.path, join(project, target === 'claude' ? '.claude' : '.github', 'agents', id + (target === 'claude' ? '.md' : '.agent.md')))
+    for (const file of (await inspectResource(id)).content) assert.deepEqual(await readFile(join(result.destination, file.path)), file.body)
+    const native = await readFile(result.adapter.path, 'utf8')
+    assert.equal((native.match(/^---$/gm) ?? []).length, 2)
+    assert.equal(JSON.parse(native.match(/^name: (.*)$/m)[1]), id)
+    assert.equal(JSON.parse(native.match(/^description: (.*)$/m)[1]), (await inspectResource(id)).item.description)
+    assert.doesNotMatch(native, /^(tools|model|permissionMode):/m)
+    assert.match(native, /permission gates come from the host/)
+    assert.doesNotMatch(native, /Copying a Markdown file does not automatically register/)
+    assert.equal(result.adapter.toolAccess, 'inherited-from-host')
+    assert.equal(result.adapter.permissions, 'host-controlled')
+    assert.match(native, /# Evidence reviewer/)
+    const receipt = JSON.parse(await readFile(join(result.destination, '.undominated-install.json'), 'utf8'))
+    assert.equal(receipt.generatedFiles[0].path, result.adapter.path)
+    assert.match(receipt.generatedFiles[0].sha256, /^[a-f0-9]{64}$/)
+    await assert.rejects(installResource(id, { project, target }), /already exists/)
+  })
+
+  test(`${target} adapter collision or symlink fails before portable files are written`, async t => {
+    const project = await temporary(t), id = 'undominated-evidence-reviewer'
+    const directory = join(project, target === 'claude' ? '.claude' : '.github', 'agents')
+    await mkdir(directory, { recursive: true })
+    const adapter = join(directory, id + (target === 'claude' ? '.md' : '.agent.md'))
+    await writeFile(adapter, 'existing custom agent')
+    await assert.rejects(installResource(id, { project, target }), /already exists/)
+    assert.equal(await readFile(adapter, 'utf8'), 'existing custom agent')
+    assert.deepEqual(await readdir(project), [target === 'claude' ? '.claude' : '.github'])
+    await rm(adapter)
+    await rmdir(directory)
+    await symlink(await temporary(t), directory)
+    await assert.rejects(installResource(id, { project, target }), /symlink/)
+    assert.deepEqual(await readdir(project), [target === 'claude' ? '.claude' : '.github'])
+  })
+}
+
+test('targets are validated per resource kind instead of silently ignored', async t => {
+  const project = await temporary(t)
+  for (const [id, target] of [[skill, 'cursor'], [skill, 'vscode'], ['undominated-evidence-reviewer', 'codex'], ['undominated-evidence-reviewer', 'cursor'], ['undominated-mcp', 'github'], ['undominated-mcp', 'agents']]) {
+    await assert.rejects(installResource(id, { project, target }), /--target/)
+    assert.deepEqual(await readdir(project), [])
+  }
+})
+
+test('equals syntax, duplicate flags and boolean values cannot silently change installation intent', async t => {
+  const project = await temporary(t)
+  const good = await resourceMain(['install', skill, `--project=${project}`, '--target=codex', '--dry-run', '--json'])
+  assert.equal(good.code, 0, good.err)
+  assert.equal(JSON.parse(good.out).destination, join(project, '.agents', 'skills', skill))
+  for (const args of [
+    ['list', '--target='], ['inspect', skill, '--project='], ['install', skill, '--project='],
+    ['install', skill, '--target=', '--project', project],
+    ['install', skill, '--project', project, `--project=${project}`],
+    ['install', skill, '--project', project, '--target=claude', '--target', 'codex'],
+    ['install', skill, '--project', project, '--dry-run=false'],
+    ['install', skill, '--project', project, '--json=true'],
+    ['install', skill, '--project', project, '--dry-run', '--dry-run'],
+    ['list', skill], ['unknown', '--help'], ['list', '--bogus', '--help'],
+  ]) {
+    const result = await resourceMain(args)
+    assert.equal(result.code, 1, JSON.stringify(args))
+    assert.equal(result.out, '')
+    assert.ok(result.err)
+    assert.deepEqual(await readdir(project), [])
+  }
+})
+
+test('MCP helpers retain exact executable/argv, label client scopes and never edit host configuration', async t => {
+  const project = await temporary(t)
+  for (const name of ['.mcp.json', '.cursor/mcp.json', '.vscode/mcp.json', '.codex/config.toml']) {
+    await mkdir(dirname(join(project, name)), { recursive: true })
+    await writeFile(join(project, name), 'keep this client configuration')
+  }
+  const result = await installResource('undominated-mcp', { project })
+  const entry = join(result.destination, 'bin', 'undominated-mcp.mjs')
+  assert.deepEqual(result.helpers.server, { type: 'stdio', command: process.execPath, args: [entry] })
+  const clients = result.helpers.clients
+  assert.deepEqual(clients.claude.args, ['mcp', 'add', '--scope', 'project', '--transport', 'stdio', 'undominated', '--', process.execPath, entry])
+  assert.deepEqual(clients.codex.args, ['mcp', 'add', 'undominated', '--', process.execPath, entry])
+  assert.equal(clients.claude.scope, 'project')
+  assert.equal(clients.claude.cwd, project)
+  assert.equal(clients.codex.scope, 'user')
+  assert.match(clients.codex.note, /user configuration/)
+  assert.deepEqual(clients.cursor.config.mcpServers.undominated, result.helpers.server)
+  assert.deepEqual(clients.vscode.config.mcpServers.undominated, result.helpers.server)
+  assert.deepEqual(clients.vscode.legacyConfig.servers.undominated, result.helpers.server)
+  assert.equal(clients.vscode.configPath, join(project, '.mcp.json'))
+  for (const name of ['.mcp.json', '.cursor/mcp.json', '.vscode/mcp.json', '.codex/config.toml']) assert.equal(await readFile(join(project, name), 'utf8'), 'keep this client configuration')
+  for (const target of ['claude', 'codex', 'cursor', 'vscode']) {
+    const preview = await installResource('undominated-mcp', { project: await temporary(t), target, dryRun: true })
+    assert.deepEqual(Object.keys(preview.helpers.clients), [target])
+  }
+})
+
+test('POSIX MCP helpers preserve hostile path characters as argv, with no shell expansion', { skip: process.platform === 'win32' }, async t => {
+  const base = await temporary(t), project = join(base, "project 'quotes' $HOME $(touch PWNED) `touch BACKTICK` ; &")
+  await mkdir(project)
+  const bin = join(base, 'bin'); await mkdir(bin)
+  const capture = join(base, 'argv.json')
+  const stub = `#!${process.execPath}\nrequire('node:fs').writeFileSync(process.env.UNDOMINATED_ARGV_FILE, JSON.stringify(process.argv.slice(2)))\n`
+  for (const name of ['claude', 'codex']) await writeFile(join(bin, name), stub, { mode: 0o755 })
+  const result = await installResource('undominated-mcp', { project, dryRun: true })
+  for (const setup of [result.helpers.clients.claude, result.helpers.clients.codex]) {
+    const child = spawnSync('/bin/sh', ['-c', setup.shellCommands.posix.command], {
+      cwd: project, encoding: 'utf8', env: { ...process.env, PATH: `${bin}${delimiter}${process.env.PATH}`, UNDOMINATED_ARGV_FILE: capture },
+    })
+    assert.equal(child.status, 0, child.stderr)
+    assert.deepEqual(JSON.parse(await readFile(capture, 'utf8')), setup.args)
+    assert.match(setup.shellCommands.powershell.command, /^& '.*'/)
+    assert.match(setup.shellCommands.powershell.command, /''quotes''/)
+    assert.match(setup.shellCommands.powershell.shell, /not cmd.exe/)
+  }
+  assert.deepEqual(await readdir(project), [])
+})
+
+test('control characters and MCP configuration interpolation are rejected before writes', async t => {
+  const base = await temporary(t)
+  for (const name of ['line\nbreak', 'tab\tname', 'escape\u001bname']) {
+    const project = join(base, name); await mkdir(project)
+    await assert.rejects(installResource(skill, { project }), /control characters/)
+    assert.deepEqual(await readdir(project), [])
+  }
+  const project = join(base, '${env:HOME}'); await mkdir(project)
+  await assert.rejects(installResource('undominated-mcp', { project }), /interpolation/)
+  assert.deepEqual(await readdir(project), [])
+  await assert.rejects(installResource(skill, { project: base, dryRun: 'false' }), /boolean/)
 })

@@ -37,6 +37,7 @@ the MIT License in their respective LICENSE files:
 - agents/undominated-resource-curator/
 - agents/undominated-stack-cost-optimizer/
 - skills/undominated-advertised-route/
+- skills/undominated-alias-resolution/
 - skills/undominated-benchmark-audit/
 - skills/undominated-cache-tier-billing/
 - skills/undominated-context-tier/
@@ -45,12 +46,19 @@ the MIT License in their respective LICENSE files:
 - skills/undominated-dominance-wording/
 - skills/undominated-eval-contamination-audit/
 - skills/undominated-evidence-audit/
+- skills/undominated-filter-invariance/
+- skills/undominated-final-host/
+- skills/undominated-final-path/
 - skills/undominated-freshness-budget/
+- skills/undominated-header-not-row/
 - skills/undominated-hint-vs-handler/
 - skills/undominated-identity-dedup/
+- skills/undominated-indicative-rate/
 - skills/undominated-licence-boundary/
 - skills/undominated-meter-scope/
 - skills/undominated-migration-preflight/
+- skills/undominated-multiplier-aside/
+- skills/undominated-payback-basis/
 - skills/undominated-plan-quote/
 - skills/undominated-population-denominator/
 - skills/undominated-prompt-cost-estimator/
@@ -63,11 +71,19 @@ the MIT License in their respective LICENSE files:
 - skills/undominated-release-proof/
 - skills/undominated-resource-audit/
 - skills/undominated-rung-select/
+- skills/undominated-schema-not-quote/
 - skills/undominated-seller-spread/
+- skills/undominated-serving-attribution/
 - skills/undominated-shared-lastmod/
+- skills/undominated-single-base/
+- skills/undominated-slug-is-not-body/
+- skills/undominated-source-pin/
+- skills/undominated-spelled-meter/
+- skills/undominated-status-not-page/
 - skills/undominated-surface-agreement/
 - skills/undominated-throughput-benchmark-audit/
 - skills/undominated-unrated-sentinel/
+- skills/undominated-withdrawal-residue/
 
 These component licences grant rights to the listed code and resource files.
 They do not grant rights to the Undominated.ai name or brand assets, or

@@ -1,0 +1,13 @@
+{
+  "alias": "synthetic/model-latest",
+  "targets": [
+    {
+      "id": "synthetic/model-latest",
+      "concrete": true
+    },
+    {
+      "id": "synthetic/model-v1",
+      "concrete": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "unfiltered": [
+    "synthetic/a",
+    "synthetic/b",
+    "synthetic/c"
+  ],
+  "filtered": [
+    "synthetic/c",
+    "synthetic/a"
+  ]
+}

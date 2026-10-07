@@ -128,6 +128,12 @@ The following commit adds suggest-not-redirect, withheld-provider, announced-not
 
 The public boundary suite contains 173 cases after adding 25 controls, including an absent Accept-Language redirect, the two withheld names, a safety claim from `unknown`, and a per-thousand unit restated per million. All 173 cases passed, as did all 52 source synthetic examples. These checks use supplied JSON. They do not send a request, publish a provider, or read a price.
 
+## Four ladder and load boundary checkers — 2026-10-08
+
+The following commit adds ladder-not-flattened, marginal-not-whole, rollback-not-baseline, and load-not-catalogue. The source inventory moves from 52 to 56 validator skills. The 11 profiles, the legacy skill, and the MCP server are unchanged. These four supply synthetic passes and refusal or invalid examples. They are outside the `a67bd9b` Skills CLI receipt and the npm map through `0.4.0`. The published `0.3.1` figure of 43 boundary and control cases remains the npm bundle's case count. Fifty-six validator skills are not that figure.
+
+The public boundary suite contains 194 cases after adding 21 controls, including a flattened ladder, an added rung, a marginal billing mode, a rolled-back deploy recorded as the baseline, and a load return labelled catalogue. All 194 cases passed locally in 14.178 seconds, as did all 56 source synthetic examples. These checks use supplied JSON. They do not read a price, price a marginal block, contact a host, or fetch a page.
+
 ## Catalogue figures and comparison wording
 
 The older [PR #4](https://github.com/Lenvanderhof/Undominated.ai/pull/4) identified two distinct errors: counting unscored service listings as unmeasured models, and describing weak Pareto dominance as requiring both a higher score and a lower price. Current hero wording preserves ties: no lower score, no higher cost, with at least one strict gain. Recorded capability requirements remain a separate check.

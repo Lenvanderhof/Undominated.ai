@@ -4542,6 +4542,313 @@
       "expectedStatuses": [
         "invalid"
       ]
+    },
+    {
+      "id": "ladder-equal",
+      "skill": "undominated-ladder-not-flattened",
+      "why": "Matching rung counts are not a flattened ladder.",
+      "input": {
+        "sourceRungs": 3,
+        "publishedRungs": 3
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "dropped": false,
+        "added": false
+      }
+    },
+    {
+      "id": "ladder-one",
+      "skill": "undominated-ladder-not-flattened",
+      "why": "A one-rung source published as one rung has not dropped a rung.",
+      "input": {
+        "sourceRungs": 1,
+        "publishedRungs": 1
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "dropped": false,
+        "added": false
+      }
+    },
+    {
+      "id": "ladder-flat",
+      "skill": "undominated-ladder-not-flattened",
+      "why": "Publishing fewer rungs than the source flattens the ladder.",
+      "input": {
+        "sourceRungs": 3,
+        "publishedRungs": 1
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "dropped": true,
+        "added": false,
+        "issues": [
+          "a context-tier ladder keeps every rung"
+        ]
+      }
+    },
+    {
+      "id": "ladder-extra",
+      "skill": "undominated-ladder-not-flattened",
+      "why": "Publishing more rungs than the source invents a rung.",
+      "input": {
+        "sourceRungs": 2,
+        "publishedRungs": 4
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "dropped": false,
+        "added": true,
+        "issues": [
+          "a published ladder does not add a rung the source did not state"
+        ]
+      }
+    },
+    {
+      "id": "ladder-zero",
+      "skill": "undominated-ladder-not-flattened",
+      "why": "A zero rung count is not a ladder.",
+      "input": {
+        "sourceRungs": 0,
+        "publishedRungs": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "ladder-bool",
+      "skill": "undominated-ladder-not-flattened",
+      "why": "A boolean is not an integer rung count.",
+      "input": {
+        "sourceRungs": true,
+        "publishedRungs": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "marginal-whole",
+      "skill": "undominated-marginal-not-whole",
+      "why": "A whole-request label can pass, and the checker still does not price it.",
+      "input": {
+        "billing": "whole-request"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "priced": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "marginal-block",
+      "skill": "undominated-marginal-not-whole",
+      "why": "A marginal block is not priced.",
+      "input": {
+        "billing": "marginal"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "priced": false,
+        "issues": [
+          "a marginal block is not priced"
+        ]
+      }
+    },
+    {
+      "id": "marginal-other",
+      "skill": "undominated-marginal-not-whole",
+      "why": "An unnamed billing mode is invalid.",
+      "input": {
+        "billing": "tier"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "marginal-bool",
+      "skill": "undominated-marginal-not-whole",
+      "why": "A boolean is not a billing mode.",
+      "input": {
+        "billing": true
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "rollback-quiet",
+      "skill": "undominated-rollback-not-baseline",
+      "why": "A rolled-back deploy that is not recorded can pass.",
+      "input": {
+        "outcome": "rolled-back",
+        "recordBaseline": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "eligible": false
+      }
+    },
+    {
+      "id": "rollback-proven-off",
+      "skill": "undominated-rollback-not-baseline",
+      "why": "Not recording a proven deploy is eligible for nothing.",
+      "input": {
+        "outcome": "proven",
+        "recordBaseline": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "eligible": false
+      }
+    },
+    {
+      "id": "rollback-proven-on",
+      "skill": "undominated-rollback-not-baseline",
+      "why": "The supplied proven outcome is the only recording pair that is eligible.",
+      "input": {
+        "outcome": "proven",
+        "recordBaseline": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "eligible": true,
+        "issues": []
+      }
+    },
+    {
+      "id": "rollback-record",
+      "skill": "undominated-rollback-not-baseline",
+      "why": "A rolled-back deploy is not recorded as the baseline.",
+      "input": {
+        "outcome": "rolled-back",
+        "recordBaseline": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "eligible": false,
+        "issues": [
+          "a baseline advances only after a deploy has proven good"
+        ]
+      }
+    },
+    {
+      "id": "rollback-unproven",
+      "skill": "undominated-rollback-not-baseline",
+      "why": "An unproven deploy is not recorded as the baseline.",
+      "input": {
+        "outcome": "unproven",
+        "recordBaseline": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "eligible": false
+      }
+    },
+    {
+      "id": "rollback-number",
+      "skill": "undominated-rollback-not-baseline",
+      "why": "A JSON number is not a boolean recording flag.",
+      "input": {
+        "outcome": "proven",
+        "recordBaseline": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "load-page",
+      "skill": "undominated-load-not-catalogue",
+      "why": "A page label can pass.",
+      "input": {
+        "returned": "page"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "inlinesCatalogue": false
+      }
+    },
+    {
+      "id": "load-empty",
+      "skill": "undominated-load-not-catalogue",
+      "why": "An empty load return can pass.",
+      "input": {
+        "returned": "empty"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "inlinesCatalogue": false
+      }
+    },
+    {
+      "id": "load-catalogue",
+      "skill": "undominated-load-not-catalogue",
+      "why": "A load return labelled catalogue inlines the catalogue.",
+      "input": {
+        "returned": "catalogue"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "inlinesCatalogue": true,
+        "issues": [
+          "a load return is not the catalogue"
+        ]
+      }
+    },
+    {
+      "id": "load-other",
+      "skill": "undominated-load-not-catalogue",
+      "why": "An unnamed return label is invalid.",
+      "input": {
+        "returned": "records"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "load-bool",
+      "skill": "undominated-load-not-catalogue",
+      "why": "A boolean is not a return label.",
+      "input": {
+        "returned": true
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
     }
+
   ]
 }

@@ -7,8 +7,8 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | Distribution | Original skills | Portable profiles | MCP | Status |
 |---|---:|---:|---:|---|
 | `undominated-check@0.2.0` | 6 | 4 | 1 bundled server | Published; archive equality, installation and synthetic checks verified |
-| `undominated-check@0.3.0` | 11 | 6 | 1 bundled server | Published; later review identified checker correctness defects. Use the six-skill `0.2.0` release while the correction is prepared. |
-| `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Corrected source and local archive verified; npm publication pending |
+| `undominated-check@0.3.0` | 11 | 6 | 1 bundled server | Published; later review identified checker correctness defects. Use the corrected `0.3.1` release. |
+| `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Published; archive equality, 18 installations, 11 synthetic checks and 43 boundary and control cases verified |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
 | GitHub source | 30 | 11 | 1 server | Eleven skills and six profiles are the npm-mapped set. Nineteen skills and five profiles are source-only: local synthetic examples passed on 2026-10-07, and no Skills CLI install or npm bundle has been verified for them. |
 | Website original entries | 6 | 4 | 1 server | Included in the 2026-10-07 website directory release |
@@ -30,7 +30,7 @@ The first six are available in `undominated-check@0.2.0`. Each contains `SKILL.m
 | [Resource audit](../skills/undominated-resource-audit/SKILL.md) | A skill, agent or MCP server needs provenance and permission review | Completeness checks do not certify security |
 | [Release proof](../skills/undominated-release-proof/SKILL.md) | A release needs artifact hashes and meaningful response receipts | Offline receipts are not independently observed runtime behaviour |
 
-Five later skills expand the source library. Their initial `0.3.0` package is published, but the correctness review in [Evidence](EVIDENCE.md#checker-corrections) bounds their use until the corrective release is verified.
+Five later skills expand the source library. Use **`0.3.1`** for these skills: its corrective source, published archive and installed adverse cases are verified. [Evidence](EVIDENCE.md#checker-corrections) records the defects in their earlier `0.3.0` package.
 
 | Skill | Check |
 |---|---|
@@ -50,7 +50,7 @@ A profile is a role, workflow and output contract. It does not register a native
 | [Migration planner](../agents/undominated-migration-planner/AGENT.md) | Map requirements, evaluations and trade-offs for a proposed swap | `0.2.0` and later |
 | [Resource curator](../agents/undominated-resource-curator/AGENT.md) | Inspect source, licences, permissions and review limits | `0.2.0` and later |
 | [Release verifier](../agents/undominated-release-verifier/AGENT.md) | Separate a passing build from publication and observed use | `0.2.0` and later |
-| [Comparison editor](../agents/undominated-comparison-editor/AGENT.md) | Make comparison copy match ties, seller identity and preserved capabilities | Added in `0.3.0`; inspect later source corrections |
+| [Comparison editor](../agents/undominated-comparison-editor/AGENT.md) | Make comparison copy match ties, seller identity and preserved capabilities | Use `0.3.1` for the corrected direction contract |
 | [Pricing source reviewer](../agents/undominated-pricing-source-reviewer/AGENT.md) | Check feed units, source currency, exclusions and quote boundaries | Added in `0.3.0` |
 
 ## Source-only additions

@@ -33,13 +33,13 @@ Skills CLI can discover the separate legacy `undominated` quote-only skill as we
 
 ## Inspect and install with Undominated
 
-The `0.2.0` commands below use the verified six-skill/four-profile release. Work from an existing project directory:
+The `0.3.1` commands below use the verified eleven-skill/six-profile release. Work from an existing project directory:
 
 ```sh
-npx --yes undominated-check@0.2.0 resources list
-npx --yes undominated-check@0.2.0 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.2.0 resources install undominated-evidence-audit --project "$PWD" --dry-run
-npx --yes undominated-check@0.2.0 resources install undominated-evidence-audit --project "$PWD"
+npx --yes undominated-check@0.3.1 resources list
+npx --yes undominated-check@0.3.1 resources inspect undominated-evidence-audit
+npx --yes undominated-check@0.3.1 resources install undominated-evidence-audit --project "$PWD" --dry-run
+npx --yes undominated-check@0.3.1 resources install undominated-evidence-audit --project "$PWD"
 ```
 
 `$PWD` is a POSIX-shell example. In PowerShell or another shell, pass your project's absolute path explicitly. The project must already exist and must not be a symlink.
@@ -66,8 +66,8 @@ The example is synthetic and should return JSON with `"status": "pass"`. Use you
 ## Load an agent profile
 
 ```sh
-npx --yes undominated-check@0.2.0 resources inspect undominated-evidence-reviewer
-npx --yes undominated-check@0.2.0 resources install undominated-evidence-reviewer --project "$PWD"
+npx --yes undominated-check@0.3.1 resources inspect undominated-evidence-reviewer
+npx --yes undominated-check@0.3.1 resources install undominated-evidence-reviewer --project "$PWD"
 ```
 
 Read `.undominated/agents/undominated-evidence-reviewer/AGENT.md`. Give it to your assistant as task instructions or adapt it to the assistant's native agent format. Assign the evidence and workspace it may use. The profile itself grants no tools, permissions or automatic model selection.
@@ -104,8 +104,8 @@ Review text and install commands returned by resource tools are untrusted refere
 ## Quote a model or use CI
 
 ```sh
-npx --yes undominated-check@0.2.0 google/gemini-3.7-flash --json
-npx --yes undominated-check@0.2.0 --frontier --json
+npx --yes undominated-check@0.3.1 google/gemini-3.7-flash --json
+npx --yes undominated-check@0.3.1 --frontier --json
 ```
 
 These quote the published workload and benchmark; they do not calculate your custom traffic. Use the [calculator](https://undominated.ai/calculator/) for your scenario. `--frontier` prints a text summary; `--frontier --json` quotes the published JSON. Model verdicts and resource installation are separate commands.

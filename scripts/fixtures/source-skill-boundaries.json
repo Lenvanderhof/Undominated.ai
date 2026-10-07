@@ -3348,6 +3348,132 @@
       ]
     },
     {
+      "id": "multiplier-unicode-symbol-space",
+      "skill": "undominated-multiplier-aside",
+      "why": "The multiplication symbol is not a word character; its end must not require a word boundary.",
+      "input": {
+        "label": "synthetic",
+        "claims": [
+          {
+            "id": "priority",
+            "role": "base",
+            "excerpt": "Priority charged at 2\u00d7 the base"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ]
+    },
+    {
+      "id": "multiplier-unicode-symbol-end",
+      "skill": "undominated-multiplier-aside",
+      "why": "The multiplication symbol is not a word character; its end must not require a word boundary.",
+      "input": {
+        "label": "synthetic",
+        "claims": [
+          {
+            "id": "priority",
+            "role": "base",
+            "excerpt": "Priority factor 2\u00d7"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ]
+    },
+    {
+      "id": "multiplier-unicode-symbol-punctuation",
+      "skill": "undominated-multiplier-aside",
+      "why": "The multiplication symbol is not a word character; its end must not require a word boundary.",
+      "input": {
+        "label": "synthetic",
+        "claims": [
+          {
+            "id": "priority",
+            "role": "base",
+            "excerpt": "Priority factor 2\u00d7."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "review"
+      ]
+    },
+    {
+      "id": "multiplier-symbol-component-control",
+      "skill": "undominated-multiplier-aside",
+      "why": "An explicitly separate component never claims the base rate.",
+      "input": {
+        "label": "synthetic",
+        "claims": [
+          {
+            "id": "priority",
+            "role": "component",
+            "excerpt": "Priority factor 2\u00d7"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ]
+    },
+    {
+      "id": "final-host-repeated-dot-requestedHost",
+      "skill": "undominated-final-host",
+      "why": "Only one DNS root dot may be removed; a second dot must remain invalid.",
+      "input": {
+        "label": "synthetic",
+        "responses": [
+          {
+            "id": "response",
+            "requestedHost": "example.test..",
+            "finalHost": "example.test"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "final-host-repeated-dot-finalHost",
+      "skill": "undominated-final-host",
+      "why": "Only one DNS root dot may be removed; a second dot must remain invalid.",
+      "input": {
+        "label": "synthetic",
+        "responses": [
+          {
+            "id": "response",
+            "requestedHost": "example.test",
+            "finalHost": "example.test.."
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "final-host-single-root-dot-control",
+      "skill": "undominated-final-host",
+      "why": "A single trailing DNS root dot and case normalization remain supported.",
+      "input": {
+        "label": "synthetic",
+        "responses": [
+          {
+            "id": "response",
+            "requestedHost": "EXAMPLE.TEST.",
+            "finalHost": "example.test"
+          }
+        ]
+      },
+      "expectedStatuses": [
+        "pass"
+      ]
+    },
+    {
       "id": "final-path-trailing-slash",
       "skill": "undominated-final-path",
       "why": "One trailing slash does not make a different path.",

@@ -4,7 +4,7 @@ description: Refuse a base-rate claim when the excerpt names a multiplier. Prior
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Multiplier-aside audit
@@ -12,7 +12,7 @@ metadata:
 Use when a page spells a currency and a unit, and a later sentence applies a multiplier to priority, fast, flex, or scale traffic.
 
 1. This checker does not read amounts and does not decide which sentence is the invoice. It looks for multiplier wording in the excerpt you supply.
-2. A multiplier is the word `multiplier`, the phrases `倍率` or `加成` or `times the`, or a number glued to `x` or `×` such as `2x`. The name `xAI` does not match, because there is no digit before the `x`.
+2. A multiplier is the word `multiplier`, the phrases `倍率` or `加成` or `times the`, or a number followed by `x` or `×` such as `2x` or `2×`. A space before the symbol is allowed; either symbol is recognized before punctuation, whitespace, or the end of the excerpt. The name `xAI` does not match, because there is no digit before the `x`.
 3. Negation is not parsed. A base claim whose excerpt says "this is not a multiplier" still needs review. Do not feed this checker a sentence about context length such as "2x longer".
 4. `role: base` is a pass only when no multiplier wording is present. `role: component` does not claim the base rate, so multiplier wording does not fail it. This checker does not turn a component into a base rate.
 5. Cache splits and peak splits belong to `undominated-single-base`. An `amount` or a `price` field is invalid input. The examples are synthetic sentences, not a vendor quote.

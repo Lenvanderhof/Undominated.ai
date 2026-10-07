@@ -21,7 +21,9 @@ def hostname(value, label):
         raise ValueError(f"{label} must be non-empty text")
     if "://" in value or "/" in value or " " in value or "@" in value:
         raise ValueError(f"{label} must be a hostname, not a URL")
-    host = value.strip().lower().rstrip(".")
+    host = value.strip().lower()
+    if host.endswith("."):
+        host = host[:-1]
     if not HOST.fullmatch(host):
         raise ValueError(f"{label} is not a hostname")
     return host

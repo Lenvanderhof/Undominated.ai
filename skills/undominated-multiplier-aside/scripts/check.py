@@ -7,10 +7,11 @@ import sys
 from pathlib import Path
 
 ROLES = ("base", "component")
-# A digit glued to "x" is a multiplier token. "xAI" has no digit, so it does not match.
+# A word boundary after × misses whitespace and end-of-input because × is not a word character.
+# Excluding a following word character handles x and × without matching "2xyz" or "xAI".
 # Negation is not parsed: the word "multiplier" is a hit even in a denial.
 MULT = re.compile(
-    r"\bmultiplier\b|倍率|加成|\btimes the\b|\b\d+(?:\.\d+)?\s*[x×]\b",
+    r"\bmultiplier\b|倍率|加成|\btimes the\b|\b\d+(?:\.\d+)?\s*[x×](?!\w)",
     re.IGNORECASE,
 )
 SCOPE = (

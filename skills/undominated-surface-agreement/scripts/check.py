@@ -8,10 +8,12 @@ from decimal import Decimal
 from pathlib import Path
 
 
-def value_of(raw, field, side, issues):
-    """Return (Decimal | None, form). An absent key and a stated null are distinct."""
-    if raw is None:
+def value_of(raw, field, side, issues, present):
+    """Return (Decimal | None, form). A missing key is absent. A present null is null."""
+    if not present:
         return None, "absent"
+    if raw is None:
+        return None, "null"
     if isinstance(raw, bool) or isinstance(raw, (int, float)):
         issues.append(f"{field} is a JSON number on the {side} surface, not a decimal string")
         return Decimal(str(raw)), "number"
@@ -22,11 +24,16 @@ def value_of(raw, field, side, issues):
 
 def compare(left, left_form, right, right_form):
     """Exact-decimal equality, with a stated reason for every non-agreement."""
+    if left_form == "null" and right_form == "null":
+        return True, "both surfaces state null; nothing is stated, which establishes no value"
     if left_form == "absent" and right_form == "absent":
         return True, "field is absent from both surfaces; nothing is stated, which is not a verified value"
-    if left_form == "absent":
+    if {left_form, right_form} == {"null", "absent"}:
+        stated, omitted = ("published", "rendered") if left_form == "null" else ("rendered", "published")
+        return False, f"the {stated} surface states null and the {omitted} surface omits the field; a stated null and a missing key are not the same"
+    if left_form in ("absent", "null"):
         return False, "the published surface states nothing for this field and the rendered surface states a value; a dropped or nulled field is not an agreement"
-    if right_form == "absent":
+    if right_form in ("absent", "null"):
         return False, "the rendered surface states nothing for this field and the published surface states a value; a dropped or nulled field is not an agreement"
     if left_form == "number" and right_form == "number":
         return False, "both surfaces state a JSON number; agreement on a float is not evidence of the published value"
@@ -56,8 +63,8 @@ def check(data):
 
     fields, agreements, disagreements = [], 0, 0
     for field in sorted(set(published) | set(rendered)):
-        left, left_form = value_of(published.get(field), field, "published", issues)
-        right, right_form = value_of(rendered.get(field), field, "rendered", issues)
+        left, left_form = value_of(published.get(field), field, "published", issues, field in published)
+        right, right_form = value_of(rendered.get(field), field, "rendered", issues, field in rendered)
         agrees, reason = compare(left, left_form, right, right_form)
         if not agrees and field in published and field in rendered:
             # Both sides state the field, so a non-agreement is a value or form
@@ -69,14 +76,18 @@ def check(data):
         disagreements += 0 if agrees else 1
         fields.append({
             "field": field,
-            "published": published.get(field),
-            "rendered": rendered.get(field),
+            "published": published[field] if field in published else None,
+            "rendered": rendered[field] if field in rendered else None,
+            "publishedForm": left_form,
+            "renderedForm": right_form,
             "agrees": agrees,
             "reason": reason,
         })
 
     if not fields:
         issues.append("no fields were supplied; an empty comparison proves nothing")
+    elif not any(row["agrees"] and row["reason"] is None for row in fields):
+        issues.append("no field states a comparable value on both surfaces; null agreement establishes nothing")
 
     return {
         "status": "review" if issues else "pass",

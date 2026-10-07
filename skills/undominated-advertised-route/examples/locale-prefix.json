@@ -1,0 +1,7 @@
+{
+  "site": "https://example.test",
+  "englishOnly": ["/skills/"],
+  "locales": ["nl"],
+  "advertised": ["https://example.test/nl/skills/"],
+  "files": ["nl/skills/index.html", "skills/index.html"]
+}

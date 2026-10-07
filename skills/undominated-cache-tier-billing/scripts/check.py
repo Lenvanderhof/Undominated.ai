@@ -74,12 +74,17 @@ def check(data):
         issues.append("cacheWriteMultiplier is zero, which would bill a cache write at no cost")
     if tokens["cachedPrefixTokens"] > tokens["inputTokens"]:
         issues.append("cachedPrefixTokens exceeds inputTokens; the uncached remainder was clamped to zero")
-    if 0 < tokens["cachedPrefixTokens"] < tokens["minimumCacheablePrefixTokens"]:
-        issues.append("cachedPrefixTokens is below minimumCacheablePrefixTokens, so the cached share does not qualify for the cache tier")
     if tokens["cacheWriteTokens"] > tokens["inputTokens"]:
         issues.append("cacheWriteTokens exceeds inputTokens")
 
-    if cache_read is None:
+    # A prefix shorter than the publisher's minimum does not receive the cache
+    # rate. Saying it "does not qualify" while still multiplying by cacheRead
+    # underpriced the cached share.
+    below_minimum = 0 < tokens["cachedPrefixTokens"] < tokens["minimumCacheablePrefixTokens"]
+    if below_minimum:
+        issues.append("cachedPrefixTokens is below minimumCacheablePrefixTokens, so the cached share does not qualify for the cache tier and bills at the base input rate")
+        cache_read_rate, cache_read_form, cache_read_source = base_input, "below-minimum-billed-at-uncached-input", "base.input"
+    elif cache_read is None:
         # No published cache-read rate means the cached share bills as uncached input.
         # Absence is never billed as the cheaper cache price.
         cache_read_rate, cache_read_form, cache_read_source = base_input, "absent-billed-at-uncached-input", "base.input"

@@ -7,7 +7,8 @@ import argparse
 import json
 import re
 import sys
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal
+from fractions import Fraction
 from pathlib import Path
 
 
@@ -35,6 +36,42 @@ def safe_int(value, label: str, allow_zero: bool = True) -> int:
     if not allow_zero and value <= 0:
         raise ValueError(f"{label} must be strictly positive, got {value}")
     return value
+
+
+def decimal_text(value: Fraction) -> str:
+    """Token costs terminate; Decimal's ambient precision must not alter them."""
+    denominator = value.denominator
+    twos = fives = 0
+    while denominator % 2 == 0:
+        denominator //= 2
+        twos += 1
+    while denominator % 5 == 0:
+        denominator //= 5
+        fives += 1
+    if denominator != 1:
+        raise ValueError("cost has no exact finite decimal representation")
+    places = max(twos, fives)
+    scaled = abs(value.numerator) * (10 ** places // value.denominator)
+    digits = str(scaled).zfill(places + 1)
+    text = (digits[:-places] + "." + digits[-places:]).rstrip("0").rstrip(".") if places else digits
+    return ("-" if value < 0 else "") + text
+
+
+def rounded_percentage(value: Fraction) -> str:
+    scaled = abs(value) * 100
+    whole, remainder = divmod(scaled.numerator, scaled.denominator)
+    if remainder * 2 >= scaled.denominator:
+        whole += 1
+    sign = "-" if value < 0 and whole else ""
+    return f"{sign}{whole // 100}.{whole % 100:02d}%"
+
+
+def token_cost(tokens: int, rate, label: str) -> Fraction:
+    if rate is None:
+        if tokens:
+            raise ValueError(f"{label} requires an explicit rate for nonzero tokens")
+        return Fraction(0)
+    return tokens * Fraction(rate) / 1_000_000
 
 
 def verify_path_security(path: Path, label: str):
@@ -73,6 +110,8 @@ def parse_pricing_ladders(raw_ladders: list) -> list:
     for idx, rung in enumerate(raw_ladders):
         if not isinstance(rung, dict):
             raise ValueError(f"ladder rung {idx} must be an object")
+        if "maxInputTokens" not in rung:
+            raise ValueError(f"rung[{idx}].maxInputTokens must be explicit; null means unbounded")
         cap = rung.get("maxInputTokens")
         if idx == len(raw_ladders) - 1:
             if cap is not None:
@@ -88,10 +127,10 @@ def parse_pricing_ladders(raw_ladders: list) -> list:
         uncached = safe_decimal(rung.get("uncachedInputPerMillion"), f"rung[{idx}].uncachedInputPerMillion")
         cache_read = safe_decimal(rung.get("cacheReadInputPerMillion"), f"rung[{idx}].cacheReadInputPerMillion")
         cache_write_val = rung.get("cacheWriteInputPerMillion")
-        cache_write = safe_decimal(cache_write_val, f"rung[{idx}].cacheWriteInputPerMillion") if cache_write_val is not None else uncached
+        cache_write = safe_decimal(cache_write_val, f"rung[{idx}].cacheWriteInputPerMillion") if cache_write_val is not None else None
         output_rate = safe_decimal(rung.get("outputPerMillion"), f"rung[{idx}].outputPerMillion")
         reasoning_rate_val = rung.get("reasoningOutputPerMillion")
-        reasoning_rate = safe_decimal(reasoning_rate_val, f"rung[{idx}].reasoningOutputPerMillion") if reasoning_rate_val is not None else output_rate
+        reasoning_rate = safe_decimal(reasoning_rate_val, f"rung[{idx}].reasoningOutputPerMillion") if reasoning_rate_val is not None else None
 
         parsed.append({
             "maxInputTokens": cap,
@@ -119,27 +158,38 @@ def check(data: dict, base_dir: Path) -> dict:
     if not isinstance(model_name, str) or not model_name.strip():
         raise ValueError("model must be non-empty text")
     
-    currency = data.get("currency", "USD")
-    if not re.fullmatch(r"[A-Z]{3}", currency):
-        raise ValueError("currency must be an explicit 3-letter ISO code (e.g. USD)")
+    currency = data.get("currency")
+    if not isinstance(currency, str) or not re.fullmatch(r"[A-Z]{3}", currency):
+        raise ValueError("currency must be an explicit three-uppercase-letter code (e.g. USD)")
 
     # Load pricing ladder: either from pricingTable or inline ladders
     ladders = None
-    provider = data.get("provider", "Unspecified")
+    provider = data.get("provider")
+    if ("pricingTable" in data) == ("ladders" in data):
+        raise ValueError("provide exactly one of pricingTable or inline ladders")
     if "pricingTable" in data:
         pricing_file = resolve_safe_relative_file(base_dir, data["pricingTable"])
         pricing_data = json.loads(pricing_file.read_text(encoding="utf-8"))
-        if not isinstance(pricing_data, dict) or "models" not in pricing_data:
+        if not isinstance(pricing_data, dict) or not isinstance(pricing_data.get("models"), dict):
             raise ValueError("pricing table file must be an object with a 'models' dictionary")
         if model_name not in pricing_data["models"]:
             raise ValueError(f"model '{model_name}' not found in pricing table: {data['pricingTable']}")
         model_entry = pricing_data["models"][model_name]
-        provider = model_entry.get("provider", provider)
+        if not isinstance(model_entry, dict):
+            raise ValueError("pricing table model entry must be an object")
+        if model_entry.get("currency") != currency:
+            raise ValueError("pricing table model currency must explicitly match the workload currency")
+        table_provider = model_entry.get("provider")
+        if provider is not None and provider != table_provider:
+            raise ValueError("pricing table provider must exactly match the supplied provider")
+        provider = table_provider
         ladders = parse_pricing_ladders(model_entry.get("ladders", []))
     elif "ladders" in data:
         ladders = parse_pricing_ladders(data["ladders"])
     else:
         raise ValueError("either 'pricingTable' relative path or inline 'ladders' must be provided")
+    if not isinstance(provider, str) or not provider.strip():
+        raise ValueError("provider must be explicit non-empty text, inline or in the pricing table")
 
     turns_data = data.get("turns")
     if not isinstance(turns_data, list) or not turns_data:
@@ -151,20 +201,22 @@ def check(data: dict, base_dir: Path) -> dict:
     tot_cache_write = 0
     tot_reasoning = 0
     tot_completion = 0
-    tot_cost = Decimal("0")
-    tot_unoptimized_cost = Decimal("0")
-
-    one_million = Decimal("1000000")
+    tot_cost = Fraction(0)
+    tot_unoptimized_cost = Fraction(0)
+    seen_turns = set()
 
     for idx, turn in enumerate(turns_data):
         if not isinstance(turn, dict):
             raise ValueError(f"turn at index {idx} must be an object")
-        turn_num = safe_int(turn.get("turn", idx + 1), f"turns[{idx}].turn")
-        uncached_in = safe_int(turn.get("uncachedInputTokens", 0), f"turns[{idx}].uncachedInputTokens")
-        cache_read = safe_int(turn.get("cacheReadTokens", 0), f"turns[{idx}].cacheReadTokens")
-        cache_write = safe_int(turn.get("cacheWriteTokens", 0), f"turns[{idx}].cacheWriteTokens")
-        reasoning = safe_int(turn.get("reasoningTokens", 0), f"turns[{idx}].reasoningTokens")
-        completion = safe_int(turn.get("completionTokens", 0), f"turns[{idx}].completionTokens")
+        turn_num = safe_int(turn.get("turn"), f"turns[{idx}].turn", allow_zero=False)
+        if turn_num in seen_turns:
+            raise ValueError(f"turn index {turn_num} appears more than once")
+        seen_turns.add(turn_num)
+        uncached_in = safe_int(turn.get("uncachedInputTokens"), f"turns[{idx}].uncachedInputTokens")
+        cache_read = safe_int(turn.get("cacheReadTokens"), f"turns[{idx}].cacheReadTokens")
+        cache_write = safe_int(turn.get("cacheWriteTokens"), f"turns[{idx}].cacheWriteTokens")
+        reasoning = safe_int(turn.get("reasoningTokens"), f"turns[{idx}].reasoningTokens")
+        completion = safe_int(turn.get("completionTokens"), f"turns[{idx}].completionTokens")
 
         turn_input_tokens = uncached_in + cache_read + cache_write
         turn_output_tokens = reasoning + completion
@@ -175,17 +227,18 @@ def check(data: dict, base_dir: Path) -> dict:
 
         rung = find_ladder_rung(ladders, turn_input_tokens)
 
-        cost_uncached = (Decimal(uncached_in) * rung["uncachedInputPerMillion"]) / one_million
-        cost_cache_read = (Decimal(cache_read) * rung["cacheReadInputPerMillion"]) / one_million
-        cost_cache_write = (Decimal(cache_write) * rung["cacheWriteInputPerMillion"]) / one_million
-        cost_reasoning = (Decimal(reasoning) * rung["reasoningOutputPerMillion"]) / one_million
-        cost_completion = (Decimal(completion) * rung["outputPerMillion"]) / one_million
+        cost_uncached = token_cost(uncached_in, rung["uncachedInputPerMillion"], "uncached input")
+        cost_cache_read = token_cost(cache_read, rung["cacheReadInputPerMillion"], "cache read")
+        cost_cache_write = token_cost(cache_write, rung["cacheWriteInputPerMillion"], "cache write")
+        cost_reasoning = token_cost(reasoning, rung["reasoningOutputPerMillion"], "reasoning output")
+        cost_completion = token_cost(completion, rung["outputPerMillion"], "completion output")
 
         turn_cost = cost_uncached + cost_cache_read + cost_cache_write + cost_reasoning + cost_completion
 
-        # Counterfactual unoptimized cost: all input tokens at full uncached rate, all outputs at outputPerMillion
-        unopt_input = (Decimal(turn_input_tokens) * rung["uncachedInputPerMillion"]) / one_million
-        unopt_output = (Decimal(turn_output_tokens) * rung["outputPerMillion"]) / one_million
+        # Change only input caching; changing reasoning rates would mislabel that
+        # price difference as a cache saving.
+        unopt_input = token_cost(turn_input_tokens, rung["uncachedInputPerMillion"], "baseline input")
+        unopt_output = cost_reasoning + cost_completion
         turn_unoptimized = unopt_input + unopt_output
 
         tot_uncached_in += uncached_in
@@ -204,24 +257,23 @@ def check(data: dict, base_dir: Path) -> dict:
             "reasoningTokens": reasoning,
             "completionTokens": completion,
             "totalTurnTokens": turn_total_tokens,
-            "turnCost": str(turn_cost.quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP)),
+            "turnCost": decimal_text(turn_cost),
         })
 
     issues = []
-    expected_cost_str = data.get("expectedTotalCost")
-    if expected_cost_str is not None:
-        expected_cost = safe_decimal(expected_cost_str, "expectedTotalCost")
-        tolerance = safe_decimal(data.get("tolerance", "0.00001"), "tolerance")
+    tolerance = Fraction(safe_decimal(data.get("tolerance", "0.00001"), "tolerance"))
+    if "expectedTotalCost" in data:
+        expected_cost = Fraction(safe_decimal(data["expectedTotalCost"], "expectedTotalCost"))
         discrepancy = abs(tot_cost - expected_cost)
         if discrepancy > tolerance:
             issues.append(
-                f"calculated total cost {tot_cost} deviates from expectedTotalCost {expected_cost} by {discrepancy} (tolerance: {tolerance})"
+                f"calculated total cost {decimal_text(tot_cost)} deviates from expectedTotalCost {decimal_text(expected_cost)} by {decimal_text(discrepancy)} (tolerance: {decimal_text(tolerance)})"
             )
 
     cache_savings = tot_unoptimized_cost - tot_cost
     cache_savings_pct = (
-        (cache_savings / tot_unoptimized_cost * Decimal("100")).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-        if tot_unoptimized_cost > 0 else Decimal("0.00")
+        rounded_percentage(cache_savings / tot_unoptimized_cost * 100)
+        if tot_unoptimized_cost > 0 else None
     )
 
     grand_total_tokens = tot_uncached_in + tot_cache_read + tot_cache_write + tot_reasoning + tot_completion
@@ -241,10 +293,12 @@ def check(data: dict, base_dir: Path) -> dict:
             "grandTotalTokens": grand_total_tokens,
         },
         "financialSummary": {
-            "totalCost": str(tot_cost.quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP)),
-            "unoptimizedBaselineCost": str(tot_unoptimized_cost.quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP)),
-            "netSavings": str(cache_savings.quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP)),
-            "savingsPercentage": f"{cache_savings_pct}%",
+            "totalCost": decimal_text(tot_cost),
+            "unoptimizedBaselineCost": decimal_text(tot_unoptimized_cost),
+            "netSavings": decimal_text(cache_savings),
+            "savingsPercentage": cache_savings_pct,
+            "percentageRounding": "half-up to two decimal places; null when baseline is zero",
+            "baselineAssumption": "all input at the selected uncached rate; unchanged reasoning and completion rates",
         },
         "turnBreakdown": turns_breakdown,
         "issues": issues,

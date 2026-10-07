@@ -12,7 +12,8 @@
     "inputTokens": 200000,
     "cachedPrefixTokens": 120000,
     "minimumCacheablePrefixTokens": 1024,
-    "cacheWriteTokens": 120000,
+    "cacheWriteTokens": 80000,
     "outputTokens": 4000
-  }
+  },
+  "cacheWriteBilling": "replacement"
 }

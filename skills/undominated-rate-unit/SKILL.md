@@ -4,7 +4,7 @@ description: Refuse a token-price conversion until the currency and the unit are
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Rate-unit audit
@@ -14,7 +14,7 @@ Use when a feed might be quoted per token, per thousand, per million, or in cent
 1. Currency is three explicit letters. A missing currency is not USD.
 2. The unit must be one of `per_million_tokens`, `per_thousand_tokens`, `per_token`, or `cents_per_token`. `per M`, `neurons`, and a missing unit do not convert. Do not guess that M means million.
 3. Rates are decimal strings, not JSON numbers and not booleans. A number has already been rounded to binary.
-4. Scaling runs only after both gates pass. Per million stays as written. Per thousand is multiplied by 1000. Per token is multiplied by 1000000. Cents per token are multiplied by 10000, which is `cents × 1,000,000 / 100`. The scaled strings are a conversion of the supplied input, not a new vendor quote.
+4. Scaling runs only after both gates pass. Per million stays as written. Per thousand is multiplied by 1000. Per token is multiplied by 1000000. Cents per token are multiplied by 10000, which is `cents × 1,000,000 / 100`. Scaling preserves every supplied digit using a sufficient local decimal context; an inexact operation is invalid input, never an accepted rounded rate. The scaled strings are a conversion of the supplied input, not a new vendor quote.
 5. One side may not be invented. A quote needs both `input` and `output`. Do not fill the other side with zero.
 
 ## Run the local check

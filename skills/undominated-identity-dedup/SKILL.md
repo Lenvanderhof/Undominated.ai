@@ -4,18 +4,18 @@ description: Collapse duplicate identities inside one population before ranking,
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Identity dedup audit
 
 Use when a count, a coverage figure, a ranked list or a spread is produced from a table of rows.
 
-1. Rows are not identities. A model and its `:batch` and `:free` twins are one measurement entering a table three times. Dedupe on identity before any count, before any ranking, and before any comparison.
-2. Normalise before comparing: trim and case-fold identity strings, and fold seller names the same way. `Vendor A` and `vendor a` are one seller until evidence says otherwise.
-3. The invariant: one identity appears at most once in any published population. Report every duplicate group with its row indices, so the collapsed entries are visible rather than asserted.
-4. A same-identity price conflict is a different defect from a duplicate and is reported separately. Duplicates mean a denominator is wrong; conflicting prices for one identity mean the source itself disagrees, and deduplicating would hide that by silently picking a winner.
-5. State the denominator change explicitly. Published coverage fell from 153 to 112 distinct models on one task, and four task chips lost their visibility threshold as a result — the collapse is the finding, not a formatting detail.
+1. Rows are not identities. Choose the population unit first: models or sellers. Supply the canonical model IDs and seller labels supported by the evidence; this script does not resolve aliases or remove service-tier suffixes.
+2. The declared normalization policy trims and folds whitespace and case. Use it only for a population where that policy is appropriate. Matching after normalization is not independent proof that upstream identifiers refer to the same model or company.
+3. Count model identities by `id`, or seller identities by `seller`. Report each duplicate population group and the row indices that would be collapsed. Several models from one seller still count as one seller.
+4. Keep price disagreement separate from duplicate counts. Compare prices only within the same supplied model and seller identity; different models at one seller, or different sellers of one model, may have different legitimate prices. Decimal spellings such as `1.0` and `1.00` are numerically equal.
+5. State the input-row count and distinct-identity denominator explicitly. A numeric disagreement requires review of currency, units, observation time and delivery terms before calling it a source error. These conditions are not inferred by the checker.
 
 ## Run the local check
 
@@ -32,7 +32,11 @@ Exit codes: `0` every identity is unique and consistent; `1` review required; `2
 
 ## Input contract
 
-`unit` is `model` or `seller`. `rows` is a non-empty list of objects; each carries `id`, plus `seller` when `unit` is `seller`. A `price` field, when present, must be a decimal string and is used for conflict detection. Identities and sellers are text, not numbers.
+`unit` is `model` or `seller`. `rows` is a non-empty list of objects; each carries a non-empty model `id`, plus a non-empty `seller` when `unit` is `seller`. A seller can also be supplied in model mode. Present `seller` fields must be non-empty text; absent seller identity remains absent and is not equated to a named seller.
+
+A `price` field, when present, must be a non-negative decimal string. Numeric comparison preserves every supplied digit and ignores representational trailing zeros. Price groups use the normalized model ID and seller together; no cross-model or cross-seller price conflict is inferred. The input must already provide comparable currency, units and service conditions if a reported numeric disagreement will be used as a price-error claim. The checker does not establish that comparability.
+
+`uniqueIdentities`, `rowsDropped` and `duplicateGroups` follow the selected population unit. `conflictingGroups` follows the narrower model/seller grouping and reports numeric disagreements; it does not select a price or infer a rate for a missing value.
 
 ## Deliverable and limits
 

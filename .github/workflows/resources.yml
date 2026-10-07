@@ -24,3 +24,26 @@ jobs:
         run: npm test --prefix packages/undominated-mcp
       - name: Public pull-request action contract
         run: node --test actions/dominated-warn/index.test.mjs
+      - name: Source skill examples (synthetic inputs only)
+        run: |
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+          skills = sorted(entry.parent for entry in Path('skills').glob('*/SKILL.md') if entry.parent.name != 'undominated')
+          if not skills:
+              raise SystemExit('No validator skills found')
+          for skill in skills:
+              for required in ['scripts/check.py', 'examples/synthetic.json', 'LICENSE']:
+                  if not (skill / required).is_file():
+                      raise SystemExit(f'{skill}: missing {required}')
+              result = subprocess.run(
+                  ['python3', 'scripts/check.py', 'examples/synthetic.json'],
+                  cwd=skill, text=True, capture_output=True, check=True,
+              )
+              if json.loads(result.stdout).get('status') != 'pass':
+                  raise SystemExit(f'{skill}: synthetic example did not pass')
+          print(f'{len(skills)} synthetic examples passed; source truth and semantic completeness are not established')
+          PY
+      - name: Source skill boundary and control cases
+        run: python3 -B scripts/source-skill-boundaries.test.py

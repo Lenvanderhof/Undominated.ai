@@ -48,13 +48,14 @@ def check(data: dict) -> dict:
         raise ValueError("claim must be non-empty text")
     
     observed_at = data.get("observedAt")
-    if observed_at:
-        try:
-            date.fromisoformat(observed_at)
-        except ValueError:
+    if observed_at is not None:
+        if not isinstance(observed_at, str) or not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", observed_at):
             raise ValueError("observedAt must be a valid ISO-8601 date (YYYY-MM-DD)")
+        date.fromisoformat(observed_at)
 
-    tolerance = safe_float(data.get("tolerance", 0.05), "tolerance", min_val=0.001)
+    tolerance = safe_float(data.get("tolerance", 0.05), "tolerance")
+    if tolerance >= 1:
+        raise ValueError("tolerance must be a fraction below 1")
 
     runs = data.get("runs")
     if not isinstance(runs, list) or not runs:
@@ -67,10 +68,14 @@ def check(data: dict) -> dict:
         if not isinstance(run, dict):
             raise ValueError(f"runs[{idx}] must be an object")
 
-        engine = run.get("engine", f"Engine-{idx+1}")
-        model = run.get("model", "unknown-model")
-        hardware = run.get("hardware", "unknown-hardware")
-        precision = run.get("precision", "unknown-precision")
+        # Equal invented placeholders previously made absent evidence look comparable.
+        for field in ("engine", "model", "hardware", "precision"):
+            if not isinstance(run.get(field), str) or not run[field].strip():
+                raise ValueError(f"runs[{idx}].{field} must be explicit non-empty text")
+            marker = re.sub(r"[\s_]+", "-", run[field].strip().casefold())
+            if marker in {"unknown", "unspecified", "not-stated", "n/a", "none", "null", f"unknown-{field}", f"unspecified-{field}"}:
+                issues.append(f"runs[{idx}].{field} is an unknown marker, so cohort equivalence is unassessed")
+        engine, model, hardware, precision = (run[field] for field in ("engine", "model", "hardware", "precision"))
 
         concurrency = safe_int(run.get("concurrency"), f"runs[{idx}].concurrency", min_val=1)
         in_tokens = safe_int(run.get("inputTokens"), f"runs[{idx}].inputTokens", min_val=1)
@@ -85,6 +90,8 @@ def check(data: dict) -> dict:
 
         # 1. Latency decomposition check
         expected_latency_ms = ttft_ms + (out_tokens - 1) * tpot_ms
+        if not math.isfinite(expected_latency_ms):
+            raise ValueError("derived latency must be finite")
         lat_diff = abs(total_lat_ms - expected_latency_ms) / total_lat_ms
         lat_valid = lat_diff <= tolerance
         if not lat_valid:
@@ -103,6 +110,8 @@ def check(data: dict) -> dict:
 
         # 3. Aggregate throughput check via Little's Law
         expected_agg_tps = (concurrency * out_tokens * 1000.0) / total_lat_ms
+        if not math.isfinite(expected_agg_tps) or expected_agg_tps <= 0:
+            raise ValueError("derived aggregate throughput must be positive and finite")
         agg_diff = abs(claimed_agg_tps - expected_agg_tps) / expected_agg_tps
         agg_valid = agg_diff <= (tolerance * 2.0)
         if not agg_valid:
@@ -151,19 +160,21 @@ def check(data: dict) -> dict:
                 issues.append(f"Cohort mismatch: comparing different models ('{base['model']}' vs '{comp['model']}')")
             # Check hardware parity
             if base["hardware"] != comp["hardware"]:
-                parity_notes.append(f"Hardware differs: '{base['hardware']}' vs '{comp['hardware']}'")
+                note = f"Hardware differs: '{base['hardware']}' vs '{comp['hardware']}'"
+                parity_notes.append(note)
+                issues.append(note)
             # Check precision parity
             if base["precision"] != comp["precision"]:
-                parity_notes.append(f"Precision differs: '{base['precision']}' vs '{comp['precision']}'")
+                note = f"Precision differs: '{base['precision']}' vs '{comp['precision']}'"
+                parity_notes.append(note)
+                issues.append(note)
             # Check concurrency parity
             if base["concurrency"] != comp["concurrency"]:
                 issues.append(f"Concurrency mismatch: comparing concurrency {base['concurrency']} with concurrency {comp['concurrency']}")
             # Check prompt & output size parity
-            in_ratio = abs(base["tokens"]["input"] - comp["tokens"]["input"]) / max(base["tokens"]["input"], comp["tokens"]["input"])
-            out_ratio = abs(base["tokens"]["output"] - comp["tokens"]["output"]) / max(base["tokens"]["output"], comp["tokens"]["output"])
-            if in_ratio > 0.20 or out_ratio > 0.20:
+            if base["tokens"] != comp["tokens"]:
                 issues.append(
-                    f"Workload size mismatch: input tokens ({base['tokens']['input']} vs {comp['tokens']['input']}) or output tokens ({base['tokens']['output']} vs {comp['tokens']['output']}) deviate > 20%"
+                    f"Workload size mismatch: input tokens ({base['tokens']['input']} vs {comp['tokens']['input']}) or output tokens ({base['tokens']['output']} vs {comp['tokens']['output']}) differ"
                 )
 
     return {

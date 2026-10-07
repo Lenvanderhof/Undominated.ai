@@ -4,7 +4,7 @@ import argparse
 import json
 import re
 import sys
-from decimal import Decimal
+from decimal import Decimal, Inexact, localcontext
 from pathlib import Path
 
 OPERATIONS = ("sum", "average", "rank")
@@ -14,6 +14,26 @@ def money(value, label):
     if isinstance(value, bool) or not isinstance(value, str) or not re.fullmatch(r"(?:0|[1-9]\d*)(?:\.\d+)?", value):
         raise ValueError(f"{label} must be a non-negative decimal string")
     return Decimal(value)
+
+
+def exact_sum(values):
+    exponent = min(value.as_tuple().exponent for value in values)
+    digits = max(len(value.as_tuple().digits) + value.as_tuple().exponent - exponent
+                 for value in values)
+    # Align decimal places, then reserve every possible carry from the number of addends.
+    with localcontext() as context:
+        context.prec = digits + len(str(len(values)))
+        context.traps[Inexact] = True
+        return sum(values, Decimal(0))
+
+
+def exact_average(total, count):
+    # A terminating division by count needs fewer than bit_length(count) extra digits.
+    # A repeating expansion raises Inexact instead of silently becoming a rounded amount.
+    with localcontext() as context:
+        context.prec = len(total.as_tuple().digits) + count.bit_length()
+        context.traps[Inexact] = True
+        return total / Decimal(count)
 
 
 def check(data):
@@ -60,9 +80,15 @@ def check(data):
     if not issues:
         currency = distinct[0]
         if operation == "sum":
-            result = {"currency": currency, "total": format(sum((row["amount"] for row in parsed), Decimal(0)), "f")}
+            result = {"currency": currency, "total": format(exact_sum([row["amount"] for row in parsed]), "f")}
         elif operation == "average":
-            result = {"currency": currency, "average": format(sum((row["amount"] for row in parsed), Decimal(0)) / Decimal(len(parsed)), "f")}
+            total = exact_sum([row["amount"] for row in parsed])
+            try:
+                average = exact_average(total, len(parsed))
+            except Inexact:
+                issues.append("average has no exact finite decimal within supported arithmetic; no rounding rule was supplied")
+            else:
+                result = {"currency": currency, "average": format(average, "f")}
         else:
             ordered = sorted(parsed, key=lambda row: row["amount"], reverse=True)
             result = {"currency": currency, "rankedIds": [row["id"] for row in ordered]}

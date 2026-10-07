@@ -14,5 +14,6 @@
     "minimumCacheablePrefixTokens": 1024,
     "cacheWriteTokens": 50000,
     "outputTokens": 2000
-  }
+  },
+  "cacheWriteBilling": "surcharge"
 }

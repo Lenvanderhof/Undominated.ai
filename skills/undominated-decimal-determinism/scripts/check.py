@@ -4,7 +4,7 @@ import argparse
 import json
 import re
 import sys
-from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from decimal import Decimal, Inexact, InvalidOperation, ROUND_HALF_UP, localcontext
 from pathlib import Path
 
 DECIMAL_STRING = re.compile(r"(?:0|[1-9]\d*)(?:\.\d+)?")
@@ -18,6 +18,24 @@ def money(value, label):
         return Decimal(value)
     except InvalidOperation as exc:
         raise ValueError(f"{label} is not a parseable decimal") from exc
+
+
+def exact_product(left, right):
+    # Coefficient digit counts bound the product; the default 28 digits can hide a mismatch.
+    with localcontext() as context:
+        context.prec = len(left.as_tuple().digits) + len(right.as_tuple().digits)
+        context.traps[Inexact] = True
+        return left * right
+
+
+def exact_difference(left, right):
+    exponent = min(left.as_tuple().exponent, right.as_tuple().exponent)
+    digits = max(len(value.as_tuple().digits) + value.as_tuple().exponent - exponent
+                 for value in (left, right))
+    with localcontext() as context:
+        context.prec = digits + 1
+        context.traps[Inexact] = True
+        return left - right
 
 
 def float_artefact(unit_text, quantity, billed):
@@ -69,7 +87,7 @@ def check(data):
             entries.append(entry)
             continue
         unit = money(raw, f"rates[{name!r}]")
-        recomputed = unit * quantity
+        recomputed = exact_product(unit, quantity)
         entry["unitRate"] = format(unit, "f")
         entry["recomputed"] = format(recomputed, "f")
         if name not in billed:
@@ -87,7 +105,7 @@ def check(data):
             entry["agrees"] = True
         else:
             entry["agrees"] = False
-            entry["difference"] = format(claimed - recomputed, "f")
+            entry["difference"] = format(exact_difference(claimed, recomputed), "f")
             issues.append(
                 f"billed[{name!r}] differs from the decimal product of unit rate and quantity"
             )

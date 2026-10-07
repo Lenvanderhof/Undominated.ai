@@ -48,8 +48,6 @@ def tokenize(text: str) -> list[str]:
 def get_ngrams(tokens: list[str], n: int) -> set[tuple[str, ...]]:
     if not tokens:
         return set()
-    if len(tokens) < n:
-        return {tuple(tokens)}
     return {tuple(tokens[i : i + n]) for i in range(len(tokens) - n + 1)}
 
 
@@ -100,11 +98,10 @@ def check(data: dict) -> dict:
         raise ValueError("version must be non-empty text")
 
     observed_at = data.get("observedAt")
-    if observed_at:
-        try:
-            date.fromisoformat(observed_at)
-        except ValueError:
+    if observed_at is not None:
+        if not isinstance(observed_at, str) or not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", observed_at):
             raise ValueError("observedAt must be a valid ISO-8601 date (YYYY-MM-DD)")
+        date.fromisoformat(observed_at)
 
     canary = data.get("canaryGuid")
     if canary is not None:
@@ -125,11 +122,15 @@ def check(data: dict) -> dict:
 
     issues = []
     audited_samples = []
+    sample_ids = set()
 
     for idx, s in enumerate(samples):
         if not isinstance(s, dict):
             raise ValueError(f"samples[{idx}] must be an object")
-        sample_id = s.get("id", f"sample-{idx+1}")
+        sample_id = s.get("id")
+        if not isinstance(sample_id, str) or not sample_id.strip() or sample_id in sample_ids:
+            raise ValueError(f"samples[{idx}].id must be unique non-empty text")
+        sample_ids.add(sample_id)
         eval_text = s.get("evalText")
         ref_text = s.get("referenceCorpusExcerpt")
 
@@ -139,24 +140,29 @@ def check(data: dict) -> dict:
             raise ValueError(f"samples[{idx}].referenceCorpusExcerpt must be a string or null")
 
         eval_tokens = tokenize(eval_text)
+        if not eval_tokens:
+            raise ValueError(f"samples[{idx}].evalText must contain words")
         eval_ngrams = get_ngrams(eval_tokens, ngram_size)
 
-        containment = 0.0
-        longest_seq = 0
-        if ref_text:
-            ref_tokens = tokenize(ref_text)
+        # A missing/short reference cannot produce a measured zero or a passed audit.
+        containment = None
+        longest_seq = None
+        ref_tokens = tokenize(ref_text) if ref_text else []
+        if ref_tokens:
             ref_ngrams = get_ngrams(ref_tokens, ngram_size)
-            if eval_ngrams:
+            if eval_ngrams and ref_ngrams:
                 overlap = eval_ngrams & ref_ngrams
                 containment = len(overlap) / len(eval_ngrams)
             longest_seq = longest_common_word_sequence(eval_tokens, ref_tokens)
+        if containment is None:
+            issues.append(f"[{sample_id}] Contamination unassessed: both supplied texts need at least {ngram_size} words")
 
         # Flag contamination breaches
-        if containment > max_contamination:
+        if containment is not None and containment > max_contamination:
             issues.append(
                 f"[{sample_id}] High {ngram_size}-gram contamination: {containment*100:.1f}% overlaps reference corpus (allowed limit: {max_contamination*100:.1f}%)"
             )
-        if longest_seq >= 13:
+        if longest_seq is not None and longest_seq >= 13:
             issues.append(
                 f"[{sample_id}] Verbatim memorization risk: {longest_seq} consecutive identical words with training/reference text"
             )
@@ -164,19 +170,21 @@ def check(data: dict) -> dict:
         audited_samples.append({
             "id": sample_id,
             "evalTokenCount": len(eval_tokens),
-            "containmentRatio": round(containment, 4),
+            "containmentRatio": round(containment, 4) if containment is not None else None,
             "longestVerbatimSequence": longest_seq,
-            "passedContamination": containment <= max_contamination and longest_seq < 13,
+            "passedContamination": containment <= max_contamination and longest_seq < 13 if containment is not None else None,
         })
 
     # Judge audit section
     judge_result = None
     judge_data = data.get("judgeAudit")
-    if judge_data:
+    if judge_data is not None:
         if not isinstance(judge_data, dict):
             raise ValueError("judgeAudit must be an object")
 
-        judge_model = judge_data.get("judgeModel", "unspecified-judge")
+        judge_model = judge_data.get("judgeModel")
+        if not isinstance(judge_model, str) or not judge_model.strip():
+            raise ValueError("judgeAudit.judgeModel must be explicit non-empty text")
         max_inconsistency = safe_float(
             judge_data.get("maxAllowedPositionInconsistency", 0.15),
             "judgeAudit.maxAllowedPositionInconsistency",
@@ -195,9 +203,14 @@ def check(data: dict) -> dict:
             raise ValueError("judgeAudit.pairwisePositionTests must be an array")
 
         inconsistent_count = 0
+        prompt_ids = set()
         for p_idx, pt in enumerate(pos_tests):
             if not isinstance(pt, dict):
                 raise ValueError(f"judgeAudit.pairwisePositionTests[{p_idx}] must be an object")
+            prompt_id = pt.get("promptId")
+            if not isinstance(prompt_id, str) or not prompt_id.strip() or prompt_id in prompt_ids:
+                raise ValueError("judge position tests need unique non-empty promptId values")
+            prompt_ids.add(prompt_id)
             std_win = pt.get("standardWinner")
             swp_win = pt.get("swappedWinner")
             if std_win not in ("A", "B", "tie") or swp_win not in ("A", "B", "tie"):
@@ -205,7 +218,9 @@ def check(data: dict) -> dict:
             if std_win != swp_win:
                 inconsistent_count += 1
 
-        inconsistency_rate = (inconsistent_count / len(pos_tests)) if pos_tests else 0.0
+        inconsistency_rate = (inconsistent_count / len(pos_tests)) if pos_tests else None
+        if inconsistency_rate is None:
+            issues.append(f"[{judge_model}] Position bias unassessed: no pairwise position tests")
         if pos_tests and inconsistency_rate > max_inconsistency:
             issues.append(
                 f"[{judge_model}] Severe position bias: {inconsistency_rate*100:.1f}% judgments flipped upon swapping candidate positions (threshold: {max_inconsistency*100:.1f}%)"
@@ -227,6 +242,8 @@ def check(data: dict) -> dict:
             scores.append(float(rscore))
 
         v_corr = pearson_correlation(lens, scores) if len(lens) >= 3 else None
+        if v_corr is None:
+            issues.append(f"[{judge_model}] Verbosity bias unassessed: need at least three samples and nonzero variance")
         if v_corr is not None and v_corr > max_verbosity_corr:
             issues.append(
                 f"[{judge_model}] Significant verbosity skew: Pearson correlation r={v_corr:.2f} between response length and score (threshold: {max_verbosity_corr:.2f})"
@@ -236,23 +253,24 @@ def check(data: dict) -> dict:
             "judgeModel": judge_model,
             "totalPositionTests": len(pos_tests),
             "inconsistentPositionCount": inconsistent_count,
-            "positionInconsistencyRate": round(inconsistency_rate, 4),
-            "positionBiasPassed": inconsistency_rate <= max_inconsistency,
+            "positionInconsistencyRate": round(inconsistency_rate, 4) if inconsistency_rate is not None else None,
+            "positionBiasPassed": inconsistency_rate <= max_inconsistency if inconsistency_rate is not None else None,
             "verbositySampleCount": len(v_samples),
             "verbosityScoreCorrelation": round(v_corr, 4) if v_corr is not None else None,
-            "verbosityBiasPassed": v_corr is None or v_corr <= max_verbosity_corr,
+            "verbosityBiasPassed": v_corr <= max_verbosity_corr if v_corr is not None else None,
         }
 
     return {
         "status": "review" if issues else "pass",
         "evalSuite": data["evalSuite"],
         "version": data["version"],
-        "canaryVerified": canary is not None,
+        "canaryProvided": canary is not None,
+        "canaryProtectionVerified": None,
         "totalSamplesAudited": len(audited_samples),
         "auditedSamples": audited_samples,
         "judgeAudit": judge_result,
         "issues": issues,
-        "scope": "n-gram contamination detection, verbatim memorization check, and LLM judge bias verification",
+        "scope": "overlap and judge statistics over supplied evidence only; absent evidence is unassessed, canary presence does not verify protection",
     }
 
 

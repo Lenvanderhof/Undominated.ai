@@ -10,10 +10,10 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | `undominated-check@0.3.0` | 11 | 6 | 1 bundled server | Published; later review identified checker correctness defects. Use the corrected `0.3.1` release. |
 | `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Published; archive equality, 18 installations, 11 synthetic checks and 43 boundary and control cases verified |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
-| GitHub source | 30 | 11 | 1 server | Eleven skills and six profiles are the npm-mapped set. Nineteen skills and five profiles are source-only: local synthetic examples passed on 2026-10-07, and no Skills CLI install or npm bundle has been verified for them. |
+| GitHub source | 30 | 11 | 1 server | Eleven skills and six profiles are the npm-mapped set. Nineteen skills and five profiles are source-only. Skills CLI installation and synthetic checks were verified at pinned source `8087a25`; semantic review is separate. |
 | Website original entries | 6 | 4 | 1 server | Included in the 2026-10-07 website directory release |
 
-The npm rows count the installation map, not every directory. Nineteen further skills and five further profiles are source-only and are listed below. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside both groups. Skills CLI discovery of this repository can see the legacy skill and the source-only directories. That discovery was not executed.
+The npm rows count the installation map, not every directory. Nineteen further skills and five further profiles are source-only and are listed below. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside both groups. Skills CLI 1.7.1 discovered and copied all 29 skill directories at [`8087a25`](https://github.com/Lenvanderhof/Undominated.ai/tree/8087a25ac453a717a3a8aabce9b2987f6b2b1b2d): the 28 validator skills plus that legacy skill. All 125 installed files matched the pinned source, and 28 installed synthetic examples returned structured passes. This establishes installation and fixture behaviour, not semantic completeness.
 
 A website review is not proof that a third-party resource is bundled here. `resources list` is the authority for a specific installed CLI version. [Installation guide](GETTING-STARTED.md) · [release verification and limits](EVIDENCE.md).
 
@@ -55,11 +55,12 @@ A profile is a role, workflow and output contract. It does not register a native
 
 ## Source-only additions
 
-These directories are in this repository so a later pinned install can name them. They are not in `undominated-check@0.2.0`, `@0.3.0`, or `@0.3.1`. On 2026-10-07 each skill's `examples/synthetic.json` was run with its own `scripts/check.py` and exited 0. Those inputs are synthetic. A passing check is not a vendor quote and is not an install receipt. The Skills CLI was not run. The five profiles were not registered as native subagents.
+These directories can be installed from GitHub source with a pinned Skills CLI command. They are not in `undominated-check@0.2.0`, `@0.3.0`, or `@0.3.1`. On 2026-10-07 each skill's `examples/synthetic.json` was run with its own `scripts/check.py` and exited 0. Those inputs are synthetic. A passing check is not a vendor quote and is not an install receipt. The subsequent pinned Skills CLI check described above verified acquisition and file identity, including the first 17 source-only skills at that revision. Two later skills and a fifth profile were added in `c47ac12`; that older installation receipt does not cover them. The five profiles were not registered as native subagents.
 
 | Resource | Contract | Limit |
 |---|---|---|
 | [Advertised-route audit](../skills/undominated-advertised-route/SKILL.md) | Refuse a crawl-list URL whose English-only path gained a locale prefix, or whose `?format=md` sibling was never written. | A supplied file list is not a fetch, and a present file is not a claim that its contents are correct. |
+| [Cache-tier billing audit](../skills/undominated-cache-tier-billing/SKILL.md) | Split supplied cache reads, writes and uncached input using an explicit replacement or surcharge write-billing basis; below-minimum cached prefixes bill at base input. | One supplied rate set. It does not walk a context-tier ladder or apply batch, off-peak, or subscription rules. |
 | [Currency isolation audit](../skills/undominated-currency-isolate/SKILL.md) | Refuse to add, average, or rank amounts whose currencies differ. | It does not convert currencies or fetch an exchange rate. |
 | [Decimal determinism audit](../skills/undominated-decimal-determinism/SKILL.md) | Require a published rate, a computed bill, and a displayed figure to agree as decimals. | It does not fetch vendor prices. |
 | [Eval contamination and judge audit](../skills/undominated-eval-contamination-audit/SKILL.md) | Check supplied evaluation text for overlap and judge-prompt skew. | It does not crawl an external corpus. |
@@ -73,8 +74,7 @@ These directories are in this repository so a later pinned install can name them
 | [Rate-unit audit](../skills/undominated-rate-unit/SKILL.md) | Refuse a token-price conversion until the currency and the unit are both explicit. | It does not guess that M means million. A scaled figure is not a new vendor quote. |
 | [Read-only claim audit](../skills/undominated-readonly-claim/SKILL.md) | Reject a read-only label when a listed tool name contains a mutation token. | A passing name list is not proof the handlers are read-only. |
 | [Context-rung selection](../skills/undominated-rung-select/SKILL.md) | Select the context-tier rung that contains a request's input length. | It does not model marginal block pricing or fetch vendor rates. |
-| [Cache-tier billing audit](../skills/undominated-cache-tier-billing/SKILL.md) | Bill a qualifying cached prefix at the cache-read rate. A prefix below the stated minimum bills at the base input rate. | One supplied rate set. It does not walk a context-tier ladder or apply batch, off-peak, or subscription rules. |
-| [Rendered-surface and payload agreement](../skills/undominated-surface-agreement/SKILL.md) | Compare a rendered snapshot and a JSON snapshot field by field. A stated null and a missing key are different findings. | It does not fetch either surface. |
+| [Rendered-surface and payload agreement](../skills/undominated-surface-agreement/SKILL.md) | Compare rendered and JSON snapshots field by field; distinguish stated nulls from missing keys. | It does not fetch either surface. |
 | [Shared-lastmod audit](../skills/undominated-shared-lastmod/SKILL.md) | Refuse a crawl list where every page is dated on the build day. | One page dated on the build day can be a real change. A shared older day can be the day a record began. |
 | [Throughput benchmark audit](../skills/undominated-throughput-benchmark-audit/SKILL.md) | Check that a supplied throughput claim names its concurrency and batch conditions. | It does not run a benchmark. |
 | [Unrated sentinel](../skills/undominated-unrated-sentinel/SKILL.md) | Keep a missing score out of a ranked list. | Unrated is not scored zero. |

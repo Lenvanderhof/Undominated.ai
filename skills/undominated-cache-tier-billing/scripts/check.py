@@ -4,15 +4,36 @@ import argparse
 import json
 import re
 import sys
-from decimal import Decimal, getcontext
+from decimal import Decimal, Inexact, localcontext
 from pathlib import Path
 
-# Every cost is tokens * rate / 1e6, so the division is the only inexact step.
-# 50 digits keeps a whole token count times a quoted rate exact to more places
-# than any published price carries; rounding here would invent precision.
-getcontext().prec = 50
-
 MILLION = Decimal(1000000)
+
+
+def exact_product(left, right):
+    # The input contract has no fixed digit ceiling; 50 significant digits can lose a rate.
+    with localcontext() as context:
+        context.prec = len(left.as_tuple().digits) + len(right.as_tuple().digits)
+        context.traps[Inexact] = True
+        return left * right
+
+
+def token_cost(tokens, unit_rate):
+    product = exact_product(Decimal(tokens), unit_rate)
+    with localcontext() as context:
+        context.prec = len(product.as_tuple().digits) + len(MILLION.as_tuple().digits)
+        context.traps[Inexact] = True
+        return product / MILLION
+
+
+def exact_sum(values):
+    exponent = min(value.as_tuple().exponent for value in values)
+    digits = max(len(value.as_tuple().digits) + value.as_tuple().exponent - exponent
+                 for value in values)
+    with localcontext() as context:
+        context.prec = digits + len(str(len(values)))
+        context.traps[Inexact] = True
+        return sum(values, Decimal(0))
 
 
 def money(value, label):
@@ -67,6 +88,14 @@ def check(data):
     keys = ("inputTokens", "cachedPrefixTokens", "minimumCacheablePrefixTokens", "cacheWriteTokens", "outputTokens")
     tokens = {key: count(request.get(key), f"request.{key}") for key in keys}
 
+    cache_write_billing = data.get("cacheWriteBilling")
+    if tokens["cacheWriteTokens"] > 0 and cache_write_billing not in ("replacement", "surcharge"):
+        raise ValueError("positive cacheWriteTokens requires explicit cacheWriteBilling: replacement or surcharge")
+    if cache_write_billing is not None and cache_write_billing not in ("replacement", "surcharge"):
+        raise ValueError("cacheWriteBilling must be replacement or surcharge when supplied")
+    if cache_write_billing == "replacement" and tokens["cachedPrefixTokens"] + tokens["cacheWriteTokens"] > tokens["inputTokens"]:
+        raise ValueError("replacement cache reads and writes must not exceed inputTokens together")
+
     # An absolute published price outranks a multiple of it, so it wins when both arrive.
     if cache_write is not None and multiplier is not None:
         issues.append("cacheWrite and cacheWriteMultiplier were both supplied; the absolute rate was used")
@@ -94,7 +123,7 @@ def check(data):
     if cache_write is not None:
         cache_write_rate, cache_write_form, cache_write_source = cache_write, "absolute", "cacheWrite"
     elif multiplier is not None:
-        cache_write_rate, cache_write_form, cache_write_source = base_input * multiplier, "multiplier-of-base-input", "cacheWriteMultiplier"
+        cache_write_rate, cache_write_form, cache_write_source = exact_product(base_input, multiplier), "multiplier-of-base-input", "cacheWriteMultiplier"
     elif tokens["cacheWriteTokens"] > 0:
         cache_write_rate, cache_write_form, cache_write_source = base_input, "absent-billed-at-uncached-input", "base.input"
         issues.append("no cache-write rate was supplied for a request that wrote cached tokens; the write billed at the base input rate")
@@ -102,18 +131,20 @@ def check(data):
         cache_write_rate, cache_write_form, cache_write_source = Decimal(0), "absent-no-write-billed", None
 
     cached_tokens = min(tokens["cachedPrefixTokens"], tokens["inputTokens"])
-    uncached_tokens = max(tokens["inputTokens"] - tokens["cachedPrefixTokens"], 0)
+    replaced_write_tokens = tokens["cacheWriteTokens"] if cache_write_billing == "replacement" else 0
+    uncached_tokens = max(tokens["inputTokens"] - tokens["cachedPrefixTokens"] - replaced_write_tokens, 0)
     components = {
-        "inputUncached": Decimal(uncached_tokens) * base_input / MILLION,
-        "cacheRead": Decimal(cached_tokens) * cache_read_rate / MILLION,
-        "cacheWrite": Decimal(tokens["cacheWriteTokens"]) * cache_write_rate / MILLION,
-        "output": Decimal(tokens["outputTokens"]) * base_output / MILLION,
+        "inputUncached": token_cost(uncached_tokens, base_input),
+        "cacheRead": token_cost(cached_tokens, cache_read_rate),
+        "cacheWrite": token_cost(tokens["cacheWriteTokens"], cache_write_rate),
+        "output": token_cost(tokens["outputTokens"], base_output),
     }
-    total = sum(components.values(), Decimal(0))
+    total = exact_sum(list(components.values()))
     return {
         "status": "review" if issues else "pass",
         "model": data["model"],
         "currency": data["currency"],
+        "cacheWriteBilling": cache_write_billing,
         "tokens": {
             "inputTokens": tokens["inputTokens"],
             "cachedPrefixTokens": cached_tokens,

@@ -4,7 +4,7 @@ import argparse
 import json
 import re
 import sys
-from decimal import Decimal
+from decimal import Decimal, Inexact, localcontext
 from pathlib import Path
 
 # Multiplier that turns one explicit unit into a per-million figure in the same currency.
@@ -21,6 +21,14 @@ def money(value, label):
     if isinstance(value, bool) or not isinstance(value, str) or not re.fullmatch(r"(?:0|[1-9]\d*)(?:\.\d+)?", value):
         raise ValueError(f"{label} must be a non-negative decimal string")
     return Decimal(value)
+
+
+def exact_scale(value, scale):
+    # Even multiplication by one rounds a Decimal under an insufficient global context.
+    with localcontext() as context:
+        context.prec = len(value.as_tuple().digits) + len(scale.as_tuple().digits)
+        context.traps[Inexact] = True
+        return value * scale
 
 
 def check(data):
@@ -57,8 +65,8 @@ def check(data):
         scale = SCALES[unit]
         scaled = [{
             "id": quote["id"],
-            "inputPerMillion": format(quote["input"] * scale, "f"),
-            "outputPerMillion": format(quote["output"] * scale, "f"),
+            "inputPerMillion": format(exact_scale(quote["input"], scale), "f"),
+            "outputPerMillion": format(exact_scale(quote["output"], scale), "f"),
         } for quote in parsed]
     return {
         "status": "review" if issues else "pass",

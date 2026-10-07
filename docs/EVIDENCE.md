@@ -43,6 +43,24 @@ The public resource workflow runs the standalone CLI, MCP and public GitHub Acti
 
 The legacy Action suite initially failed because one assertion read `.github/workflows/launch-verdicts.yml`, a private workflow absent from this public repository. That private-repository assertion was removed from the public suite; all 22 public Action assertions were preserved. No production workflow or Action runtime was copied or changed.
 
+The separately published [source-only batch](https://github.com/Lenvanderhof/Undominated.ai/commit/8087a25ac453a717a3a8aabce9b2987f6b2b1b2d) adds 17 skill directories and four portable profiles. Their MIT licence files are present, and all 17 supplied synthetic examples independently returned structured passes. The source workflow now runs examples for all 28 validator skills. A separate Skills CLI 1.7.1 check at that exact source revision discovered and copied all 29 repository skills (28 validators plus the legacy quote-only skill), matched 125 installed files and passed all 28 installed synthetic examples. That verifies acquisition and fixture behaviour at `8087a25`. Subsequent source-only corrections and their boundary tests are recorded below; the original install receipt does not by itself verify those newer bytes. It is outside the 18-resource npm bundle and the website's original-resource release.
+
+## Source-only correction record — 2026-10-07
+
+The 17 newly published skills at `8087a25` all passed their synthetic examples. A separate review then found **20 unexpected outcomes among 37 targeted cases**; that count is outcomes, not distinct bugs. The affected contracts were corrected in source while the published npm `0.3.1` bundle remained unchanged.
+
+| Source-only contract | Correction |
+|---|---|
+| Decimal determinism, rate-unit conversion and currency isolation | Preserve supplied decimal digits during arithmetic; withhold a repeating average when no rounding rule is supplied |
+| Cache-tier billing | Derive sufficient arithmetic precision; require explicit replacement or surcharge write billing, exclude replacement writes from base input, and reject overlapping replacement token shares |
+| Prompt cost estimator | Require the stated identity/currency and applicable pricing evidence; preserve exact cost arithmetic and tier boundaries |
+| Context-rung selection | Require an explicit final `null` cap rather than interpreting a missing field as unbounded |
+| Identity dedup | Count the selected model/seller population, equate numeric decimal spellings, and separate different model/seller price groups |
+| Throughput audit | Require explicit run identities and check model, hardware, precision and workload comparability |
+| Evaluation contamination audit | Refuse a clean verdict when required sample/judge evidence is absent; preserve declared normalization and missing-evidence boundaries |
+
+The nine corrected checker contracts are version `1.0.1`; the surface-agreement contract also received a prose-only clarification. All 62 cases in the public [boundary/control suite](../scripts/source-skill-boundaries.test.py) and all 28 supplied synthetic examples passed against the corrected source. The suite checks structured outcomes and specific result fields, including expected refusals and positive controls. CI also requires a checker, licence and synthetic example for every non-legacy skill directory, and runs every example. These are bounded regression and installation checks, not certification of source truth, general effectiveness or native-agent activation. The additional profiles remain portable instructions; the extra resources remain outside the npm and website original-resource bundles.
+
 ## What a source review means
 
 A resource review records the pinned upstream definition, the applicable licence, the requested permissions, why it was selected and what was not tested. Third-party projects can change after a reviewed revision. A source review is not a security certification, an effectiveness benchmark or a promise that every integration works.

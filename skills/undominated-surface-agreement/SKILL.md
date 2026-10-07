@@ -4,16 +4,16 @@ description: Prove a rendered surface and its published payload state the same v
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Rendered-surface and payload agreement
 
 Use when a document a visitor reads and a JSON file a machine reads describe the same facts, and you need both proven equal.
 
-1. Two publication paths are two data sources, and a build that does not reconcile them is two data sources. A hub once shipped HTML read from one accepted snapshot while its public JSON was written by a separate script and dated three days later — every quality row disagreed, and the two files were both correct according to their own pipelines.
+1. Independently generated HTML and JSON can describe different snapshots. Record both input identities and compare their supplied fields before describing the two outputs as consistent.
 2. Compare values, not text. Fields are compared as exact decimals, so `1.0` and `1.00` agree; two surfaces that print the same figure to different precision have still agreed. Compare the number you would quote, never its formatting.
-3. A field present on one side and absent on the other is a disagreement in its own right, listed in `missingFromRendered` or `missingFromPublished`, never folded into the agreement count. A silently dropped field is the exact failure that shipped: rows that vanished rather than rows that changed.
+3. A field present on one side and absent on the other is a disagreement in its own right, listed in `missingFromRendered` or `missingFromPublished`, never folded into the agreement count. Checking only shared fields would hide an omission.
 4. A stated `null` and a missing key are different findings. Two stated nulls agree only that nothing is stated — they establish no value. A stated null beside a missing key does not agree. A stated null beside a value is a disagreement. Absence is never a passing verdict about quality, price or coverage. If no field has a comparable value on both sides, the check is a review.
 5. The forms must match too. A field carried as a JSON number on one side and a decimal string on the other does not agree, and two JSON numbers do not agree either: agreement on a float is not evidence of a published value. Passing validates the field set you supplied, not that either surface is current.
 

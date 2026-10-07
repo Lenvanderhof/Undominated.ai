@@ -4,7 +4,7 @@ description: Refuse to add, average or rank amounts whose currencies differ, so 
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Currency isolation audit
@@ -15,7 +15,8 @@ Use when a total, an average or a ranking mixes money from more than one source.
 2. A sum, an average and a rank are valid only inside one currency. Two currencies do not produce a combined figure.
 3. This checker does not convert. A supplied exchange rate is not a reason to add the amounts. Drop the rate and withhold the total.
 4. Amounts are decimal strings, not JSON numbers and not booleans. Both sides of a pair stay in the currency they were given.
-5. Ranking orders the supplied amounts inside that one currency. It does not turn the order into a quality ranking.
+5. Sums and terminating averages retain exact decimal arithmetic beyond the default 28 significant digits. A repeating average cannot be represented as a finite decimal without a rounding policy; this checker returns review and withholds it rather than choosing a rule.
+6. Ranking orders the supplied amounts inside that one currency. It does not turn the order into a quality ranking.
 
 ## Run the local check
 

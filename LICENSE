@@ -43,6 +43,28 @@ the MIT License in their respective LICENSE files:
 - agents/undominated-comparison-editor/
 - agents/undominated-pricing-source-reviewer/
 
+- agents/undominated-eval-harness-auditor/
+- agents/undominated-population-reviewer/
+- agents/undominated-quote-identity-reviewer/
+- agents/undominated-stack-cost-optimizer/
+- skills/undominated-cache-tier-billing/
+- skills/undominated-currency-isolate/
+- skills/undominated-decimal-determinism/
+- skills/undominated-eval-contamination-audit/
+- skills/undominated-freshness-budget/
+- skills/undominated-identity-dedup/
+- skills/undominated-population-denominator/
+- skills/undominated-prompt-cost-estimator/
+- skills/undominated-quantisation-label/
+- skills/undominated-quote-join/
+- skills/undominated-ratchet-gate/
+- skills/undominated-rate-unit/
+- skills/undominated-readonly-claim/
+- skills/undominated-rung-select/
+- skills/undominated-surface-agreement/
+- skills/undominated-throughput-benchmark-audit/
+- skills/undominated-unrated-sentinel/
+
 These component licences grant rights to the listed code and resource files.
 They do not grant rights to the Undominated.ai name or brand assets, or
 sublicense data fetched from external publishers. Files outside these listed

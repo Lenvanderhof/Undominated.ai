@@ -37,47 +37,42 @@ def check(data):
     if not isinstance(rows, list) or not rows:
         raise ValueError("rows must be a non-empty list")
 
-    groups, order, issues, conflicts = {}, [], [], []
+    groups, comparisons, issues = {}, {}, []
     for index, row in enumerate(rows):
         if not isinstance(row, dict):
             raise ValueError(f"rows[{index}] must be an object")
-        key = identity(row.get("id"), f"rows[{index}].id")
-        price = price_of(row, f"rows[{index}]")
-        if key not in groups:
-            groups[key] = []
-            order.append(key)
-        groups[key].append((index, price))
-        if unit == "seller":
-            # A second seller identity is checked across rows below; here we only
-            # require that every seller row carries a comparable seller name.
-            identity(row.get("seller"), f"rows[{index}].seller")
-
-    if unit == "seller":
-        sellers = {}
-        for index, row in enumerate(rows):
-            key = identity(row.get("seller"), f"rows[{index}].seller")
-            sellers.setdefault(key, []).append(index)
-        for key in sorted(sellers):
-            indices = sellers[key]
-            if len(indices) > 1:
-                issues.append(f"seller {key!r} appears on rows {indices}, so one seller occupies several entries")
+        model_id = identity(row.get("id"), f"rows[{index}].id")
+        seller = None
+        if unit == "seller" or "seller" in row:
+            seller = identity(row.get("seller"), f"rows[{index}].seller")
+        key = seller if unit == "seller" else model_id
+        groups.setdefault(key, []).append(index)
+        # Seller counts group by seller; price disagreement additionally needs
+        # the same supplied model identity. Distinct sellers are not conflicting
+        # quotes for a model, and a seller's distinct models have distinct rates.
+        comparison = (key, model_id, seller)
+        comparisons.setdefault(comparison, []).append((index, price_of(row, f"rows[{index}]")))
 
     duplicate_groups, conflicting_groups = [], []
-    for key in order:
-        members = groups[key]
-        if len(members) < 2:
+    for key, indices in groups.items():
+        if len(indices) < 2:
+            continue
+        duplicate_groups.append({"identity": key, "rows": indices, "dropped": len(indices) - 1})
+        issues.append(f"{unit} identity {key!r} appears {len(indices)} times, on rows {indices}")
+
+    for (key, model_id, seller), members in comparisons.items():
+        # Decimal equality/hash preserves supplied digits and equates 1.0 with
+        # 1.00. normalize() would silently round under the active context.
+        distinct = {price for _, price in members if price is not None}
+        if len(distinct) < 2:
             continue
         indices = [index for index, _ in members]
-        group = {"identity": key, "rows": indices, "dropped": len(indices) - 1}
-        duplicate_groups.append(group)
-        issues.append(f"identity {key!r} appears {len(indices)} times, on rows {indices}")
-        prices = [price for _, price in members if price is not None]
-        distinct = {format(value, "f") for value in prices}
-        if len(distinct) > 1:
-            conflicting_groups.append({"identity": key, "rows": indices, "prices": sorted(distinct)})
-            issues.append(
-                f"identity {key!r} carries conflicting prices {sorted(distinct)} on rows {indices}"
-            )
+        values = []
+        for price in sorted(distinct):
+            value = format(price, "f")
+            values.append(value.rstrip("0").rstrip(".") if "." in value else value)
+        conflicting_groups.append({"identity": key, "model": model_id, "seller": seller, "rows": indices, "prices": values})
+        issues.append(f"supplied quote identity {model_id!r} at seller {seller!r} carries different prices {values} on rows {indices}")
 
     dropped = sum(group["dropped"] for group in duplicate_groups)
     return {
@@ -89,7 +84,7 @@ def check(data):
         "duplicateGroups": duplicate_groups,
         "conflictingGroups": conflicting_groups,
         "issues": issues,
-        "scope": f"identity uniqueness and price agreement across {len(rows)} rows as {unit} identities, one normalisation pass, no external lookup",
+        "scope": f"identity uniqueness across {len(rows)} rows as {unit} identities; numeric price disagreement only within supplied model/seller identities, no proof of equivalent currency, units or service terms",
     }
 
 

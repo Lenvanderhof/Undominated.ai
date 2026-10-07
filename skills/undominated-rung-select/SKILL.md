@@ -4,14 +4,14 @@ description: Select the context-tier rung that contains a request's input length
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Rung selection
 
 Use when a bill needs the rate for one input length, and the vendor publishes more than one rung.
 
-1. Keep every rung. Finite caps are strictly increasing positive integers. The final rung is unbounded (`maxInputTokens` null).
+1. Keep every rung. Finite caps are strictly increasing positive integers. Every rung must explicitly include `maxInputTokens`. The final rung is unbounded only when that key is explicitly null; a missing key is unknown and invalid.
 2. A request uses the first rung whose cap is greater than or equal to `inputTokens`. Past a cap, the whole request uses the next rung. Tokens equal to a cap stay on that rung.
 3. This checker does not model marginal block pricing. A request marked `marginal` is a review, and no rung is selected.
 4. Report both the input rate and the output rate of the selected rung. Do not drop a side, and do not convert the rate into a cost.

@@ -4,7 +4,7 @@ description: Precision calculation of inference costs across prompt tokens, comp
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Precision prompt and trajectory cost estimator
@@ -14,7 +14,7 @@ Use when estimating, validating, or auditing inference bills for agentic multi-t
 1. Freeze first-party provider pricing terms. Record exact model ID, provider name, currency, context ladder boundaries, and token pricing rates per million: uncached prompt tokens, cached prompt read tokens, cached prompt write/creation tokens, completion tokens, and reasoning/thought tokens.
 2. Tokenize requests using the target model's exact tokenizer. Never approximate token counts from character or word counts. Deconstruct multi-turn interactions turn-by-turn into uncached input, cached read hits, newly written cached tokens, generated reasoning tokens, and final completion tokens.
 3. Apply provider context tier ladders deterministically. When a provider doubles input or output rates beyond a context threshold (e.g. 128k tokens), identify the applicable tier per turn based on the total prompt context presented to the engine.
-4. Run the validator to compute exact decimal costs per turn and across the full trajectory. The tool computes counterfactual unoptimized baseline spend, net prompt-caching savings, and verifies claims against invoiced or expected numbers without floating-point drift.
+4. Run the validator to compute exact decimal costs per turn and across the full trajectory. The baseline prices all input at the selected uncached rate while keeping reasoning and completion rates unchanged. It is an explicit counterfactual, not an observed alternative bill. Totals and comparisons are exact; the displayed savings percentage alone uses half-up rounding to two decimal places and is null when its denominator is zero.
 5. Disclose calculation boundaries: this tool models pure API token inference costs. Network egress fees, provisioned throughput reservation minimums, batch discounts, and regional sales taxes must be audited separately.
 
 ## Run the local check
@@ -33,13 +33,14 @@ Exit codes: `0` checks passed within the stated scope; `1` review required or a 
 ## Input contract
 
 The input JSON object must contain:
+
 - `workloadId`: Non-empty string identifying the benchmark or production workload.
 - `model`: Exact model identity string matching the pricing table or ladder.
-- `provider`: Provider name string.
-- `currency`: Explicit 3-letter ISO code (e.g. `"USD"`).
-- `pricingTable`: Safe relative path to a local pricing table JSON file (without parent directory `..` traversal or symlinks), OR an inline `ladders` array.
+- `provider`: Non-empty provider name for inline ladders. A pricing-table model entry must supply its own provider; when the workload also names one, the two must match exactly.
+- `currency`: Explicit three-uppercase-letter currency code (e.g. `"USD"`). The checker validates its format and equality, not membership in a currency standard.
+- Exactly one of `pricingTable` (a safe relative path to local JSON, without parent directory `..` traversal or symlinks) or inline `ladders`. A pricing-table model entry must name a currency exactly matching the workload; no conversion or relabelling is performed.
 - `turns`: Non-empty array of turn objects, each containing:
-  - `turn`: Positive integer turn index.
+  - `turn`: Explicit positive integer turn index, unique within the trajectory.
   - `uncachedInputTokens`: Non-negative integer.
   - `cacheReadTokens`: Non-negative integer.
   - `cacheWriteTokens`: Non-negative integer.
@@ -48,7 +49,9 @@ The input JSON object must contain:
 - `expectedTotalCost` (optional): Non-negative decimal string to mathematically verify against computed cost.
 - `tolerance` (optional): Non-negative decimal string tolerance for verification (defaults to `"0.00001"`).
 
-All token counts must be finite non-negative integers; booleans are strictly rejected. All monetary rates are parsed as exact decimals.
+Every listed turn field is required; an absent token class is not assumed to contain zero tokens. All token counts must be non-negative integers; booleans are rejected. All monetary rates are parsed as exact decimals and cost arithmetic uses exact rational values, without the ambient Decimal precision limit.
+
+Each ladder rung requires an explicit `maxInputTokens`: positive increasing caps for intermediate rungs, and an explicit null for the final unbounded rung. Rungs require `uncachedInputPerMillion`, `cacheReadInputPerMillion` and `outputPerMillion` rates. `cacheWriteInputPerMillion` and `reasoningOutputPerMillion` may be absent only when the corresponding token count is zero for that selected rung; they are never inferred from another rate. Rates are non-negative decimal strings or integers. Token classes are disjoint: cache-written input is not counted again as uncached input, and reasoning output is not counted again as completion output.
 
 ## Deliverable and limits
 

@@ -30,6 +30,7 @@ Use Node.js **22.12+** and Python **3.10+**. These public packages have no runti
 npm test --prefix packages/undominated-check
 npm test --prefix packages/undominated-mcp
 node --test actions/dominated-warn/index.test.mjs
+python3 -B scripts/source-skill-boundaries.test.py
 ```
 
 The CLI test command builds the local bundle and runs installer, verdict and checker tests. Add tests for a reproduced defect or meaningful new boundary; a test that merely repeats an implementation does not establish correctness.

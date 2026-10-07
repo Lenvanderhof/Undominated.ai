@@ -32,7 +32,9 @@ def check(data):
     for index, rung in enumerate(rungs):
         if not isinstance(rung, dict):
             raise ValueError("each rung must be an object")
-        cap = rung.get("maxInputTokens")
+        if "maxInputTokens" not in rung:
+            raise ValueError("each rung must explicitly state maxInputTokens; null means unbounded")
+        cap = rung["maxInputTokens"]
         if index == len(rungs) - 1:
             if cap is not None:
                 raise ValueError("the final rung must be unbounded")

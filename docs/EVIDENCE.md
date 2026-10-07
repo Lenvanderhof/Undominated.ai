@@ -79,6 +79,14 @@ The 17 newly published skills at `8087a25` all passed their synthetic examples. 
 
 The nine earlier corrected checker contracts and the later advertised-route correction use version `1.0.1`; the surface-agreement contract also removes an uncited incident claim and preserves the later distinction between missing fields and stated nulls. At `bf1c18e`, all 67 cases in the public [boundary/control suite](../scripts/source-skill-boundaries.test.py) and all 30 supplied synthetic examples passed against the combined source. The suite checks structured outcomes and specific result fields, including expected refusals and positive controls. CI also requires a checker, licence and synthetic example for every non-legacy skill directory, and runs every example. These are bounded regression and installation checks, not certification of source truth, general effectiveness or native-agent activation. The additional profiles remain portable instructions; the extra resources remain outside the npm and website original-resource bundles.
 
+## Six later source-only skills: correction record — 2026-10-07
+
+Independent review of the six skills added at `9595ea9` found two boundary errors. `undominated-multiplier-aside` accepted a base-rate claim containing `2×` followed by whitespace or the end of the excerpt, because its word-boundary expression did not handle the multiplication symbol. It now requires review for those cases while preserving the separate-component exemption. `undominated-final-host` removed every trailing dot, allowing an invalid host such as `example.test..` to equal `example.test`. It now removes at most one DNS root dot and rejects repeated trailing dots. Both corrected skills use version `1.0.1`.
+
+Seven added regressions and positive controls are in the public [boundary fixtures](../scripts/fixtures/source-skill-boundaries.json). All 111 cases in the public suite passed. A separate six-skill review passed 85 cases: 28 bundled examples, 32 relevant public boundary cases and 25 additional controls and adverse inputs. All 39 source validator synthetic examples also passed. These results cover supplied text, revision shape and recorded host strings; they do not verify a vendor quote, a real redirect, source truth or publication rights.
+
+These six skills remain source-only. The published `undominated-check@0.4.0` package and its 18-resource installation map are unchanged. A corrected source commit and fresh pinned Skills CLI installation are separate from these local checks; this record does not claim either has occurred.
+
 ## What a source review means
 
 A resource review records the pinned upstream definition, the applicable licence, the requested permissions, why it was selected and what was not tested. Third-party projects can change after a reviewed revision. A source review is not a security certification, an effectiveness benchmark or a promise that every integration works.

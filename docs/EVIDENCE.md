@@ -91,6 +91,14 @@ After preserving the four concurrent source-only additions from `743c4cc`, the m
 
 These six skills remain source-only. The published `undominated-check@0.4.0` package and its 18-resource installation map are unchanged. A corrected source commit and fresh pinned Skills CLI installation are separate from these local checks; this record does not claim either has occurred.
 
+## Four later source-only skills: correction record — 2026-10-07
+
+Independent review of final-path, status-not-page, schema-not-quote and header-not-row at `743c4cc` (preserved by `2cda264`) found two contracts requiring correction. `undominated-final-path` trimmed surrounding whitespace before validation and could normalize `//` into `/`; it also omitted its forbidden top-level amount/price check. Version `1.0.1` rejects these inputs, preserves valid root and single-trailing-slash controls, and states its narrow ASCII-path subset.
+
+`undominated-status-not-page` labelled a supplied 200 as `read` and every other valid status as `not-read`, including a claim that 206 did not return the page. A status alone cannot establish that content was received or read: [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html#name-content-semantics) separates response content from status, and [206](https://www.rfc-editor.org/rfc/rfc9110.html#name-206-partial-content) can carry representation ranges. Version `1.0.1` retains the conservative integer-200-only pass rule and universal refusal of status-based quotes, but uses `status-eligible`/`unverified` forms and explicit `bodyVerified: false`. This output-contract correction replaces the earlier `read`/`not-read` forms. The other two checker contracts remain at `1.0.0`.
+
+The public boundary suite contains 148 cases after adding 16 controls and regressions, including malformed paths, partial-content status, absent row evidence and schema-role distinctions. All 148 cases passed, as did all 43 source synthetic examples. A separate four-skill review passed 213 checks against actual checker CLI outputs, including every pair of the six supported row/claim units, missing evidence, malformed inputs and structured refusal exit codes. These are bounded supplied-input checks; they do not certify source truth, successful fetching, source extraction or native host execution. Corrected-source publication and pinned Skills CLI acquisition are separate release steps and are not claimed by this local correction record. The npm `0.4.0` package and its 18-resource map are unchanged.
+
 ## What a source review means
 
 A resource review records the pinned upstream definition, the applicable licence, the requested permissions, why it was selected and what was not tested. Third-party projects can change after a reviewed revision. A source review is not a security certification, an effectiveness benchmark or a promise that every integration works.

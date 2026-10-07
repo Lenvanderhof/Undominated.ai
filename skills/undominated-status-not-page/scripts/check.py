@@ -7,8 +7,9 @@ from pathlib import Path
 
 # A status is the integer you recorded. A string, a boolean, and a float are not coerced.
 SCOPE = (
-    "a page-read claim is supported only by the status integer 200 you supply; "
-    "a quote claim is never supported by a status, and no request is sent"
+    "only the supplied integer 200 passes this conservative status gate; "
+    "no status proves that response content was received or read, a quote is never supported, "
+    "and no request is sent"
 )
 
 
@@ -44,17 +45,19 @@ def check(data):
             "role": role,
             "httpStatus": code,
             "form": "not-claimed",
+            "bodyVerified": False,
             "issues": ["a status code does not support a quote"],
             "scope": SCOPE,
         }
-    read = code == 200
+    eligible = code == 200
     return {
-        "status": "pass" if read else "review",
+        "status": "pass" if eligible else "review",
         "label": label,
         "role": role,
         "httpStatus": code,
-        "form": "read" if read else "not-read",
-        "issues": [] if read else [f"status {code} did not return the page"],
+        "form": "status-eligible" if eligible else "unverified",
+        "bodyVerified": False,
+        "issues": [] if eligible else [f"status {code} requires review under this 200-only gate; response content was not verified"],
         "scope": SCOPE,
     }
 

@@ -23,8 +23,9 @@ def text(value, label):
 def path(value, label):
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{label} must be non-empty text")
-    raw = value.strip()
-    if "://" in raw or "?" in raw or "#" in raw or " " in raw or not raw.startswith("/"):
+    # Trimming would make a malformed recorded path equal a different valid path.
+    raw = value
+    if "://" in raw or "?" in raw or "#" in raw or any(c.isspace() for c in raw) or not raw.startswith("/") or raw.startswith("//"):
         raise ValueError(f"{label} must be a path, not a URL")
     if len(raw) > 1 and raw.endswith("/"):
         raw = raw[:-1]
@@ -37,6 +38,8 @@ def path(value, label):
 
 
 def check(data):
+    if "amount" in data or "price" in data:
+        raise ValueError("input must not include an amount or a price")
     label = text(data.get("label"), "label")
     responses = data.get("responses")
     if not isinstance(responses, list) or not responses:

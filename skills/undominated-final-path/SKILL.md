@@ -4,7 +4,7 @@ description: Refuse a page claim when the final path you recorded is not the pat
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Final-path audit
@@ -13,7 +13,7 @@ Use when a fetch stayed on the host you asked for and still landed on a differen
 
 1. You supply the requested path and the final path. This checker does not send a request, does not read a host, and does not look at the body.
 2. One trailing slash is removed, except on `/`. `/pricing/` and `/pricing` are the same path. Case is not folded. `/Pricing` and `/pricing` are different paths.
-3. A URL, a query, a fragment, a space, or a dot segment is invalid input. Paste the path only. This checker does not resolve `..`.
+3. A URL, a query, a fragment, any whitespace (including surrounding whitespace), a doubled leading slash, or a dot segment is invalid input. Paste the path only. This checker does not trim whitespace or resolve `..`. Its accepted subset is `/` or slash-separated ASCII letters, digits, `.`, `_`, `~` and `-`; percent-encoded and Unicode paths are outside this contract.
 4. A pass means the two path strings match. It does not mean the page was a rate card, and it does not mean the bytes were saved.
 5. An `amount` or a `price` field is invalid. The examples are synthetic paths, not a fetch log.
 

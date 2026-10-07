@@ -17,7 +17,7 @@ export const PROTOCOL_VERSIONS = Object.freeze([
 ])
 
 export const INSTRUCTIONS =
-  'Undominated quotes published measurements from undominated.ai. Unrated is not zero. Unpriced is not free. Artificial Analysis scores are never returned. This server does not route traffic, pick a provider, or approximate a missing number. Return the JSON as-is; do not paraphrase prices into prose.'
+  'Undominated quotes published measurements from undominated.ai. Unrated is not zero. Unpriced is not free. A model’s price is one seller’s offer, named in priceRow, and that seller is often not the model’s maker; a promoted offer is priced at its standard rate and its promoted price is the deal; a deal-only price and a deal carry their reasons, and precision-not-disclosed is never full precision. Artificial Analysis scores are never returned. This server does not route traffic, pick a provider, or approximate a missing number. Return the JSON as-is; do not paraphrase prices into prose.'
 
 export function initializeResult(params = {}, { version = '0.1.0' } = {}) {
   const requested = params.protocolVersion

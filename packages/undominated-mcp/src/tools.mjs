@@ -44,7 +44,7 @@ export const TOOLS = Object.freeze([
   {
     name: 'get_model',
     description:
-      'Quote allowlisted fields for a model slug: name, provider, vendor-published prices, context, openWeights, lmarena if present, provenance. Artificial Analysis intelligence/coding/agentic fields are stripped. Missing scores are omitted, never zero. Not a router.',
+      'Quote allowlisted fields for a model slug: name, provider (the model’s maker), prices, priceBasis, priceRow, deal, context, openWeights, lmarena if present, provenance. prices is the published reference price: the rate card of one seller’s offer, named in priceRow.provider, which is often a reseller and not the maker. Where priceRow.discount is present that offer is on promotion and prices is its standard rate, each rate divided by (1 − discount); what it charges today is the deal. priceBasis is reference, deal-only (no offer passed the like-for-like test and the price is a fallback; priceRow.reasons says why) or model-level. deal is a cheaper offer right now that does not pass that test, or the price row’s own promoted price, with its reasons; it is not the price. The reason precision-not-disclosed means a reseller declares no serving precision: never read it as full precision. Such an offer is excluded from reference pricing unless the model is explicitly closed-weight; an absent open-weight declaration is not evidence of closed weights. provenance.held naming pricing means the price is kept at an earlier published record while a newer upstream value is reviewed. Artificial Analysis intelligence/coding/agentic fields are stripped. Missing scores are omitted, never zero. Not a router.',
     inputSchema: {
       type: 'object',
       properties: {

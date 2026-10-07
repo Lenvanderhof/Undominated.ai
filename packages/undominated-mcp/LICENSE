@@ -30,9 +30,10 @@ The data it fetches is licensed separately and is not sublicensed here.
   (https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset). Attribute
   LMArena when you republish a score. Each verdict document carries its own
   `licence` field saying so.
-- Vendor list prices are quoted from the publishers' own rates. This server
-  does not grant a sublicence to those figures.
+- Prices are rates a seller published on OpenRouter: the model's vendor or a
+  reseller of it, named beside each price. This server does not grant a
+  sublicence to those figures.
 - Artificial Analysis index scores (intelligence, coding, agentic) never
   leave this server. Their free-tier terms are "Internal use only with
   attribution"; public redistribution needs a commercial licence we do not
-  hold. See https://undominated.ai and docs/LICENSING-AND-CLAIMS.md §1.
+  hold. See https://undominated.ai/methodology/.

@@ -88,6 +88,29 @@ const TIER_FIELDS = Object.freeze([
 
 const WINDOW_FIELDS = Object.freeze(['from', 'to', 'days', 'input', 'output', 'cachedInput', 'cacheWrite'])
 
+/**
+ * Whose price it is. Since the reference price (2026-10) `prices` is the rate
+ * card of one seller's offer, which is often not the model's own vendor, and
+ * until these fields travelled a client asking for DeepSeek V4 Pro was told
+ * "provider: DeepSeek, input 1.044": DigitalOcean's offer, at a precision
+ * DigitalOcean does not declare.
+ *
+ * A reseller that declares no precision no longer sets a reference price
+ * (ruling R121), so the `precisionNotDisclosed` flag these rows carried for a
+ * day is gone. It is a reason now, `precision-not-disclosed`, in `reasons`: on
+ * a deal, and on a deal-only price.
+ *
+ * R124: an offer on promotion sets the price at its standard rate, each rate
+ * ÷ (1 − discount). `priceRow.discount` is that fraction as the seller's row
+ * states it, so a client can see that `prices` is not what the seller charges
+ * today; what it charges today is the `deal`. Without the field GPT-5.6 Sol
+ * read "$4 / $20 from OpenAI" beside a deal "$2 / $10 from OpenAI", unexplained.
+ */
+const PRICE_BASES = Object.freeze(['reference', 'deal-only', 'model-level'])
+const PRICE_ROW_FIELDS = Object.freeze(['provider', 'tag', 'quantization', 'discount'])
+const DEAL_FIELDS = Object.freeze(['provider', 'tag', 'quantization', 'input', 'output', 'cachedInput'])
+const REASON_FIELDS = Object.freeze(['reason', 'pct', 'tier', 'quantization'])
+
 const PROVENANCE_FIELDS = Object.freeze([
   'source',
   'sourceUrl',
@@ -96,6 +119,14 @@ const PROVENANCE_FIELDS = Object.freeze([
   'arenaSource',
   'arenaLicence',
 ])
+
+/**
+ * A held field is kept at an earlier published record while a newer upstream
+ * value is reviewed. Where `fields` names `pricing`, the price is that
+ * record's, not today's listing, and a client told only "model-level" would
+ * take it for OpenRouter's current one.
+ */
+const HELD_FIELDS = Object.freeze(['fields', 'record', 'recordDate'])
 
 const finite = (n) => typeof n === 'number' && Number.isFinite(n)
 const nonempty = (s) => typeof s === 'string' && s.length > 0
@@ -153,11 +184,12 @@ function projectRows(rows, keys) {
 }
 
 /**
- * Vendor-published rates only. `blendedPerMillion` and `longContextPenalty` are
- * derived in our pipeline; quoting them here would present a computed number as
- * a list price. `tierThreshold` is the first rung of a ladder — keeping it
- * without the rest of `tiers` is how Qwen3.7 Flash was mispriced. The ladder
- * travels as the array, every rung.
+ * Rates a seller published, and only those: the rate card of the one offer the
+ * site prices the model at (`priceRow`, below). `blendedPerMillion` and
+ * `longContextPenalty` are derived in our pipeline; quoting them here would
+ * present a computed number as a published rate. `tierThreshold` is the first
+ * rung of a ladder — keeping it without the rest of `tiers` is how Qwen3.7
+ * Flash was mispriced. The ladder travels as the array, every rung.
  */
 export function projectPrices(pricing) {
   if (!pricing || typeof pricing !== 'object') return undefined
@@ -173,6 +205,34 @@ export function projectPrices(pricing) {
     out.hasPricing === true ||
     (out.tiers && out.tiers.length > 0)
   return hasRate && Object.keys(out).length ? out : undefined
+}
+
+/**
+ * How the price was reached and whose offer it is: `priceBasis` (reference,
+ * deal-only, or model-level where OpenRouter's own listing is the price),
+ * `priceRow` (the seller, its endpoint tag, the precision it declares, the
+ * promotion its standard rate was derived from, and, on a deal-only price, why
+ * it is not a reference price) and `deal` (a cheaper offer right now that does
+ * not pass the like-for-like test, or the price row's own promoted price, with
+ * why; never a ranked price). A basis this module does not know is not passed
+ * on, and neither is a discount that is not a fraction between 0 and 1.
+ */
+export function projectPriceBasis(model) {
+  const out = {}
+  if (PRICE_BASES.includes(model?.priceBasis)) out.priceBasis = model.priceBasis
+  const withReasons = (source, fields) => {
+    const picked = pick(source, fields)
+    if (!picked) return null
+    const reasons = projectRows(source.reasons, REASON_FIELDS)
+    if (reasons) picked.reasons = reasons
+    return picked
+  }
+  const row = withReasons(model?.priceRow, PRICE_ROW_FIELDS)
+  if (row && Object.hasOwn(row, 'discount') && !(finite(row.discount) && row.discount > 0 && row.discount < 1)) delete row.discount
+  if (row) out.priceRow = row
+  const deal = withReasons(model?.deal, DEAL_FIELDS)
+  if (deal) out.deal = deal
+  return out
 }
 
 export function projectLmarena(model) {
@@ -202,6 +262,8 @@ export function projectLmarena(model) {
 
 export function projectProvenance(model, { provenanceUrl, pageUrl } = {}) {
   const picked = pick(model?.provenance, PROVENANCE_FIELDS) ?? {}
+  const held = projectRows(model?.provenance?.held, HELD_FIELDS)
+  if (held) picked.held = held
   if (provenanceUrl) picked.url = provenanceUrl
   if (pageUrl) picked.page = pageUrl
   return Object.keys(picked).length ? picked : undefined
@@ -218,7 +280,11 @@ export function projectModel(model, { id, provenanceUrl, pageUrl } = {}) {
   if (nonempty(model.name)) out.name = model.name
   if (nonempty(model.provider)) out.provider = model.provider
   const prices = projectPrices(model.pricing)
-  if (prices) out.prices = prices
+  if (prices) {
+    out.prices = prices
+    // Only beside a price: a basis without one would describe nothing.
+    Object.assign(out, projectPriceBasis(model))
+  }
   if (finite(model.contextWindow)) out.context = model.contextWindow
   if (model.openWeights === true || model.openWeights === false) out.openWeights = model.openWeights
   const lmarena = projectLmarena(model)

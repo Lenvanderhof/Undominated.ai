@@ -26,7 +26,7 @@ free. A model with no verdict returns `{ "error": "unrated", "id" }` or
 | Tool | In | Out |
 |---|---|---|
 | `get_verdict` | `{ "id": "google/gemini-3.7-flash" }` | Quoted dominance document, `provenanceUrl`, `verifiedAt`. Unrated/unpriced → `{ error, id }`. |
-| `get_model` | `{ "id": "google/gemini-3.7-flash" }` | Allowlisted fields only: name, provider, vendor-published prices, context, openWeights, lmarena if present, provenance. |
+| `get_model` | `{ "id": "google/gemini-3.7-flash" }` | Allowlisted fields only: name, provider, prices, `priceBasis`, `priceRow`, `deal`, context, openWeights, lmarena if present, provenance. |
 | `search_resources` | `{ "kind": "skills", "query": "evidence", "limit": 10 }` | Alphabetical source-reviewed matches, dates, limits and review links. |
 | `get_resource` | `{ "kind": "skills", "id": "undominated-evidence-audit" }` | Full published source review, permissions, licence, installation guidance and untested scope. |
 | `get_frontier` | `{}` | Frontier ids + names, `provenanceUrl` `https://undominated.ai/frontier/`, `asOf` from the live catalogue. |
@@ -35,6 +35,25 @@ Resource discovery supports `skills`, `agents` and `mcp-servers`. It reads the p
 
 Every number traces to a live document under `https://undominated.ai/data/`.
 The server does not paraphrase prices into prose. Do not ask it to.
+
+### Whose price `get_model` returns
+
+`prices` is the site's published price: the **reference price**, the rate card of
+the cheapest offer that is serving, at standard delivery and at the maker's
+precision or better, each offer counted at its standard rate
+([methodology](https://undominated.ai/methodology/#reference-price)). That offer
+is often a reseller's, so `provider` (the model's maker) is not who charges it.
+A reseller that declares no serving precision sets a reference price only for a
+model whose weights are closed. Read these beside it:
+
+| Field | Meaning |
+|---|---|
+| `priceRow.provider`, `priceRow.tag` | The seller and endpoint the price is taken from. |
+| `priceRow.discount` | Present when that offer is on promotion: the fraction off, as the seller's row states it. `prices` is then the standard rate, each rate ÷ (1 − discount), and the promoted price is the `deal`. |
+| `priceBasis` | `reference`; `deal-only` when no offer passed the test and the price is a fallback, a reseller's offer that declares no precision or failing that a 4-bit one, at its standard rate (`priceRow.reasons` says which); `model-level` when no seller's offer sets it and it is OpenRouter's own listing for the model. |
+| `provenance.held` | Present when a field is kept at an earlier published record while a newer upstream value is reviewed. Where its `fields` names `pricing`, the price is that record's (`recordDate`), not today's listing. |
+| `deal` | A cheaper offer right now that does not pass the test, or the price row's own promoted price. It never sets a rank and is not the price. |
+| `reasons`, on `deal` and on a deal-only `priceRow` | Why the offer does not pass: `promotion` with its `pct`, `four-bit` with the `quantization`, `delivery-tier` with the `tier`, `precision-not-disclosed`. The last is a reseller that declares no precision. It is not full precision, and it is not known to be less. |
 
 This is **not a router** and not an affiliate. It will not tell an agent which
 endpoint to call.
@@ -136,10 +155,12 @@ The server source is MIT. The data it fetches is not sublicensed by it.
 |---|---|
 | This package's code | MIT |
 | LMArena Elo | CC BY 4.0, official dataset. Attribute LMArena if you republish a score. |
-| Vendor list prices | Quoted from publishers' own rates. No sublicence granted. |
+| Published prices | Rates a seller published on OpenRouter: the model's vendor or a reseller of it, named in `priceRow.provider`. No sublicence granted. |
 | Artificial Analysis intelligence / coding / agentic | **Never returned.** Free tier is internal-use-only. |
 
-If a figure here disagrees with the vendor's own page, that is worth reporting:
+A price here can differ from the vendor's own page by design: it may be a
+reseller's offer, and `priceRow` says whose. If a figure disagrees with the seller
+it names, or with the row OpenRouter lists for that seller, that is worth reporting:
 [open an issue](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml).
 
 ## Licence

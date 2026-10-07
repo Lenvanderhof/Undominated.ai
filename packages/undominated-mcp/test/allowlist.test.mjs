@@ -9,6 +9,7 @@ import {
   findAaFields,
   projectLmarena,
   projectModel,
+  projectPriceBasis,
   projectPrices,
 } from '../src/quote.mjs'
 import { TOOLS, createTools } from '../src/tools.mjs'
@@ -120,6 +121,141 @@ test('projectPrices keeps every tier rung and drops derived blends', () => {
   assert.equal(prices.blendedPerMillion, undefined)
   assert.equal(prices.longContextPenalty, undefined)
   assert.equal(prices.tierThreshold, undefined)
+})
+
+// Gemma 4 26B A4B on 2026-09-30 (data/models.json): Google's model, priced at
+// DekaLLM's bf16 row. Darkbloom's cheaper row declares no precision, so since
+// R121 it is the deal and not the price.
+const RESOLD = {
+  slug: 'google/gemma-4-26b-a4b-it',
+  name: 'Gemma 4 26B A4B',
+  provider: 'Google',
+  pricing: { input: 0.06, output: 0.33, cachedInput: null, hasPricing: true },
+  priceBasis: 'reference',
+  priceRow: {
+    provider: 'DekaLLM',
+    tag: 'dekallm/bf16',
+    quantization: 'bf16',
+    // The flag a record carried for a day before R121: not passed on.
+    precisionNotDisclosed: false,
+    reasons: [],
+    internalNote: 'not for publication',
+  },
+  deal: {
+    provider: 'Darkbloom',
+    tag: 'darkbloom',
+    quantization: 'unknown',
+    precisionNotDisclosed: true,
+    reasons: [{ reason: 'precision-not-disclosed', intelligence: 62.1 }],
+    input: 0.042,
+    output: 0.22,
+    cachedInput: 0.021,
+    blendedPerMillion: 0.0865,
+  },
+  referencePrecision: { label: 'unknown', source: null },
+  modelLevelPricing: { input: 0.09, output: 0.3 },
+}
+
+test('get_model says whose offer the price is, and never passes it off as the maker’s', () => {
+  const out = projectModel(RESOLD)
+  assert.equal(out.provider, 'Google')
+  assert.equal(out.prices.input, 0.06)
+  assert.equal(out.priceBasis, 'reference')
+  assert.deepEqual(out.priceRow, { provider: 'DekaLLM', tag: 'dekallm/bf16', quantization: 'bf16' })
+  assert.deepEqual(out.deal, {
+    provider: 'Darkbloom',
+    tag: 'darkbloom',
+    quantization: 'unknown',
+    input: 0.042,
+    output: 0.22,
+    cachedInput: 0.021,
+    reasons: [{ reason: 'precision-not-disclosed' }],
+  })
+  // The model-level price is not a second price to quote.
+  assert.equal(out.modelLevelPricing, undefined)
+  assert.equal(out.referencePrecision, undefined)
+  assert.doesNotMatch(JSON.stringify(out), /internalNote|62\.1|blendedPerMillion|precisionNotDisclosed/)
+})
+
+test('a deal-only price carries its reasons; an unknown basis and a basis without a price are dropped', () => {
+  // GPT-5.2 Codex on 2026-09-30: Azure's is the one serving row, and Azure
+  // declares no precision.
+  const dealOnly = projectPriceBasis({
+    priceBasis: 'deal-only',
+    priceRow: {
+      provider: 'Azure',
+      tag: 'azure',
+      quantization: 'unknown',
+      reasons: [{ reason: 'precision-not-disclosed' }],
+    },
+    deal: null,
+  })
+  assert.equal(dealOnly.priceBasis, 'deal-only')
+  assert.deepEqual(dealOnly.priceRow, { provider: 'Azure', tag: 'azure', quantization: 'unknown', reasons: [{ reason: 'precision-not-disclosed' }] })
+  assert.equal(Object.hasOwn(dealOnly, 'deal'), false)
+
+  // R124, GPT-5.6 Sol on 2026-09-30: OpenAI's row is at 50% off and sets the
+  // price at its standard rate, $4 / $20. The discount travels on the row and
+  // the promoted price is the deal.
+  const promoted = projectPriceBasis({
+    priceBasis: 'reference',
+    priceRow: { provider: 'OpenAI', tag: 'openai', quantization: 'unknown', reasons: [], discount: 0.5 },
+    deal: { provider: 'OpenAI', tag: 'openai', quantization: 'unknown', reasons: [{ reason: 'promotion', pct: 50 }], input: 2, output: 10, cachedInput: 0.2 },
+  })
+  assert.deepEqual(promoted.priceRow, { provider: 'OpenAI', tag: 'openai', quantization: 'unknown', discount: 0.5 })
+  assert.deepEqual(promoted.deal.reasons, [{ reason: 'promotion', pct: 50 }])
+  assert.equal(promoted.deal.input, 2)
+  // A discount that is not a fraction between 0 and 1 is not passed on.
+  for (const discount of [0, 1, -0.5, 1.5, '0.5', null, Number.NaN]) {
+    assert.equal(Object.hasOwn(projectPriceBasis({ priceBasis: 'reference', priceRow: { provider: 'OpenAI', tag: 'openai', discount } }).priceRow, 'discount'), false, String(discount))
+  }
+
+  const held = projectPriceBasis({ priceBasis: 'model-level', priceRow: null, deal: null })
+  assert.deepEqual(held, { priceBasis: 'model-level' })
+
+  assert.deepEqual(projectPriceBasis({ priceBasis: 'vendor-list' }), {})
+
+  const unpriced = projectModel({ slug: 'lab/x', name: 'X', provider: 'Lab', priceBasis: 'model-level', pricing: { hasPricing: false } })
+  assert.equal(unpriced.prices, undefined)
+  assert.equal(Object.hasOwn(unpriced, 'priceBasis'), false)
+})
+
+test('a held price says so: model-level alone would read as today’s listing', () => {
+  // GPT-5.6 Sol Pro as it was until 2026-10-06: kept at the published record
+  // of 2026-09-23. That hold is retired (R122); a held price has this shape.
+  const out = projectModel({
+    slug: 'openai/gpt-5.6-sol-pro',
+    name: 'GPT-5.6 Sol Pro',
+    provider: 'OpenAI',
+    pricing: { input: 2, output: 10, hasPricing: true },
+    priceBasis: 'model-level',
+    priceRow: null,
+    deal: null,
+    provenance: {
+      source: 'openrouter/models',
+      confidence: 'verified',
+      held: [{ fields: ['pricing'], record: 'https://undominated.ai/data/publications/inputs/7bd7.json', recordDate: '2026-09-23', reviewer: 'internal' }],
+    },
+  })
+  assert.equal(out.priceBasis, 'model-level')
+  assert.equal(Object.hasOwn(out, 'priceRow'), false)
+  assert.deepEqual(out.provenance.held, [
+    { fields: ['pricing'], record: 'https://undominated.ai/data/publications/inputs/7bd7.json', recordDate: '2026-09-23' },
+  ])
+  assert.equal(out.provenance.confidence, undefined)
+  assert.equal(projectModel({ slug: 'lab/x', provenance: { source: 's' } }).provenance.held, undefined)
+})
+
+test('no tool, instruction or README line calls the price the vendor’s own', () => {
+  const root = resolve(dir, '..')
+  const getModel = TOOLS.find((t) => t.name === 'get_model').description
+  assert.match(getModel, /priceRow\.provider/)
+  assert.match(getModel, /precision-not-disclosed/)
+  assert.doesNotMatch(JSON.stringify(TOOLS) + INSTRUCTIONS, /precisionNotDisclosed/)
+  assert.match(INSTRUCTIONS, /often not the model’s maker/)
+  for (const text of [JSON.stringify(TOOLS), INSTRUCTIONS, readFileSync(resolve(root, 'README.md'), 'utf8'), readFileSync(resolve(root, 'LICENSE'), 'utf8')]) {
+    assert.doesNotMatch(text, /vendor-published prices|vendor list prices/i)
+  }
 })
 
 test('tools/list names quote and read-only resource tools with no router/gateway tool', () => {

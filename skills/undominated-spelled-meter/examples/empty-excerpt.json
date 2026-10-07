@@ -1,0 +1,11 @@
+{
+  "label": "an empty excerpt is not evidence",
+  "claims": [
+    {
+      "id": "blank",
+      "currency": "USD",
+      "unit": "million",
+      "excerpt": "   "
+    }
+  ]
+}

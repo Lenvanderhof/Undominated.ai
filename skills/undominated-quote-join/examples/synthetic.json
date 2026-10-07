@@ -1,0 +1,7 @@
+{
+  "label": "synthetic/join",
+  "catalogueProvider": "synthetic",
+  "quoteProvider": "synthetic",
+  "catalogueId": "synthetic/model-v1",
+  "quoteId": "synthetic/model-v1"
+}

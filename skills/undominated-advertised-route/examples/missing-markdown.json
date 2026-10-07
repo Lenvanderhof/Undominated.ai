@@ -1,0 +1,7 @@
+{
+  "site": "https://example.test",
+  "englishOnly": ["/frontier/"],
+  "locales": ["nl"],
+  "advertised": ["https://example.test/frontier/?format=md"],
+  "files": ["frontier/index.html"]
+}

@@ -2,424 +2,79 @@
   <a href="https://undominated.ai/">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="docs/brand/lockup-dark.png">
-      <img src="docs/brand/lockup-light.png" alt="Undominated.ai" height="64">
+      <img src="docs/brand/lockup-light.png" alt="Undominated.ai" height="72">
     </picture>
   </a>
 </p>
-
+<p align="center"><strong>Best first. Then price.</strong><br>Compare models. Inspect the evidence. Bring the checks into your own workflow.</p>
 <p align="center">
-  <strong>Best first. Then price.</strong><br>
-  <em>Independent dominance tables for AI inference.</em>
+  <a href="https://undominated.ai/">Open the platform</a> ·
+  <a href="docs/GETTING-STARTED.md">Get started</a> ·
+  <a href="docs/RESOURCES.md">Browse the source library</a> ·
+  <a href="https://github.com/Lenvanderhof/Undominated.ai/discussions">Ask a question</a>
 </p>
 
-<p align="center">
-  <a href="https://undominated.ai/"><img src="https://img.shields.io/badge/live-undominated.ai-83B81D?style=flat-square&labelColor=191814" alt="Live site"></a>
-  <a href="https://undominated.ai/frontier/"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fundominated.ai%2Fdata%2Fcatalogue.json&query=%24.stats.frontierSize&label=frontier&suffix=%20undominated&style=flat-square&labelColor=191814&color=83B81D" alt="Models on the value frontier, read live from the published catalogue"></a>
-  <a href="https://undominated.ai/check/"><img src="https://img.shields.io/badge/check-the_model_you_pay_for-0072DA?style=flat-square&labelColor=191814" alt="Check a model"></a>
-  <a href="https://www.npmjs.com/package/undominated-check"><img src="https://img.shields.io/npm/v/undominated-check?style=flat-square&labelColor=191814&color=83B81D" alt="undominated-check on npm"></a>
-  <a href="https://undominated.ai/"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fundominated.ai%2Fdata%2Fcatalogue.json&query=%24.stats.models&label=models&style=flat-square&labelColor=191814&color=83B81D" alt="Model count, read live from the published catalogue"></a>
-  <a href="https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing"><img src="https://img.shields.io/badge/dataset-Hugging_Face-FFD21E?style=flat-square&labelColor=191814" alt="Licence-gated dump on Hugging Face"></a>
-  <a href="https://github.com/Lenvanderhof/Undominated.ai/releases"><img src="https://img.shields.io/github/v/release/Lenvanderhof/Undominated.ai?filter=catalogue-*&style=flat-square&labelColor=191814&color=0072DA&label=catalogue" alt="Latest citable catalogue dump"></a>
-  <a href="https://github.com/Lenvanderhof/Undominated.ai/discussions"><img src="https://img.shields.io/badge/discussions-ask-0072DA?style=flat-square&labelColor=191814" alt="Discussions"></a>
-  <a href="https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml"><img src="https://img.shields.io/badge/corrections-open_an_issue-FBFAF8?style=flat-square&labelColor=191814" alt="Report a wrong figure"></a>
-</p>
+**Undominated.ai compares AI models by independently measured capability and published price.** The website brings together model comparisons, provider offers, cost tools and reviewed AI resources. This repository supplies the installable skills, portable agent profiles, CLI and read-only MCP server, plus a public place to report corrections.
 
-<p align="center">
-  <a href="https://undominated.ai/models/anthropic__claude-fable-5.1/">
-    <img src="https://undominated.ai/badge/anthropic__claude-fable-5.1.svg" alt="anthropic/claude-fable-5.1 dominance badge — current #1 on the live board, LMArena, balanced workload">
-  </a>
-</p>
+[![The Undominated skills directory, with task categories, reviewed counts and source-review scope.](docs/shots/skills-2026-10-07.png)](https://undominated.ai/skills/)
 
----
+<sub>Live skills directory captured on 2026-10-07. Browse the current page for the latest reviews.</sub>
 
+## Start with the job
 
-## Original skills, agent profiles and MCP server
-
-This repository contains eleven original skills with offline Python checks, six portable specialist agent profiles, and a read-only MCP server. Each resource keeps its licence and supporting files together. The examples use synthetic inputs; passing them does not certify performance on your tasks.
-
-List or install a named skill with the standard Skills CLI:
-
-```sh
-npx skills add Lenvanderhof/Undominated.ai --list
-npx skills add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
-```
-
-| Skill | Job |
+| You want to… | Start here |
 |---|---|
-| `undominated-evidence-audit` | Check evidence identity, denominators and arithmetic |
-| `undominated-migration-preflight` | Check required capabilities and evaluation results |
-| `undominated-provider-quote-compare` | Compare explicit workloads across distinct sellers and complete tier ladders |
-| `undominated-benchmark-audit` | Inspect matched cohorts, missing scores and descriptive correlations |
-| `undominated-resource-audit` | Review provenance, licences, permissions and verification evidence |
-| `undominated-release-proof` | Check artifact hashes and meaningful response receipts |
-| `undominated-seller-spread` | Count a price spread across distinct sellers |
-| `undominated-dominance-wording` | Keep ties and dropped requirements out of a both-better claim |
-| `undominated-plan-quote` | Keep recorded plan quotes out of a USD total |
-| `undominated-licence-boundary` | Refuse a public page as a redistribution licence |
-| `undominated-context-tier` | Check a past-this-length price multiple against every rung |
+| Choose a model for your requirements | [Model finder](https://undominated.ai/finder/) · [Comparisons](https://undominated.ai/compare/) · [Frontier](https://undominated.ai/frontier/) |
+| Understand a bill or an API budget | [Cost calculator](https://undominated.ai/calculator/) · [Bill audit](https://undominated.ai/audit/) · [Subscription plans](https://undominated.ai/plans/) |
+| Compare sellers and pricing conditions | [Providers](https://undominated.ai/providers/) · [Price spreads](https://undominated.ai/spreads/) · [Context cliffs](https://undominated.ai/cliffs/) |
+| Find instructions, agents or integrations | [Skills](https://undominated.ai/skills/) · [Agents](https://undominated.ai/agents/) · [MCP servers](https://undominated.ai/mcp-servers/) · [Coding tools](https://undominated.ai/tools/) |
+| Check the method or challenge a claim | [Benchmarks](https://undominated.ai/benchmarks/) · [Methodology](https://undominated.ai/methodology/) · [Corrections](https://undominated.ai/corrections/) |
 
-For portable agent profiles, see [agents/](agents/). They define evidence review, migration planning, resource curation, release verification, comparison editing and pricing-source review. Loading a profile is host-specific; a Markdown file does not register a native subagent by itself.
+The website directories contain **71 skills, 72 agent definitions and 89 MCP servers**, checked on **2026-10-07**. Those 232 reviews include third-party resources with their own licences and installation methods. The smaller original library hosted here has its own [version and availability map](docs/RESOURCES.md).
 
-[`undominated-check@0.3.0`](https://www.npmjs.com/package/undominated-check/v/0.3.0) is published on npm. It installs the eleven skills, six agent profiles and the MCP server in this tree. It requires Node.js 22.12 or newer; the offline skill checks need Python 3. [`undominated-check@0.2.0`](https://www.npmjs.com/package/undominated-check/v/0.2.0) remains the earlier release of six skills, four agents and the MCP server. Do not republish either version. Inspect and install with a pinned version:
+## Use a skill
+
+From your project directory, install the evidence-audit skill with the standard Skills CLI:
 
 ```sh
-npx --yes undominated-check@0.3.0 resources list
-npx --yes undominated-check@0.3.0 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.3.0 resources install undominated-evidence-audit --project /absolute/path/to/project --dry-run
-npx --yes undominated-check@0.3.0 resources install undominated-context-tier --project /absolute/path/to/project
+npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
 ```
 
-Remove `--dry-run` to copy the inspected resource. Skills go to `.agents/skills/` by default, or `.claude/skills/` with `--target claude`. Agent profiles go to `.undominated/agents/`. Installing `undominated-mcp` writes its source and a separate MCP configuration file under `.undominated/mcp/`; import that configuration into your client. The installer refuses existing destinations, verifies bundled file hashes and does not execute downloaded code or edit existing client configuration.
-
-[`undominated-mcp@0.1.0`](https://www.npmjs.com/package/undominated-mcp/v/0.1.0) is published on npm. Configure your MCP client to run `npx --yes undominated-mcp@0.1.0`; [the package README](packages/undominated-mcp/) includes client configuration examples. The server quotes published model evidence and adds read-only `search_resources` and `get_resource` tools. Resource detail queries require the corresponding website data release; missing data is reported as unpublished.
-
-`undominated-check@0.3.0` was verified on 2026-10-07. Its downloaded registry archive SHA-256 is `05f17f7578b02309b60b12d97b6a42fe82345731ed5b8ee85e5330657022741e` and matches the tested candidate (78 files). `resources list` from that archive returns eleven skills, six agents and the MCP server. The package tests ran every bundled synthetic check before packing. A fresh install of `undominated-context-tier` passed its synthetic ladder, and a flattened `6.67` claim at the first boundary stayed in review. The same installed package printed a live dominance verdict for `google/gemini-3.7-flash`. `undominated-mcp@0.1.0` was verified the same day by an archive match, stdio initialization, all five tool definitions and a live frontier response. These checks do not certify every client integration or the quality of downstream decisions.
-
-
-## Copy a badge
-
-The SVG is the published verdict. Swap the slug for the model you ship.
-
-```markdown
-[![anthropic/claude-fable-5.1](https://undominated.ai/badge/anthropic__claude-fable-5.1.svg)](https://undominated.ai/models/anthropic__claude-fable-5.1/)
-```
-
-`<key>` is the same segment as `/models/<key>/`. Replace `/` and `:` in the model id with `__`. The badge states one model's dominance verdict at the balanced workload on the LMArena lens, with the date it was computed. It changes when that verdict changes. Unrated is labelled unrated, not scored zero.
-
-## Check a model
+Or use the published Undominated installer to inspect the bundled resource first:
 
 ```sh
-npx --yes undominated-check@0.3.0 google/gemini-3.7-flash
+npx --yes undominated-check@0.4.0 resources list
+npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-audit
+npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project /absolute/path/to/project --dry-run
 ```
 
-Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the verdict, and exits. It sends nothing, stores nothing, and needs no key. Package: [`undominated-check@0.3.0`](https://www.npmjs.com/package/undominated-check/v/0.3.0) (MIT, verified 2026-10-07). GitHub remains an installable source: `npx --yes github:Lenvanderhof/Undominated.ai google/gemini-3.7-flash`.
+Replace the path with an existing project and remove `--dry-run` to install. This pinned version bundles eleven original skills, six portable agent profiles and the MCP server. It checks file hashes and refuses to overwrite an existing installation. [Client targets, native agent adapters and MCP setup helpers](docs/INSTALLER.md) are available in this release. Node.js **22.12+** is required; offline skill checks use **Python 3.10+**.
 
-## Warn on a dominated model (GitHub Action)
+[Installation, examples and troubleshooting →](docs/GETTING-STARTED.md)
 
-```yaml
-# .github/workflows/undominated-warn.yml
-name: undominated-warn
-on:
-  pull_request:
-jobs:
-  warn:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: Lenvanderhof/Undominated.ai/actions/dominated-warn@v1
-        continue-on-error: true
-```
+## Bring published evidence into your tools
 
-Warns. Never fails the job. Do not add it to required checks.
-
-## Agent skill (quote-only)
-
-[`skills/undominated/SKILL.md`](skills/undominated/SKILL.md) — fetch published dominance JSON; never invent a price, score, or rank. Unrated is not zero.
+Quote a published model verdict:
 
 ```sh
-npx --yes undominated-check@0.3.0 <provider/model>
+npx --yes undominated-check@0.4.0 google/gemini-3.7-flash --json
 ```
 
----
+For an MCP client, use `npx` with arguments `["--yes", "undominated-mcp@0.1.0"]`. Its five read-only tools retrieve model details, verdicts, the frontier and resource reviews. It does not install resources or route inference. [MCP setup and examples →](docs/GETTING-STARTED.md#mcp-server)
 
-<p align="center">
-  <a href="https://undominated.ai/frontier/">
-    <img src="docs/brand/hero.svg" alt="Every rated, priced model plotted by quality against effective price. The value frontier is the staircase; everything below and to the right of it is beaten on quality and undercut on price at the same time." width="100%">
-  </a>
-</p>
+Portable agent profiles define specialist roles; copying an `AGENT.md` does not register a native subagent. [Choose a role →](docs/RESOURCES.md#portable-agent-profiles)
 
-<p align="center">
-  <sub>Every dot is a published price. Generated from the live board by <code>scripts/build-hero.mjs</code> — no figure on this page is typed by hand.</sub>
-</p>
+## Evidence travels with the answer
 
----
+A price has a seller, a unit, conditions and a date. A comparison has a benchmark and a workload. Unrated is not zero; unknown precision does not establish equivalent service. Equal-score or equal-price improvements are described as such, and dropped requirements are named.
 
-Most AI “value” tables invent a score, then sort by it.
+Resource reviews record source revisions, licences, permissions and untested scope. The original skills check explicit inputs with synthetic examples; a passing check does not certify source truth or production suitability. [Evidence and release verification →](docs/EVIDENCE.md)
 
-Undominated.ai does the opposite. It ranks on **independently measured capability first**. Price breaks ties. A model that is both worse and dearer is named as such. A model that has not been measured is **unrated**, never zero.
+| Explore further | What you will find |
+|---|---|
+| [Source library](docs/RESOURCES.md) | Skill use cases, agent roles and version-specific installation coverage |
+| [Platform guide](docs/PLATFORM.md) | Pricing tools, research downloads, data APIs and dated observations |
+| [Contributing](CONTRIBUTING.md) | Resource improvements, reproducible bugs and primary-source corrections |
+| [Security](SECURITY.md) · [Licence map](LICENSE) | Reporting channels and component/data boundaries |
 
-> **<!--fig:dominatedOfRated-->123 of 136<!--/fig-->** rated, priced models are beaten on quality *and* undercut on price by something else on the board.<br>
-> **<!--fig:frontier-->13<!--/fig-->** are not. That set is the value frontier.
-
-Every figure on this page is generated from the live catalogue by `scripts/refresh-readme.mjs`, last on **<!--fig:asOf-->2026-09-23<!--/fig-->** (<!--fig:models-->437<!--/fig--> models, <!--fig:providers-->52<!--/fig--> providers). It is checked in CI, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
-
-<p align="center">
-  <a href="https://undominated.ai/"><strong>Open the index →</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://undominated.ai/check/">Check the model you already pay for</a>
-  &nbsp;·&nbsp;
-  <a href="https://undominated.ai/now/">Dated stamp</a>
-</p>
-
-<p align="center">
-  <a href="https://undominated.ai/">
-    <img src="docs/shots/board.png" alt="The leaderboard, ranked by measured quality first and effective price second. Frontier rows are tinted; every other row names, by link, the model that strictly beats it on both." width="100%">
-  </a>
-  <br>
-  <sub>Live board · Dual Witness lockup · chartreuse is frontier membership, not decoration</sub>
-</p>
-
-<table>
-  <tr>
-    <td width="38%" valign="top">
-      <a href="https://undominated.ai/"><img src="docs/shots/mobile.png" alt="The same board on a phone: ranked cards carrying price in and out, the quality score, a beaten-by link, context window and modalities — nothing truncated, nothing hidden behind a tap." width="100%"></a>
-      <br>
-      <sub>Phone · first cards, including who beats the row</sub>
-    </td>
-    <td width="62%" valign="top">
-      <a href="https://undominated.ai/frontier/"><img src="docs/shots/frontier.png" alt="The value frontier: every rated, priced model plotted by quality against effective price on a log scale, with the undominated set joined as a staircase, and the same models listed below as a ladder from the cheapest rung up." width="100%"></a>
-      <br>
-      <sub>Frontier · staircase is the argument</sub>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top">
-      <a href="https://undominated.ai/check/"><img src="docs/shots/check.png" alt="Check any model and get a computed verdict with its date: whether anything in the catalogue is both higher-scoring and cheaper, or the model sits on the frontier with nothing that beats it." width="100%"></a>
-      <br>
-      <sub><a href="https://undominated.ai/check/">Check</a> · paste what you already pay for</sub>
-    </td>
-    <td valign="top">
-      <a href="https://undominated.ai/tools/"><img src="docs/shots/tools.png" alt="Agentic coding tools compared on documented features only. An undocumented capability is recorded as unknown and never scored as a win. This is not a benchmark." width="100%"></a>
-      <br>
-      <sub><a href="https://undominated.ai/tools/">Tools</a> · coverage, not a quality score</sub>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top" colspan="2">
-      <a href="https://undominated.ai/plans/"><img src="docs/shots/plans.png" alt="ChatGPT, Claude, Copilot, Cursor and Google AI plans compared to API: published monthly price, vendor-worded limits, and the token volume where per-token is cheaper." width="100%"></a>
-      <br>
-      <sub><a href="https://undominated.ai/plans/">Plans</a> · subscription vs API, vendor-worded limits</sub>
-    </td>
-  </tr>
-</table>
-
-<p align="center">
-  <a href="https://undominated.ai/now/">
-    <img src="docs/shots/now.png" alt="Now: a dated, hashed stamp of the value frontier rather than a price index. Every stamp keeps its date and content hash, so a figure quoted from one can be checked against it later, and nothing is backfilled." width="100%">
-  </a>
-  <br>
-  <sub><a href="https://undominated.ai/now/">Now</a> · a stamp with a date and a hash, not a blended index</sub>
-</p>
-
----
-
-## Why a price index that refuses to average
-
-The spread between the cheapest and the dearest input price in the catalogue is about **<!--fig:spread-->8,824×<!--/fig-->**. That is not a rounding error. It is the reason a “value score” is a marketing instrument: it can hide a worse-and-dearer row behind a single attractive number.
-
-Undominated.ai publishes the uncomfortable version:
-
-| Claim the market likes | What this index actually does |
-| --- | --- |
-| A blended “value” rank | Capability first, effective price second. Never mixed into one score. |
-| Unrated at the bottom | Unrated is not zero. **<!--fig:unratedPct-->69%<!--/fig-->** of the catalogue (<!--fig:unrated-->301<!--/fig--> of <!--fig:models-->437<!--/fig-->) has no independent quality score. Those rows are listed by price and excluded from quality order. |
-| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank** — roughly half the ranked board collapses into shared positions once the published confidence intervals are drawn. [The live board states the exact split](https://undominated.ai/); it moves whenever a score does, so it is not repeated here. |
-| “Cheaper is better” | Cheaper is cheaper. A strict upgrade is a capability *superset* that also costs less: same context, same modalities, same tools. |
-| Headline $/M | **<!--fig:tiered-->69<!--/fig-->** models change rate past a context threshold. The board reprices the row when your prompt crosses it. |
-| Affiliate “best” lists | **No cut of inference. No affiliate. No paid placement. No gateway.** |
-
-The method, the hedges, and the licensing limits: [undominated.ai/methodology](https://undominated.ai/methodology/).
-
-<p align="center">
-  <a href="https://undominated.ai/methodology/">
-    <img src="docs/shots/methodology.png" alt="Methodology, opening with the numbers that are least flattering: the share of the catalogue with no independent quality score, how many rendered positions are genuinely distinct ranks, and how many headline prices are not the whole price." width="100%">
-  </a>
-</p>
-
----
-
-## The instrument
-
-Every route answers a decision, not a document type.
-
-| You want to | Open |
-| --- | --- |
-| See what is actually worth buying | [Leaderboard](https://undominated.ai/) |
-| See the <!--fig:frontier-->13<!--/fig--> nothing beats on both axes | [Frontier](https://undominated.ai/frontier/) |
-| Test the model you already use | [Check](https://undominated.ai/check/) |
-| Cite a dated stamp | [Now](https://undominated.ai/now/) |
-| Download the citable dump | [GitHub Release](https://github.com/Lenvanderhof/Undominated.ai/releases) · [Hugging Face](https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing) · [`CITATION.cff`](CITATION.cff) · [`datasets/`](datasets/) |
-| Compare subscription plans to API | [Plans](https://undominated.ai/plans/) |
-| Find the cheapest model above a quality floor | [Cheapest at](https://undominated.ai/cheapest-at/) |
-| See whether shopping around is worth it | [Providers](https://undominated.ai/providers/) · [Spreads](https://undominated.ai/spreads/) |
-| See context-tier step functions | [Cliffs](https://undominated.ai/cliffs/) |
-| See which adjacent ranks the benchmark cannot separate | [Significance](https://undominated.ai/significance/) |
-| Browse every publishable model | [All models](https://undominated.ai/models/) |
-| Rank image, video or embedding models the same way | [Images](https://undominated.ai/images/) · [Video](https://undominated.ai/video/) · [Embeddings](https://undominated.ai/embeddings/) |
-| Ask whether you can self-host | [Self-host](https://undominated.ai/self-host/) |
-| Scan agentic coding tools | [Tools](https://undominated.ai/tools/) |
-| Run a usage export through dominance (client-side; no upload) | [Audit](https://undominated.ai/audit/) |
-| Read how ranking is computed | [Methodology](https://undominated.ai/methodology/) |
-| Hold the commercial boundaries | [Independence](https://undominated.ai/independence/) |
-| See applied corrections | [Corrections](https://undominated.ai/corrections/) |
-| File a wrong figure | [Report](https://undominated.ai/report/) |
-
-```mermaid
-flowchart LR
-  Q["What am I buying?"] --> L["Leaderboard"]
-  L --> F["Frontier"]
-  L --> C["Check my model"]
-  L --> N["Now · dated stamp"]
-  L --> A["Audit · bill CSV"]
-  L --> S["Spreads · Cliffs · Significance"]
-  L --> T["Tools"]
-  C --> M["Methodology"]
-  F --> M
-  N --> M
-  A --> M
-  M --> R["Report a wrong figure"]
-```
-
-English is the source language. Nineteen locales ship as machine translation with numbers, model names, and provider names left untouched. Model pages stay English-only.
-
----
-
-## What “undominated” means here
-
-A model is **dominated** when another model in the catalogue scores higher *and* costs less *and* can do everything it can do.
-
-A model is **on the frontier** when nothing in the catalogue is both better and cheaper under the selected lens and workload.
-
-That is a Pareto statement, not a vibe. Chartreuse in the interface is reserved for frontier membership. It is not a brand highlight colour.
-
-Quality on the board is **LMArena Elo**, from the official CC BY 4.0 dataset, with the published confidence interval. Unrated is not zero. Artificial Analysis figures are not published here. Switching the task lens re-ranks the same prices; it does not invent a hybrid score.
-
----
-
-## This repository
-
-**Undominated.ai lives at [undominated.ai](https://undominated.ai/).** This GitHub repository is the public face of that product: a landing page you can star, cite, and link; a **public issue tracker** for corrections; **Discussions** for questions; and **dated catalogue dumps** you can download without scraping the live board.
-
-It is not a place to send scraped prices. It is not a second copy of the ranking engine. The live board remains the source.
-
-| In this repo | On the live site |
-| --- | --- |
-| This README | The ranked board, updated from sourced pages |
-| [Releases](https://github.com/Lenvanderhof/Undominated.ai/releases) — dated JSON/CSV dumps | Prices, scores, significance ranks |
-| Issue templates | Methodology, independence, corrections log |
-| Discussions | 19 locales, Markdown, JSON, RSS |
-| Brand mark and screenshots | `/now/` dated stamps |
-
-Machine-readable surfaces stay on the origin, where they can carry provenance:
-
-- [`/llms.txt`](https://undominated.ai/llms.txt) — facts for agents
-- [`/data/catalogue.json`](https://undominated.ai/data/catalogue.json) — the public catalogue
-- [`/badge/<key>.svg`](https://undominated.ai/badge/anthropic__claude-fable-5.1.svg) — README dominance badge
-- [`/?format=md`](https://undominated.ai/?format=md) — any page as Markdown
-- [`/now/`](https://undominated.ai/now/) — dated frontier stamp (hash on the page)
-- [`/data/citation.json`](https://undominated.ai/data/citation.json) — what is citable, with hashes
-- [`/data/snapshots/2026-09-19.json`](https://undominated.ai/data/snapshots/2026-09-19.json) — the current citable snapshot
-
----
-
-## Download the catalogue
-
-The live board is rebuilt in place. A citation needs bytes that will still be there next year.
-
-| What | Where |
-| --- | --- |
-| **2026-09-19 dump** (JSON + CSV, no Artificial Analysis fields) | [GitHub Release `catalogue-2026-09-19`](https://github.com/Lenvanderhof/Undominated.ai/releases/tag/catalogue-2026-09-19) |
-| Same dump, Hugging Face | [`LPH98/undominated-ai-model-pricing`](https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing) |
-| How to cite | [`CITATION.cff`](CITATION.cff) · [`datasets/README.md`](datasets/README.md) |
-| What is *not* citable | [`catalogue.json` and per-model JSON](https://undominated.ai/data/citation.json) — rebuilt on every deploy, no date in the path |
-
-LMArena Elo in the dump is **CC BY 4.0** from the official Hugging Face dataset. Vendor list prices are facts the vendor published. Artificial Analysis fields are **not in the file**.
-
----
-
-## Report a wrong figure
-
-If a live price, score, or rank disagrees with a primary source, file it here. The form requires the model, what the page shows, what it should be, a source URL, and the date you checked.
-
-<p align="center">
-  <a href="https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml"><strong>Open a correction issue →</strong></a><br>
-  <sub>Same form as <a href="https://undominated.ai/report/">undominated.ai/report</a>. Corrections with a primary source are applied on the site. Public log: <a href="https://undominated.ai/corrections/">/corrections/</a>.</sub>
-</p>
-
-Security reports: [open an advisory on this repository](https://github.com/Lenvanderhof/Undominated.ai/security/advisories/new). Do not use a public issue for anything that would let someone alter rankings.
-
----
-
-## Independence, in one screen
-
-- No cut of inference.
-- No affiliate links.
-- No paid placement, badges, or “featured” rows.
-- No gateway. We do not sit on the request path.
-- Revenue in v1: none. A later paid feed, if it exists, would sell history and provenance — not a better rank.
-
-The charter: [undominated.ai/independence](https://undominated.ai/independence/).
-
----
-
-## Is capability actually getting cheaper?
-
-Everyone publishes today's prices. Nobody publishes what the **cheapest model clearing a fixed quality bar** costs, tracked across dated snapshots — and that is the only series that answers the question, because a discount on one SKU is not the same as capability getting cheaper.
-
-<!--floors-->
-
-| Capability floor (LMArena) | 2026-08-24 | 2026-09-23 | Move | Cheapest today |
-|:---|---:|---:|---:|:---|
-| **≥ 1200** | $0.0525 | $0.036 | -31% | `openai/gpt-oss-20b` |
-| **≥ 1350** | $0.0525 | $0.0844 | +61% | `qwen/qwen3-30b-a3b-instruct-2507` |
-| **≥ 1400** | $0.0611 | $0.1031 | +69% | `deepseek/deepseek-v4-flash` |
-| **≥ 1450** | $0.4961 | $0.2375 | -52% | `z-ai/glm-5.3-flash` |
-
-<sub>Effective $/M on the balanced workload, from 14 dated snapshots. Generated by `scripts/build-floor-table.mjs`. The floors are append-only — a threshold is never edited in place, because a moved goalpost turns a series into marketing.</sub>
-
-<!--/floors-->
-
-The floors are defined once and never moved. Every point comes from a dated, hashed snapshot that is [published and citable](https://undominated.ai/data/citation.json); the archive only grows, so this series cannot be back-filled by anyone starting tomorrow.
-
----
-
-## The campaign stills
-
-Three families, shot around the Dual Witness mark. They are scene treatments, **not a second logo**: use them with attribution and never redraw the mark from a photograph.
-
-<table>
-  <tr>
-    <td width="33%" align="center">
-      <img src="docs/brand/stills/c-01-hero-monolith.png" alt="Material Witness: Hero Monolith" width="100%"><br>
-      <sub><strong>Material Witness</strong><br>the primary family</sub>
-    </td>
-    <td width="33%" align="center">
-      <img src="docs/brand/stills/b-01-frontier-bokeh.png" alt="Proof Cinema: Frontier Bokeh" width="100%"><br>
-      <sub><strong>Proof Cinema</strong><br>supporting</sub>
-    </td>
-    <td width="33%" align="center">
-      <img src="docs/brand/stills/a-01-paper-proof-grid.png" alt="Evidence Editorial: Paper Proof Grid" width="100%"><br>
-      <sub><strong>Evidence Editorial</strong><br>supporting</sub>
-    </td>
-  </tr>
-</table>
-
-All fifteen, at full resolution with the mark, the lockups and the usage rules: **[undominated.ai/press/](https://undominated.ai/press/)**.
-
----
-
-## Licensing, said plainly
-
-LMArena leaderboard data on the site is used under **CC BY 4.0** from the official dataset.
-
-Artificial Analysis figures are **not published** on the site at all. There is no redistribution licence, so they inform what gets checked and never what a reader sees — `scripts/audit-aa-exposure.mjs` puts a model's own page publishing its own AA value at **0 of 179**. **This repository does not grant a sublicence** to republish those scores, and it does not copy them into Git.
-
-Vendor prices are facts the vendor published. Every live row is supposed to carry a source link and a fetch date. If one does not, that is a [correction](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml).
-
----
-
-<p align="center">
-  <a href="https://undominated.ai/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/raster/mark-dark-on-dark-128.png">
-      <img src="docs/brand/raster/mark-light-on-paper-128.png" alt="Undominated.ai Dual Witness mark" height="56">
-    </picture>
-  </a>
-  <br>
-  <strong><a href="https://undominated.ai/">undominated.ai</a></strong>
-  <br>
-  <sub>Best first. Then price. · Built and maintained by <a href="https://lenvanderhof.com">Len van der Hof</a> · 2026</sub>
-</p>
+The website hosts the broader catalogue and comparison application. This repository contains the public tools and resource source, not the full production application or a live price-feed checkout. [Dataset downloads and citation guidance](datasets/README.md) are separate from software licences.

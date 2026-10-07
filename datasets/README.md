@@ -4,7 +4,7 @@ This repository is the public face of [undominated.ai](https://undominated.ai/).
 
 Citable dumps live as **GitHub Releases** and on **Hugging Face**. The live board is rebuilt in place; a citation needs bytes that still exist next year.
 
-## Current dump — 2026-09-19
+## Dated dump example — 2026-09-19
 
 | | |
 |---|---|
@@ -13,6 +13,8 @@ Citable dumps live as **GitHub Releases** and on **Hugging Face**. The live boar
 | Live snapshot (hashed) | https://undominated.ai/data/snapshots/2026-09-19.json |
 | Citation file | [`CITATION.cff`](../CITATION.cff) |
 | What is citable | https://undominated.ai/data/citation.json |
+
+This historical release is an example, not a claim to be the latest snapshot. Check [all releases](https://github.com/Lenvanderhof/Undominated.ai/releases) and the [live citation metadata](https://undominated.ai/data/citation.json) for newer dated artifacts.
 
 Files in the release:
 

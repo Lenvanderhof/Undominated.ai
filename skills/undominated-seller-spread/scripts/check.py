@@ -6,6 +6,7 @@ import re
 import sys
 from datetime import date
 from decimal import Decimal
+from fractions import Fraction
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -58,7 +59,7 @@ def check(data):
         issues.append("a zero owner rate makes a competition multiple undefined")
     else:
         owner_multiple = high / low
-        if owner_multiple != claimed:
+        if Fraction(high) != Fraction(claimed) * Fraction(low):
             issues.append("claimed multiple does not match the distinct-owner multiple")
     if row_low == 0:
         issues.append("a zero row rate makes the row-level multiple undefined")

@@ -1,0 +1,38 @@
+{
+  "auditId": "throughput-audit-h100-llama70b-001",
+  "claim": "Comparison of inference serving engines on 8x H100 at concurrency 16 with 1024 input / 512 output tokens",
+  "observedAt": "2026-10-01",
+  "tolerance": 0.05,
+  "runs": [
+    {
+      "engine": "Synthetic-Engine-V1",
+      "model": "synthetic-llama-3-70b-instruct",
+      "hardware": "8x H100 SXM5",
+      "precision": "fp8",
+      "concurrency": 16,
+      "inputTokens": 1024,
+      "outputTokens": 512,
+      "isStreaming": true,
+      "ttftMs": 120.0,
+      "tpotMs": 12.5,
+      "totalLatencyMs": 6507.5,
+      "claimedOutputTpsPerStream": 80.0,
+      "claimedAggregateTps": 1258.85
+    },
+    {
+      "engine": "Synthetic-Engine-V2",
+      "model": "synthetic-llama-3-70b-instruct",
+      "hardware": "8x H100 SXM5",
+      "precision": "fp8",
+      "concurrency": 16,
+      "inputTokens": 1024,
+      "outputTokens": 512,
+      "isStreaming": true,
+      "ttftMs": 180.0,
+      "tpotMs": 16.0,
+      "totalLatencyMs": 8356.0,
+      "claimedOutputTpsPerStream": 62.5,
+      "claimedAggregateTps": 980.37
+    }
+  ]
+}

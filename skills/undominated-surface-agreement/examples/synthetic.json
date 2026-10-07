@@ -1,0 +1,21 @@
+{
+  "surface": "synthetic/modalities-catalogue-v1",
+  "published": {
+    "modelCount": "120",
+    "scoredCount": "46",
+    "pricedCount": "88",
+    "bothCount": "30",
+    "coverageRatio": "1.0",
+    "sampleMeanTask": "63.47",
+    "medianTaskCount": null
+  },
+  "rendered": {
+    "modelCount": "120",
+    "scoredCount": "46",
+    "pricedCount": "88",
+    "bothCount": "30",
+    "coverageRatio": "1.00",
+    "sampleMeanTask": "63.4700",
+    "medianTaskCount": null
+  }
+}

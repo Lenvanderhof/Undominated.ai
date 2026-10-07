@@ -1,6 +1,6 @@
 {
   "name": "undominated-check",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Quote published AI model verdicts and inspect or install original Undominated skills, agent profiles and its read-only MCP server.",
   "keywords": [
     "llm",
@@ -35,7 +35,8 @@
     "src",
     "README.md",
     "LICENSE",
-    "resources"
+    "resources",
+    "completions"
   ],
   "engines": {
     "node": ">=22.12"

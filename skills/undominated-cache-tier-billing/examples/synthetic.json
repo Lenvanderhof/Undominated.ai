@@ -1,0 +1,19 @@
+{
+  "model": "synthetic/model-v1",
+  "currency": "USD",
+  "base": {
+    "input": "1.00",
+    "output": "4.00"
+  },
+  "cacheRead": "0.10",
+  "cacheWrite": null,
+  "cacheWriteMultiplier": "1.25",
+  "request": {
+    "inputTokens": 200000,
+    "cachedPrefixTokens": 120000,
+    "minimumCacheablePrefixTokens": 1024,
+    "cacheWriteTokens": 80000,
+    "outputTokens": 4000
+  },
+  "cacheWriteBilling": "replacement"
+}

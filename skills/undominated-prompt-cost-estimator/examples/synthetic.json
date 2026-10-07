@@ -1,0 +1,35 @@
+{
+  "workloadId": "synthetic-trajectory-001",
+  "description": "Multi-turn agentic trajectory with prompt caching and reasoning tokens",
+  "model": "synthetic-claude-3-7-sonnet",
+  "pricingTable": "pricing-table.json",
+  "currency": "USD",
+  "expectedTotalCost": "0.072900",
+  "tolerance": "0.000001",
+  "turns": [
+    {
+      "turn": 1,
+      "uncachedInputTokens": 1500,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 1500,
+      "reasoningTokens": 400,
+      "completionTokens": 600
+    },
+    {
+      "turn": 2,
+      "uncachedInputTokens": 200,
+      "cacheReadTokens": 1500,
+      "cacheWriteTokens": 0,
+      "reasoningTokens": 800,
+      "completionTokens": 500
+    },
+    {
+      "turn": 3,
+      "uncachedInputTokens": 300,
+      "cacheReadTokens": 1500,
+      "cacheWriteTokens": 500,
+      "reasoningTokens": 1200,
+      "completionTokens": 400
+    }
+  ]
+}

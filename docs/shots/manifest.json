@@ -52,6 +52,16 @@
       "file": "plans.png",
       "url": "https://undominated.ai/plans/",
       "viewport": "desktop"
+    },
+    {
+      "file": "skills-2026-10-07.png",
+      "url": "https://undominated.ai/skills/",
+      "viewport": [
+        1280,
+        840
+      ],
+      "capturedOn": "2026-10-07",
+      "catalogueAsOf": "2026-10-06"
     }
   ]
 }

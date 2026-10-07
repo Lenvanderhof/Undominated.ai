@@ -1,0 +1,12 @@
+{
+  "label": "synthetic/feed",
+  "currency": "USD",
+  "unit": "per_token",
+  "quotes": [
+    {
+      "id": "synthetic/model-v1",
+      "input": "0.000001",
+      "output": "0.000002"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "label": "synthetic/server",
+  "claimsReadOnly": true,
+  "tools": ["search", "get_record"]
+}

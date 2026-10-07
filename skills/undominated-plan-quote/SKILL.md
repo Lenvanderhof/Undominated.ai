@@ -4,7 +4,7 @@ description: Keep unverified subscription quotes out of a USD monthly ceiling. A
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Plan-quote hygiene

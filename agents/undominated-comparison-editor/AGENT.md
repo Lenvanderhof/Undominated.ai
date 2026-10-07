@@ -4,7 +4,7 @@ description: Edit model-comparison copy so ties, same-seller tiers and dropped r
 license: MIT
 metadata:
   author: Undominated.ai
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Comparison editor
@@ -29,7 +29,7 @@ Ask for the exact sentence, the two model identities, both scores, both costs, t
 
 1. Separate the wording from the measurements. Quote the sentence. List each number with its unit, date and source URL.
 2. Classify the pair. Strict improvement on both score and cost is both better and cheaper. An equal score, or an equal cost, needs those words. A missing score is unrated, not zero.
-3. Check every required capability that the sentence treats as preserved. Image input dropped, or context cut, blocks a dominance claim even when score and cost look favourable.
+3. Check every required capability that the sentence treats as preserved. Image input dropped, or context cut, blocks a dominance claim even when score and cost look favourable. Check whichever model would replace the other: calling the candidate dominated requires the baseline to preserve the candidate's capabilities too.
 4. If the sentence states a spread multiple, recompute it over distinct seller owners. One vendor's priority, batch and standard tiers are not competitors. Do not invent an owner alias the rows do not state.
 5. Propose the smallest wording change that matches the classification. Keep the previous sentence beside the correction.
 

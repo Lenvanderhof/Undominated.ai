@@ -97,14 +97,19 @@ def check(data):
     baseline, candidate = side(data.get("baseline"), "baseline"), side(data.get("candidate"), "candidate")
     if baseline["id"] == candidate["id"]:
         raise ValueError("baseline and candidate ids must differ")
-    state, lost, unknown = capability(required, baseline, candidate)
-    verdict = "capability-loss" if state == "lost" else "incomparable" if state == "unknown" else axes(baseline, candidate)
+    axis_verdict = axes(baseline, candidate)
+    # A reverse dominance claim must preserve the candidate's requirements too.
+    # Checking only the forward direction once called a longer-context model dominated.
+    source, replacement = (candidate, baseline) if axis_verdict == "candidate-dominated" else (baseline, candidate)
+    state, lost, unknown = capability(required, source, replacement)
+    verdict = "capability-loss" if state == "lost" else "incomparable" if state == "unknown" else axis_verdict
     matched = claim == verdict or (claim == "weak-pareto" and verdict in PARETO)
     return {
         "status": "pass" if matched else "review",
         "claim": claim,
         "verdict": verdict,
         "capabilities": state,
+        "capabilityCheck": {"from": source["id"], "to": replacement["id"]},
         "lost": lost,
         "unknown": unknown,
         "issues": [] if matched else [f"claim {claim} does not match verdict {verdict}"],

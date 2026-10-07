@@ -48,6 +48,8 @@ const check = process.argv.includes('--check')
  * outer coordinate system.
  */
 async function providerMark(vendor) {
+  // OpenRouter uses meta-llama; the website serves Meta's mark under meta.
+  vendor = ({ 'meta-llama': 'meta' })[vendor] ?? vendor
   const res = await fetch(`${ORIGIN}/providers/${vendor}.svg`)
   if (!res.ok) return null
   const raw = await res.text()
@@ -195,16 +197,16 @@ const asOf = String(s.updatedAt ?? '').slice(0, 10)
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${
   n(s.dominatedCount)
-} of ${n(s.ratedPriced ?? s.rated)} rated, priced models are beaten on quality and undercut on price. ${
+} of ${n(s.ratedPriced ?? s.rated)} rated, priced models are off the score-price frontier. ${
   frontier.members.length
-} are not.">
+} are on it. Capability requirements are separate.">
   <rect width="${W}" height="${H}" fill="${GROUND}"/>
   <text x="${PAD.left}" y="52" fill="${WITNESS}" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="600">${
     n(s.dominatedCount)
-  } of ${n(s.ratedPriced ?? s.rated)} models are a strictly worse deal.</text>
-  <text x="${PAD.left}" y="78" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="15">Something on the same board is better on quality <tspan font-style="italic">and</tspan> cheaper. ${
+  } of ${n(s.ratedPriced ?? s.rated)} models sit outside the score-price frontier.</text>
+  <text x="${PAD.left}" y="78" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="15">No lower score, no higher cost, with one strict gain. Check capabilities separately. ${
     frontier.members.length
-  } are not — that staircase is the value frontier.</text>
+  } models form the frontier.</text>
   <path d="${dominatedPath}" fill="${MUTED}" fill-opacity="0.55"/>
   <path d="${stair}" fill="none" stroke="${EVIDENCE}" stroke-width="1.5" stroke-opacity="0.5"/>
   ${markLayer}

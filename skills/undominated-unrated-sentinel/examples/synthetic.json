@@ -1,0 +1,8 @@
+{
+  "label": "synthetic/board",
+  "rows": [
+    {"id": "synthetic/scored", "score": "1.20"},
+    {"id": "synthetic/unrated", "score": null}
+  ],
+  "rankedIds": ["synthetic/scored"]
+}

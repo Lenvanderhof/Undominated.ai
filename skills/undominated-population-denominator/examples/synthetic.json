@@ -1,0 +1,11 @@
+{
+  "label": "synthetic/correlation",
+  "statedPopulation": "all frontier-class models in the saved table",
+  "claimedCount": 4,
+  "rows": [
+    {"id": "synthetic/a", "inStatedPopulation": true, "inComputedPopulation": true},
+    {"id": "synthetic/b", "inStatedPopulation": true, "inComputedPopulation": true},
+    {"id": "synthetic/c", "inStatedPopulation": true, "inComputedPopulation": true},
+    {"id": "synthetic/d", "inStatedPopulation": true, "inComputedPopulation": true}
+  ]
+}

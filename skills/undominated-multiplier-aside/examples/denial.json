@@ -1,0 +1,10 @@
+{
+  "label": "negation is not parsed",
+  "claims": [
+    {
+      "id": "denial",
+      "role": "base",
+      "excerpt": "This on-demand rate is not a multiplier."
+    }
+  ]
+}

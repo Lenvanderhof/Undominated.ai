@@ -1,0 +1,11 @@
+{
+  "label": "symbols are not words",
+  "claims": [
+    {
+      "id": "symbol-row",
+      "currency": "USD",
+      "unit": "million",
+      "excerpt": "Prices are $ per 1M tokens."
+    }
+  ]
+}

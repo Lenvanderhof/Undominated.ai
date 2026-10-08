@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Keep every figure in README.md equal to what undominated.ai publishes.
+ * Keep every figure in docs/PLATFORM.md equal to what undominated.ai publishes.
  *
  * WHY THIS EXISTS. On 2026-09-04 the README stated eleven undominated models,
  * "97 of 108" dominated, 409 in the catalogue and 63% unrated. The live figures
@@ -20,10 +20,10 @@
  * rather than deriving one, because a second implementation of a published
  * number is a second thing that can drift.
  *
- *   node scripts/refresh-readme.mjs          # rewrite README.md in place
+ *   node scripts/refresh-readme.mjs          # rewrite docs/PLATFORM.md in place
  *   node scripts/refresh-readme.mjs --check  # exit 1 if any figure is stale
- *   node scripts/refresh-readme.mjs --origin http://localhost:4173
- *                                            # read a staged build instead
+ *   node scripts/refresh-readme.mjs --check --origin http://localhost:4173
+ *                                            # inspect a staged release
  *
  * `--check` is what CI runs, so a stale README fails a pull request rather than
  * being noticed by a reader.
@@ -33,13 +33,30 @@ import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const README = resolve(ROOT, 'README.md')
+const README = resolve(ROOT, 'docs/PLATFORM.md')
+let ORIGIN = 'https://undominated.ai'
+let check = false
+let originSeen = false
 const argv = process.argv.slice(2)
-const check = argv.includes('--check')
-// A staged release serves the same /data/*.json the live site will. Reading it
-// lets the README follow a release before it is activated; CI reads the site.
-const originAt = argv.indexOf('--origin')
-const ORIGIN = originAt >= 0 && argv[originAt + 1] ? argv[originAt + 1].replace(/\/$/, '') : 'https://undominated.ai'
+for (let i = 0; i < argv.length; i += 1) {
+  if (argv[i] === '--check') {
+    check = true
+  } else if (argv[i] === '--origin') {
+    if (originSeen) throw new Error('--origin may be specified only once')
+    originSeen = true
+    const value = argv[++i]
+    if (!value || value.startsWith('--')) throw new Error('--origin requires an HTTP(S) origin')
+    let url
+    try { url = new URL(value) } catch { throw new Error('--origin requires an HTTP(S) origin') }
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password ||
+        url.pathname !== '/' || url.search || url.hash) {
+      throw new Error('--origin must be an HTTP(S) origin without credentials, a path, query or fragment')
+    }
+    ORIGIN = url.origin
+  } else {
+    throw new Error(`unknown argument: ${argv[i]}`)
+  }
+}
 
 async function json(path) {
   const res = await fetch(`${ORIGIN}${path}`, { headers: { accept: 'application/json' } })
@@ -52,13 +69,7 @@ const [catalogue, frontier] = await Promise.all([
   json('/data/frontier.json'),
 ])
 const s = catalogue.stats ?? {}
-/**
- * The site's one unrated count: standard-delivery models, batch and free
- * listings counted apart (src/lib/coverage.mjs on the site). `stats.unrated`
- * counts catalogue rows, and this README once printed "301 of 437" as models
- * with no score while the leaderboard said 210: 91 of the 437 rows are batch or
- * free listings, 52 of them tiers of a model that has a score.
- */
+// Listing rows include service variants; they cannot supply a model-coverage denominator.
 const coverage = catalogue.integrity?.coverage
 
 /**
@@ -74,12 +85,9 @@ const need = (value, name) => {
 }
 
 const FIGURES = {
-  /**
-   * Models on the value frontier: nothing else scores at least as high for less,
-   * or higher for the same price.
-   */
+  /** No other model scores at least as high for less, or higher for the same price. */
   frontier: () => String(need(frontier.members?.length, 'frontier size')),
-  /** Every purchasable row in the catalogue, batch and free listings included. Not a count of models. */
+  /** Every purchasable row in the catalogue, all variants. */
   models: () => String(need(s.models, 'stats.models')),
   providers: () => String(need(s.providers, 'stats.providers')),
   /** Rated AND priced: the population every dominance claim is made over. */
@@ -89,7 +97,7 @@ const FIGURES = {
   /** "122 of 132" — stated together so the denominator can never drift away. */
   dominatedOfRated: () =>
     `${need(s.dominatedCount, 'stats.dominatedCount')} of ${need(s.ratedPriced ?? s.rated, 'stats.ratedPriced')}`,
-  /** Standard-delivery models, the population the leaderboard ranks. */
+  /** Fail closed until the public API provides this explicit population. */
   standardModels: () => String(need(coverage?.total, 'integrity.coverage.total')),
   unrated: () => String(need(coverage?.unrated, 'integrity.coverage.unrated')),
   unratedPct: () => `${need(coverage?.unratedPct, 'integrity.coverage.unratedPct')}%`,
@@ -112,7 +120,7 @@ let occurrences = 0
 
 const next = source.replace(/<!--fig:([a-zA-Z]+)-->([\s\S]*?)<!--\/fig-->/g, (whole, key, current) => {
   const render = FIGURES[key]
-  if (!render) throw new Error(`README names an unknown figure: ${key}`)
+  if (!render) throw new Error(`Platform guide names an unknown figure: ${key}`)
   seen.add(key)
   occurrences += 1
   const value = render()
@@ -145,10 +153,12 @@ const report = (rows) => {
   }
   return [...byReading.values()].map(
     (r) =>
-      `${r.key}: README says "${r.current}", the site says "${r.value}"` +
+      `${r.key}: Platform guide says "${r.current}", the site says "${r.value}"` +
       (r.count > 1 ? ` — in ${r.count} places` : ''),
   )
 }
+
+if (!occurrences) throw new Error('platform guide has no figure markers — refusing an empty freshness check')
 
 const unused = Object.keys(FIGURES).filter((k) => !seen.has(k))
 
@@ -159,12 +169,12 @@ const counted = `${seen.size} figure${seen.size === 1 ? '' : 's'}` +
 
 if (check) {
   if (stale.length) {
-    console.error('README figures are stale:')
+    console.error('Platform guide figures are stale:')
     for (const line of report(stale)) console.error(`  ${line}`)
     console.error('\nRun: node scripts/refresh-readme.mjs')
     process.exit(1)
   }
-  console.log(`README figures agree with ${ORIGIN} (${counted} checked, as of ${FIGURES.asOf()})`)
+  console.log(`Platform guide figures agree with ${ORIGIN} (${counted} checked, as of ${FIGURES.asOf()})`)
   if (unused.length) console.log(`  unused figures available: ${unused.join(', ')}`)
   process.exit(0)
 }
@@ -172,9 +182,9 @@ if (check) {
 writeFileSync(README, next)
 console.log(
   stale.length
-    ? `README updated — ${stale.length} of ${occurrences} statements rewritten:\n` +
+    ? `Platform guide updated — ${stale.length} of ${occurrences} statements rewritten:\n` +
       report(stale)
         .map((l) => `  ${l}`)
         .join('\n')
-    : `README already current (${counted}, as of ${FIGURES.asOf()})`,
+    : `Platform guide already current (${counted}, as of ${FIGURES.asOf()})`,
 )

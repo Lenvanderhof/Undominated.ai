@@ -1,0 +1,11 @@
+{
+  "label": "a header cannot fill a blank row",
+  "headerUnit": "per_million_tokens",
+  "rows": [
+    {
+      "id": "blank",
+      "claimedUnit": "per_million_tokens",
+      "rowUnit": null
+    }
+  ]
+}

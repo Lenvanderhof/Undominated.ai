@@ -1,0 +1,10 @@
+{
+  "label": "peak and off-peak are not one base",
+  "claims": [
+    {
+      "id": "both-windows",
+      "role": "single-base",
+      "excerpt": "Off-peak is half of the peak rate."
+    }
+  ]
+}

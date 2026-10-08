@@ -1,0 +1,20 @@
+{
+  "label": "synthetic excerpts, not a vendor quote",
+  "claims": [
+    {
+      "id": "one-rate",
+      "role": "global",
+      "excerpt": "The page lists one on-demand rate for this model."
+    },
+    {
+      "id": "named-qualifier",
+      "role": "component",
+      "excerpt": "Prices vary by country."
+    },
+    {
+      "id": "list-alone",
+      "role": "global",
+      "excerpt": "The list price is the on-demand rate."
+    }
+  ]
+}

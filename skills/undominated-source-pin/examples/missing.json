@@ -1,0 +1,9 @@
+{
+  "label": "a missing revision is invalid",
+  "sources": [
+    {
+      "id": "blank",
+      "ref": "HEAD"
+    }
+  ]
+}

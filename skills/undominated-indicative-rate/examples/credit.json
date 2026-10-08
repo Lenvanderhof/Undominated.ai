@@ -1,0 +1,10 @@
+{
+  "label": "a list price beside a credit is not one global rate",
+  "claims": [
+    {
+      "id": "credit",
+      "role": "global",
+      "excerpt": "The list price is separate from the new-user credit."
+    }
+  ]
+}

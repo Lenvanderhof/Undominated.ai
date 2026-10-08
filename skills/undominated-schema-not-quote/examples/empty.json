@@ -1,0 +1,5 @@
+{
+  "label": "an empty excerpt is invalid",
+  "role": "model-rate",
+  "excerpt": "   "
+}

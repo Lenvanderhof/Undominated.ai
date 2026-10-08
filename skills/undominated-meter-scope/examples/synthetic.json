@@ -1,0 +1,27 @@
+{
+  "label": "synthetic meters, not a vendor quote",
+  "rows": [
+    {
+      "id": "inference",
+      "meter": "serverless-inference",
+      "claimedUnit": "per_million_tokens"
+    },
+    {
+      "id": "knowledge-base",
+      "meter": "knowledge-base",
+      "claimedUnit": "per_thousand_tokens"
+    }
+  ],
+  "notes": [
+    {
+      "id": "inference-header",
+      "appliesTo": ["serverless-inference"],
+      "invoiceUnit": "per_million_tokens"
+    },
+    {
+      "id": "knowledge-base-invoice",
+      "appliesTo": ["knowledge-base"],
+      "invoiceUnit": "per_thousand_tokens"
+    }
+  ]
+}

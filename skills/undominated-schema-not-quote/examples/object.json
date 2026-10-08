@@ -1,0 +1,5 @@
+{
+  "label": "a field description is not a model rate",
+  "role": "model-rate",
+  "excerpt": "The pricing object values are in a documented unit."
+}

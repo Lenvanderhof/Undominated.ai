@@ -1,0 +1,10 @@
+{
+  "label": "www is a different host",
+  "responses": [
+    {
+      "id": "www",
+      "requestedHost": "example.com",
+      "finalHost": "www.example.com"
+    }
+  ]
+}

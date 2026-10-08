@@ -1,0 +1,10 @@
+{
+  "label": "synthetic hint contradicted by writes, not a server review",
+  "tools": [
+    {
+      "name": "rules_probe",
+      "readOnlyHint": true,
+      "operations": ["mkdir", "write_file", "remove"]
+    }
+  ]
+}

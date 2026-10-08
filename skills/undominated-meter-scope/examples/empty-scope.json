@@ -1,0 +1,17 @@
+{
+  "label": "synthetic empty scope, not a vendor quote",
+  "rows": [
+    {
+      "id": "inference",
+      "meter": "serverless-inference",
+      "claimedUnit": "per_million_tokens"
+    }
+  ],
+  "notes": [
+    {
+      "id": "unnamed",
+      "appliesTo": [],
+      "invoiceUnit": "per_thousand_tokens"
+    }
+  ]
+}

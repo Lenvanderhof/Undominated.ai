@@ -1,0 +1,11 @@
+{
+  "label": "an amount is not a path",
+  "responses": [
+    {
+      "id": "amount",
+      "requestedPath": "/pricing",
+      "finalPath": "/pricing",
+      "amount": "1"
+    }
+  ]
+}

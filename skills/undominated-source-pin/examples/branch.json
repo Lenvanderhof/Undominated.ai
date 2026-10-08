@@ -1,0 +1,10 @@
+{
+  "label": "a branch name is not a pin",
+  "sources": [
+    {
+      "id": "moving",
+      "revision": "v7",
+      "ref": "v7"
+    }
+  ]
+}

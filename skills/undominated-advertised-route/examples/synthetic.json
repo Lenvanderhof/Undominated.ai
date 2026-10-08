@@ -1,0 +1,15 @@
+{
+  "site": "https://example.test",
+  "englishOnly": ["/skills/", "/agents/"],
+  "locales": ["nl", "de"],
+  "advertised": [
+    "https://example.test/skills/",
+    "https://example.test/skills/?format=md",
+    "https://example.test/de/methodology/"
+  ],
+  "files": [
+    "skills/index.html",
+    "skills/index.md",
+    "de/methodology/index.html"
+  ]
+}

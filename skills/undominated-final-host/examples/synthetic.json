@@ -1,0 +1,15 @@
+{
+  "label": "synthetic hosts, not a fetch",
+  "responses": [
+    {
+      "id": "folded",
+      "requestedHost": "Example.COM.",
+      "finalHost": "example.com"
+    },
+    {
+      "id": "docs",
+      "requestedHost": "docs.example.com",
+      "finalHost": "docs.example.com"
+    }
+  ]
+}

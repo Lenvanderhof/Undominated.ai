@@ -1,184 +1,115 @@
 # undominated-check
 
-```
-      ▄▌
-    ▄██▌  Undominated.ai
-  ▄████▌  undominated-check
-▄██████▌  quote only
-```
+Quote published AI model evidence, inspect original Undominated resources, and install the resources you choose into an explicit project.
 
-Is the model you are paying for beaten by something both better and cheaper?
+Requires **Node.js 22.12+**. The offline skill checks additionally require **Python 3.10+**; they use only the standard library. No inference API key is required.
+
+## Quote a published result
 
 ```sh
-npm install --save-dev undominated-check
-npx undominated-check google/gemini-3.7-flash
+npx --yes undominated-check@0.4.0 google/gemini-3.7-flash --json
+npx --yes undominated-check@0.4.0 --frontier --json
 ```
 
-One-shot, no install: `npx undominated-check google/gemini-3.7-flash`.
+Model commands retrieve public JSON from [Undominated.ai](https://undominated.ai/). They do not send model prompts or inference credentials, route inference, or switch providers. The requested model identifier is part of the HTTP request. Inspect the returned benchmark, workload, date, source and recorded capability losses before applying a comparison to your own task.
 
-Read-only. It fetches published JSON from [undominated.ai](https://undominated.ai), prints the
-verdict, and exits. It sends nothing, stores nothing, and needs no key or account.
+The CLI quotes a published verdict; it does not recompute the frontier or price custom traffic. Use the [calculator](https://undominated.ai/calculator/) for a workload estimate. Use `--frontier` for a text summary or add `--json` for the published document.
 
-**Not a router.** It does not pick a model, hold keys, or execute inference.
+## Inspect and install an original resource
 
-**Warn, never fail.** Printing `dominated` still exits 0. Pass `--exit-code` only if a job
-must distinguish statuses — and even then, do not make it a merge blocker.
+Version **0.4.0** bundles **11 skills, six portable agent profiles and one MCP server**. The earlier `0.2.0` bundle contains six skills, four profiles and the same server. Consult the [version and availability map](https://github.com/Lenvanderhof/Undominated.ai/blob/main/docs/RESOURCES.md) for release verification and the corrections to `0.3.0` checkers.
 
-On a TTY the Pareto staircase and chartreuse paint the **frontier** finding only.
-Pipes, CI, `--json`, and `--plain` stay the same bytes as before — no colour in a log.
-`--color` forces the chrome when you are capturing a screenshot.
-
-## README badge
-
-Same verdict as a static SVG. The slug is the dominance filename: `/` and `:` become `__`.
-
-```md
-![Undominated](https://undominated.ai/badge/anthropic__claude-opus-5.svg)
+```sh
+npx --yes undominated-check@0.4.0 resources list
+npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-audit
+npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project /absolute/path/to/project
 ```
 
-Measured 2026-08-31: that URL returns HTTP 200, `image/svg+xml`. Nested
-`/badge/anthropic/claude-opus-5.svg` also 200; `__` is the canonical prerendered key.
+Replace the path with an existing project. Inspect the dry-run before installing. `install` is an alias for `resources install`; both `--project /path` and `--project=/path` forms work. Use `--json` for structured resource output. Bundled `status: fixture-tested` describes validation scope, not registry availability or production certification.
 
----
-
-## What it prints
-
-```
-$ npx undominated-check allenai/olmo-3-32b-think
-
-  allenai/olmo-3-32b-think
-  dominated — tencent/hy3 scores +142.6 and costs 39% less
-
-  lens       lmarena
-  workload   balanced
-  as of      2026-08-30
-  beaten by  https://undominated.ai/models/tencent__hy3/
-  verdict    https://undominated.ai/data/dominance/allenai__olmo-3-32b-think.json
-  page       https://undominated.ai/check/
-
-  Something scores higher, costs less, and gives up nothing it can do.
-```
-
-Every line after the finding is there so you can disagree with it. The lens says which benchmark,
-the workload says which input:output mix priced it, `as of` says how stale it might be, and the
-verdict URL is the exact document this output was rendered from.
-
-### The five verdicts
-
-| Status | Means | Exit code under `--exit-code` |
+| Resource / target | Destination | Next step |
 |---|---|---|
-| `on the frontier` | Nothing in the catalogue is both higher scoring and cheaper. | 0 |
-| `dominated` | Something scores higher, costs less, and gives up nothing it can do. | 3 |
-| `dominated, with a trade` | Something scores higher and costs less, but drops context, output, a modality, tool use or reasoning. The loss is named. | 4 |
-| `unrated` | Nobody has published an independent quality score. | 5 |
-| `unpriced` | No published price, so no verdict is possible. | 6 |
+| Skill, default or `--target codex` | `.agents/skills/<id>/` | Load through the client's skill workflow |
+| Skill, `--target claude` | `.claude/skills/<id>/` | Load through Claude Code's skill workflow |
+| Skill, `--target github` | `.github/skills/<id>/` | Load through GitHub Copilot's skill workflow |
+| Agent profile, default | `.undominated/agents/<id>/AGENT.md` | Load as portable task instructions |
+| Agent profile, `--target claude` | Original export plus `.claude/agents/<id>.md` | Reload Claude Code and inspect the native agent |
+| Agent profile, `--target github` | Original export plus `.github/agents/<id>.agent.md` | Select the custom agent in a compatible Copilot client |
+| MCP server | `.undominated/mcp/undominated-mcp/` | Review the generated client setup, then register it |
 
-**`unrated` has its own exit code on purpose.** Nobody having measured a model is not the same
-finding as a model being beaten. A gate that collapses the two will eventually approve a swap that
-no evidence supports. Absence of a verdict is never a favourable verdict.
+Use `resources --help` for the resource-specific target list. Unsupported resource/target combinations fail before writing files. Existing default paths are preserved from `0.3.1`.
 
-**`dominated, with a trade` is not a recommendation.** Sixty-one percent of raw "better and cheaper"
-verdicts, measured on this catalogue, named a replacement that could not do the incumbent's job —
-half the context, or no image input. That is why the trade is a separate status with its own exit
-code, and why the losses are printed rather than summarised.
-
----
-
-## Usage
-
+```sh
+npx --yes undominated-check@0.4.0 install undominated-evidence-reviewer --project /absolute/path/to/project --target claude
+npx --yes undominated-check@0.4.0 install undominated-mcp --project /absolute/path/to/project --json
 ```
-npx undominated-check <model-slug>
-npx undominated-check --frontier
+
+Installation verifies bundled SHA-256 hashes, rejects traversal and symlink paths, and refuses existing destinations, including native adapter files. It never overwrites client configuration. Package acquisition through `npx` uses the network; copying bundled resources does not. A write failure can leave a partial new destination: inspect it before removing it and retrying. Do not install into a directory concurrently controlled by an untrusted process.
+
+The default `AGENT.md` export remains portable. Explicit Claude/GitHub targets additionally create a native adapter that preserves the profile's body and retains the original licensed export. Native adapters inherit the host's model, available tools and permission rules; the profile's prose does not enforce a sandbox or read-only access. The installer does not invoke an agent or grant a permission bypass.
+
+MCP JSON output separates executable paths and arguments. Printed shell commands are labelled for their shell and quote each argument. They register the server only when you run them yourself. The export uses absolute paths tied to this machine; move/reinstall it if those paths change. MCP paths containing client interpolation syntax `${…}` are refused because clients could expand them to a different location. Review host configuration before importing it, and confirm the five MCP tools appear. See [client setup and measured compatibility](https://github.com/Lenvanderhof/Undominated.ai/blob/main/docs/INSTALLER.md).
+
+From an installed skill directory:
+
+```sh
+python3 scripts/check.py examples/synthetic.json
 ```
+
+Every skill includes an MIT licence, a scoped input contract and synthetic examples. Evidence-audit and release-proof also hash supplied local files. Exit **0** means the supplied check passed, **1** requires review, and **2** identifies invalid input. A pass does not independently establish source truth, legal rights or permission to publish.
+
+## Standard Skills CLI
+
+The source skills follow the [Agent Skills specification](https://agentskills.io/specification) and support the [Skills CLI](https://github.com/vercel-labs/skills):
+
+```sh
+npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --list
+npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit --agent codex --copy --yes
+```
+
+Repository discovery is separate from a skills.sh marketplace listing. This route also discovers the separate legacy quote-only `undominated` skill, which is outside the 18-resource bundle.
+
+## Model command options
 
 | Option | Effect |
 |---|---|
-| `--local <dir>` | Read from a directory instead of the network. Point it at a checkout's `static/data`. |
-| `--origin <url>` | Fetch from a different origin. Default `https://undominated.ai`. |
-| `--json` | Print the verdict document plus the resolved URLs, unformatted. |
-| `--frontier` | List every model nothing beats on both quality and price. |
-| `--exit-code` | Exit with the status-specific code above, for CI. |
-| `--help`, `--version` | |
+| `--json` | Return the published document with resolved URLs |
+| `--frontier` | Retrieve the frontier document; pair with `--json` |
+| `--local <dir>` | Read existing `frontier.json` or `dominance/<slug>.json` files locally |
+| `--origin <url>` | Fetch from a specified origin instead of the default website |
+| `--exit-code` | Opt in to verdict-specific exit codes |
+| `--plain`, `--color` | Disable or force terminal presentation |
+| `--help`, `--version` | Show usage or package version |
 
-Without `--exit-code`, exit is `0` whenever a verdict was printed, `1` on a usage error or an
-unpublished slug, and `2` when the data could not be read.
+Without `--exit-code`, a printed model verdict exits **0**, including `dominated` and `unrated`; usage/unpublished-model errors exit **1**, and read failures exit **2**. With `--exit-code`, frontier is **0**, dominated **3**, dominated with a capability trade **4**, unrated **5**, and unpriced **6**. Treat a benchmark verdict as a reason to investigate, not an automatic migration or merge gate. These model exit codes are separate from skill-check exit codes.
 
-### Offline
+Dominance can include a tie on one axis and a strict improvement on the other. Unrated is not zero, and a capability loss is not a strict replacement. Read the precise margins and recorded losses, not only the status label.
 
-Nothing needs the network if you already have the files:
+## Source checkout
+
+From the repository root:
 
 ```sh
-npx undominated-check --frontier --local static/data
+node packages/undominated-check/scripts/build-resources.mjs
+node packages/undominated-check/bin/undominated-check.mjs resources list
+npm test --prefix packages/undominated-check
 ```
 
-```
-  9 models on the frontier · lens lmarena · workload balanced · as of 2026-08-30
+The root package is a GitHub installation wrapper; npm releases come from the dedicated package directory. [Maintainer release procedure](https://github.com/Lenvanderhof/Undominated.ai/blob/main/packages/undominated-check/PUBLISH.md).
 
-  upstage/solar-pro4                 1376.2  $0.0525/M
-  qwen/qwen3-30b-a3b-instruct-2507   1384.3  $0.0844/M
-  deepseek/deepseek-v4-flash         1431.6  $0.1013/M
-  google/gemma-4-26b-a4b-it          1434.6  $0.1375/M
-  tencent/hy3                        1441.2  $0.1444/M
-  google/gemma-4-31b-it              1441.7  $0.1525/M
-  xiaomi/mimo-v2.5-pro                 1465  $0.5437/M
-  google/gemini-3.7-flash            1490.2  $0.75/M
-  anthropic/claude-opus-5            1504.2  $10/M
+## Optional Bash completion
 
-  https://undominated.ai/frontier/
+For a local npm installation, source the bundled completion file from your project:
+
+```sh
+source node_modules/undominated-check/completions/undominated-check.bash
 ```
 
-The directory needs `frontier.json` and `dominance/<slug>.json`, with `/` and `:` in the slug
-replaced by `__`. That is the same layout the site publishes, so mirroring it is a `curl` away.
+For a global installation, use `source "$(npm root -g)/undominated-check/completions/undominated-check.bash"`. Completion suggests commands, resource IDs and install flags for the `undominated-check` executable. Resource completion reads the installed bundle without fetching website data. The installer does not edit your shell profile.
 
-### In CI
+## Evidence and support
 
-Default is **warn, never fail**: a printed verdict exits 0, including `dominated` and `unrated`.
-A job that blocks a merge over a public-benchmark verdict under one workload is uninstalled the
-same day.
+The software is [MIT](LICENSE). Its licence grants no extra rights over data it fetches. Published verdicts use LMArena evidence under CC BY 4.0 with attribution; Artificial Analysis redistribution rights remain unresolved and those scores are excluded from the public output. Provider prices retain their source, seller and applicable conditions.
 
-```yaml
-- run: npx undominated-check openai/gpt-5.2
-```
-
-`--exit-code` is opt-in, for jobs that want the status-specific codes above. Exit 3 or 4 means
-something cheaper now scores higher. Treat that as a prompt to look, not as a merge blocker —
-the verdict is computed on a public benchmark under one workload, and your workload is not that
-one. `unrated` (5) and `unpriced` (6) stay distinct from each other and from dominated: nobody
-having measured a model is not the same finding as a model being beaten.
-
----
-
-## What it does not do
-
-- **It does not compute anything.** It reads the verdict `undominated.ai` already published. There
-  is deliberately no second implementation of the frontier here, because two implementations
-  eventually give two answers and only one of them gets checked.
-- **It does not price your workload.** The published lens is `balanced` — three input tokens per
-  output token, no cache. If your traffic is output-heavy or cache-heavy the ordering changes.
-  [/check/](https://undominated.ai/check/) lets you pick the workload;
-  [/audit/](https://undominated.ai/audit/) reads it off an actual bill, in your browser.
-- **It does not know your constraints.** Region, data-retention terms, latency, an existing contract
-  and a rate limit are all invisible to it.
-- **It is not a router.** It does not pick a model, hold keys, or execute inference. No
-  affiliate links, no take-rate. See [/independence/](https://undominated.ai/independence/).
-
-## Data and licensing
-
-The CLI is MIT. The data is not sublicensed by it.
-
-Verdicts are computed over **LMArena Elo**, used under **CC BY 4.0** from the official dataset —
-attribute LMArena if you republish a score. Each verdict document carries its own `licence` field
-saying so. No Artificial Analysis figure reaches this output; their redistribution terms are
-unresolved and the pipeline excludes them from every public surface.
-
-Prices come from providers' own published rates via the OpenRouter models API.
-
-## Getting a number wrong
-
-If a figure here disagrees with the vendor's own page, that is worth reporting and the correction
-gets logged rather than quietly overwritten:
-[open an issue](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml).
-
-## Licence
-
-MIT. See [LICENSE](LICENSE).
+[Full installation guide](https://github.com/Lenvanderhof/Undominated.ai/blob/main/docs/GETTING-STARTED.md) · [Resource contracts](https://github.com/Lenvanderhof/Undominated.ai/blob/main/docs/RESOURCES.md) · [Evidence boundaries](https://github.com/Lenvanderhof/Undominated.ai/blob/main/docs/EVIDENCE.md) · [Report a correction](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml)

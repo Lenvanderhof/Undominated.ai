@@ -1,0 +1,10 @@
+{
+  "label": "a floor is not one global rate",
+  "claims": [
+    {
+      "id": "floor",
+      "role": "global",
+      "excerpt": "Plans start at a monthly fee."
+    }
+  ]
+}

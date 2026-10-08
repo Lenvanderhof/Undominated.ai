@@ -53,24 +53,27 @@ if (!live) {
   process.exit(check ? 2 : 0)
 }
 
-const days = Math.round(
-  (Date.parse(live) - Date.parse(manifest.catalogueAsOf)) / 86_400_000,
-)
-if (days > manifest.maxAgeDays) {
-  problems.push(
-    `the shots are ${days} days behind the live catalogue ` +
-      `(taken against ${manifest.catalogueAsOf}, live is ${live}, limit ${manifest.maxAgeDays}) — reshoot`,
+// A new screenshot does not refresh the dates of older images beside it.
+const ages = manifest.shots.map(shot => {
+  const asOf = shot.catalogueAsOf ?? manifest.catalogueAsOf
+  const days = Math.round((Date.parse(live) - Date.parse(asOf)) / 86_400_000)
+  if (!Number.isFinite(days)) problems.push(`${shot.file}: invalid catalogue date ${asOf}`)
+  else if (days > manifest.maxAgeDays) problems.push(
+    `${shot.file}: ${days} days behind the live catalogue ` +
+    `(taken against ${asOf}, live is ${live}, limit ${manifest.maxAgeDays}) — reshoot`,
   )
-}
+  return days
+})
+const days = Math.max(...ages)
 
 if (problems.length) {
-  console.error('README screenshots need attention:')
+  console.error('Repository screenshots need attention:')
   for (const p of problems) console.error(`  ${p}`)
   console.error(`\nReshoot at the viewports in docs/shots/manifest.json, then update capturedOn and catalogueAsOf.`)
   process.exit(check ? 1 : 0)
 }
 
 console.log(
-  `${listed.size} screenshots, taken against catalogue ${manifest.catalogueAsOf}; ` +
-    `live is ${live} (${days} day${days === 1 ? '' : 's'} behind, limit ${manifest.maxAgeDays})`,
+  `${listed.size} screenshots; live catalogue is ${live}; oldest is ` +
+    `${days} day${days === 1 ? '' : 's'} behind (limit ${manifest.maxAgeDays})`,
 )

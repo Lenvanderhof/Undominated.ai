@@ -1,0 +1,38 @@
+{
+  "resource": {
+    "id": "synthetic/local-helper",
+    "kind": "skill",
+    "sourceUrl": "https://example.org/synthetic-only",
+    "commit": "1111111111111111111111111111111111111111",
+    "license": "MIT",
+    "reviewedAt": "2026-01-01",
+    "permissions": [
+      "read:fixture"
+    ]
+  },
+  "allowedPermissions": [
+    "read:fixture"
+  ],
+  "checks": {
+    "sourceIdentity": {
+      "passed": true,
+      "evidence": "synthetic-review.txt#sourceIdentity"
+    },
+    "licenseReviewed": {
+      "passed": true,
+      "evidence": "synthetic-review.txt#licenseReviewed"
+    },
+    "permissionsReviewed": {
+      "passed": true,
+      "evidence": "synthetic-review.txt#permissionsReviewed"
+    },
+    "installReviewed": {
+      "passed": true,
+      "evidence": "synthetic-review.txt#installReviewed"
+    },
+    "functionalTest": {
+      "passed": true,
+      "evidence": "synthetic-review.txt#functionalTest"
+    }
+  }
+}

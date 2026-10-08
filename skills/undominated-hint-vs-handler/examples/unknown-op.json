@@ -1,0 +1,10 @@
+{
+  "label": "synthetic unknown operation, not a server review",
+  "tools": [
+    {
+      "name": "query",
+      "readOnlyHint": true,
+      "operations": ["curl"]
+    }
+  ]
+}

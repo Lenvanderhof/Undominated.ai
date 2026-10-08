@@ -1,6 +1,6 @@
-The README, issue templates, and brand images in this repository describe
-Undominated.ai and exist so the public can find the product and file
-corrections.
+This repository distributes Undominated.ai public software, resource
+instructions, documentation and brand images. Component software licences
+are listed below; the whole repository is not licensed under MIT.
 
 © 2026 Len van der Hof.
 
@@ -9,8 +9,84 @@ You may quote this README with attribution to Undominated.ai
 chartreuse evidence shard identify the live index. They are not a licence
 to republish the catalogue.
 
-This repository does not contain the live model catalogue, prices, or
-quality scores. Those live on https://undominated.ai/. LMArena
-leaderboard data used on the site is CC BY 4.0 from the official dataset.
-Artificial Analysis figures are not published on the site and this
-repository does not grant a sublicence to redistribute them.
+This repository does not contain the full live model catalogue. Dated
+examples, generated figures and snapshot links are identified as such; the
+current catalogue lives on https://undominated.ai/. LMArena leaderboard
+data is CC BY 4.0 from the official dataset. Artificial Analysis scores
+are excluded from this repository's public tool outputs; redistribution
+rights remain unresolved and this repository grants no sublicence to them.
+
+Component software licences
+---------------------------
+
+The software in packages/undominated-check/ and packages/undominated-mcp/
+is licensed under the MIT License in each package's LICENSE file.
+
+The following original skill and agent directories are also licensed under
+the MIT License in their respective LICENSE files:
+
+- agents/undominated-comparison-editor/
+- agents/undominated-crawl-auditor/
+- agents/undominated-eval-harness-auditor/
+- agents/undominated-evidence-reviewer/
+- agents/undominated-migration-planner/
+- agents/undominated-population-reviewer/
+- agents/undominated-pricing-source-reviewer/
+- agents/undominated-quote-identity-reviewer/
+- agents/undominated-release-verifier/
+- agents/undominated-resource-curator/
+- agents/undominated-stack-cost-optimizer/
+- skills/undominated-advertised-route/
+- skills/undominated-alias-resolution/
+- skills/undominated-benchmark-audit/
+- skills/undominated-cache-tier-billing/
+- skills/undominated-context-tier/
+- skills/undominated-currency-isolate/
+- skills/undominated-decimal-determinism/
+- skills/undominated-dominance-wording/
+- skills/undominated-eval-contamination-audit/
+- skills/undominated-evidence-audit/
+- skills/undominated-filter-invariance/
+- skills/undominated-final-host/
+- skills/undominated-final-path/
+- skills/undominated-freshness-budget/
+- skills/undominated-header-not-row/
+- skills/undominated-hint-vs-handler/
+- skills/undominated-identity-dedup/
+- skills/undominated-indicative-rate/
+- skills/undominated-licence-boundary/
+- skills/undominated-meter-scope/
+- skills/undominated-migration-preflight/
+- skills/undominated-multiplier-aside/
+- skills/undominated-payback-basis/
+- skills/undominated-plan-quote/
+- skills/undominated-population-denominator/
+- skills/undominated-prompt-cost-estimator/
+- skills/undominated-provider-quote-compare/
+- skills/undominated-quantisation-label/
+- skills/undominated-quote-join/
+- skills/undominated-ratchet-gate/
+- skills/undominated-rate-unit/
+- skills/undominated-readonly-claim/
+- skills/undominated-release-proof/
+- skills/undominated-resource-audit/
+- skills/undominated-rung-select/
+- skills/undominated-schema-not-quote/
+- skills/undominated-seller-spread/
+- skills/undominated-serving-attribution/
+- skills/undominated-shared-lastmod/
+- skills/undominated-single-base/
+- skills/undominated-slug-is-not-body/
+- skills/undominated-source-pin/
+- skills/undominated-spelled-meter/
+- skills/undominated-status-not-page/
+- skills/undominated-surface-agreement/
+- skills/undominated-throughput-benchmark-audit/
+- skills/undominated-unrated-sentinel/
+- skills/undominated-withdrawal-residue/
+
+These component licences grant rights to the listed code and resource files.
+They do not grant rights to the Undominated.ai name or brand assets, or
+sublicense data fetched from external publishers. Files outside these listed
+components retain their own applicable terms; this notice does not place the
+entire repository or the live catalogue under MIT.

@@ -1,0 +1,26 @@
+{
+  "release": "synthetic-v1",
+  "artifacts": [
+    {
+      "path": "artifact.txt",
+      "sha256": "76d0f3213e5370f4313165e480bd21a5270406e51d263e925118acb920410da2"
+    }
+  ],
+  "publicReceipts": [
+    {
+      "url": "https://example.org/synthetic-release",
+      "checkedAt": "2026-01-01T00:00:00Z",
+      "status": 200,
+      "bodyFile": "response.txt",
+      "requiredText": "Synthetic resource v1 is available.",
+      "forbiddenText": [
+        "not found",
+        "is not available"
+      ]
+    }
+  ],
+  "runtime": {
+    "passed": true,
+    "evidence": "synthetic-runtime.txt"
+  }
+}

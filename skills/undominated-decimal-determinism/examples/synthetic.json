@@ -1,0 +1,15 @@
+{
+  "note": "Synthetic fixture. Not a vendor quote, not a market measurement. Identities and amounts are invented for a self-test.",
+  "currency": "USD",
+  "quantity": "1250000",
+  "rates": {
+    "inputPerMillion": "0.15",
+    "cachedInputPerMillion": "0.015",
+    "outputPerMillion": "1.20"
+  },
+  "billed": {
+    "inputPerMillion": "187500.00",
+    "cachedInputPerMillion": "18750.000",
+    "outputPerMillion": "1500000.00"
+  }
+}

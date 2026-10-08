@@ -1,0 +1,23 @@
+{
+  "evaluatedAt": "2026-09-11",
+  "sources": [
+    {
+      "id": "per-seller-endpoints",
+      "fetchedAt": "2026-08-24",
+      "budgetDays": 1,
+      "observed": ["a31d5c9e7702", "a31d5c9e7702"]
+    },
+    {
+      "id": "arena-snapshot",
+      "fetchedAt": null,
+      "budgetDays": 7,
+      "observed": null
+    },
+    {
+      "id": "hand-researched-plans",
+      "fetchedAt": "2026-09-11",
+      "budgetDays": 30,
+      "observed": ["51e0a8c4d7b2", "d9027b6fe3a5"]
+    }
+  ]
+}

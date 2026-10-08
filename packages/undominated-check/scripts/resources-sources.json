@@ -1,0 +1,434 @@
+[
+  {
+    "id": "undominated-evidence-audit",
+    "kind": "skill",
+    "name": "Evidence audit",
+    "description": "Audit a numeric claim against locally saved source evidence, including denominator and reproducible calculations, before citing or publishing it.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-evidence-audit",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "evidence",
+      "provenance",
+      "claims",
+      "audit"
+    ],
+    "whenToUse": "Audit a numeric claim against locally saved source evidence, including denominator and reproducible calculations, before citing or publishing it.",
+    "limitations": "Deterministic local checks over supplied evidence; not a guarantee of source truth or production suitability.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-migration-preflight",
+    "kind": "skill",
+    "name": "Model migration preflight",
+    "description": "Check a proposed model replacement for required modalities, context, tool use, structured output and evaluation coverage before calling it a safe saving.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-migration-preflight",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "models",
+      "migration",
+      "compatibility",
+      "evaluation"
+    ],
+    "whenToUse": "Check a proposed model replacement for required modalities, context, tool use, structured output and evaluation coverage before calling it a safe saving.",
+    "limitations": "Deterministic local checks over supplied evidence; not a guarantee of source truth or production suitability.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-provider-quote-compare",
+    "kind": "skill",
+    "name": "Provider quote comparison",
+    "description": "Compare like-for-like provider quotes with complete context tiers and distinct sellers; recompute workload cost without inventing cache or reasoning discounts.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-provider-quote-compare",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "pricing",
+      "providers",
+      "tier-ladders",
+      "comparison"
+    ],
+    "whenToUse": "Compare like-for-like provider quotes with complete context tiers and distinct sellers; recompute workload cost without inventing cache or reasoning discounts.",
+    "limitations": "Deterministic local checks over supplied evidence; not a guarantee of source truth or production suitability.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-benchmark-audit",
+    "kind": "skill",
+    "name": "Benchmark cohort audit",
+    "description": "Audit a benchmark comparison for matched model identity, missing coverage, restricted populations and misleading confidence-interval interpretations.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-benchmark-audit",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "benchmarks",
+      "statistics",
+      "coverage",
+      "research"
+    ],
+    "whenToUse": "Audit a benchmark comparison for matched model identity, missing coverage, restricted populations and misleading confidence-interval interpretations.",
+    "limitations": "Deterministic local checks over supplied evidence; not a guarantee of source truth or production suitability.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-resource-audit",
+    "kind": "skill",
+    "name": "AI resource intake audit",
+    "description": "Review a skill, agent or MCP server for pinned source identity, licensing, requested permissions and observable verification before adding it to a trusted collection.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-resource-audit",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "skills",
+      "agents",
+      "mcp",
+      "security",
+      "curation"
+    ],
+    "whenToUse": "Review a skill, agent or MCP server for pinned source identity, licensing, requested permissions and observable verification before adding it to a trusted collection.",
+    "limitations": "Deterministic local checks over supplied evidence; not a guarantee of source truth or production suitability.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-release-proof",
+    "kind": "skill",
+    "name": "Resource release proof",
+    "description": "Verify local release artifacts and meaningful public-response receipts without confusing a build, HTTP 200 or registry metadata with a working installation.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-release-proof",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "releases",
+      "verification",
+      "distribution",
+      "artifacts"
+    ],
+    "whenToUse": "Verify local release artifacts and meaningful public-response receipts without confusing a build, HTTP 200 or registry metadata with a working installation.",
+    "limitations": "Deterministic local checks over supplied evidence; not a guarantee of source truth or production suitability.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-evidence-reviewer",
+    "kind": "agent",
+    "name": "Evidence reviewer",
+    "description": "Independently challenge numerical claims using source identity, denominator reconstruction and repeatable calculations.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "agents/undominated-evidence-reviewer",
+    "entrypoint": "AGENT.md",
+    "category": "engineering",
+    "tags": [
+      "evidence",
+      "audit",
+      "pricing",
+      "research"
+    ],
+    "whenToUse": "Review a pricing headline, model comparison, benchmark conclusion or externally sourced resource claim before it is repeated.",
+    "limitations": "Portable profile; manually load or adapt to a native agent format. No automatic subagent registration or permission grants.",
+    "permissions": [
+      "read:assigned-sources",
+      "write:assigned-workspace"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-migration-planner",
+    "kind": "agent",
+    "name": "Model migration planner",
+    "description": "Plan workload-specific model migrations while preserving required capabilities and defining observable rollback criteria.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "agents/undominated-migration-planner",
+    "entrypoint": "AGENT.md",
+    "category": "engineering",
+    "tags": [
+      "migration",
+      "evaluation",
+      "models",
+      "engineering"
+    ],
+    "whenToUse": "A team wants to replace a model or provider for cost, latency, capability or availability reasons.",
+    "limitations": "Portable profile; manually load or adapt to a native agent format. No automatic subagent registration or permission grants.",
+    "permissions": [
+      "read:assigned-sources",
+      "write:assigned-workspace"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-resource-curator",
+    "kind": "agent",
+    "name": "AI resource curator",
+    "description": "Review skills, agents and MCP servers against a concrete use case, with pinned identity, rights and runtime evidence.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "agents/undominated-resource-curator",
+    "entrypoint": "AGENT.md",
+    "category": "engineering",
+    "tags": [
+      "curation",
+      "skills",
+      "agents",
+      "mcp",
+      "security"
+    ],
+    "whenToUse": "A collection or team needs a justified addition, a replacement for an obsolete resource, or an installation review.",
+    "limitations": "Portable profile; manually load or adapt to a native agent format. No automatic subagent registration or permission grants.",
+    "permissions": [
+      "read:assigned-sources",
+      "write:assigned-workspace"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-release-verifier",
+    "kind": "agent",
+    "name": "Resource release verifier",
+    "description": "Independently verify packaged resources, clean installation and meaningful public availability after a release.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "agents/undominated-release-verifier",
+    "entrypoint": "AGENT.md",
+    "category": "engineering",
+    "tags": [
+      "releases",
+      "verification",
+      "packages",
+      "distribution"
+    ],
+    "whenToUse": "A package, skill repository, download or website change is about to be described as shipped or installable.",
+    "limitations": "Portable profile; manually load or adapt to a native agent format. No automatic subagent registration or permission grants.",
+    "permissions": [
+      "read:assigned-sources",
+      "write:assigned-workspace"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-seller-spread",
+    "kind": "skill",
+    "name": "Seller-spread audit",
+    "description": "Check a price-spread multiple against distinct seller owners, so one vendor's own service tiers are not counted as competition.",
+    "version": "1.0.1",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-seller-spread",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "pricing",
+      "sellers",
+      "spread",
+      "comparison"
+    ],
+    "whenToUse": "Check a price-spread multiple against distinct seller owners, so one vendor's own service tiers are not counted as competition.",
+    "limitations": "Deterministic local checks over supplied rows and caller-assigned seller owners; not a guarantee of source truth or market coverage.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-dominance-wording",
+    "kind": "skill",
+    "name": "Dominance wording audit",
+    "description": "Classify a two-model comparison before publishing it, so a tie or a dropped requirement is not called both better and cheaper.",
+    "version": "1.0.1",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-dominance-wording",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "dominance",
+      "wording",
+      "capabilities",
+      "comparison"
+    ],
+    "whenToUse": "Classify a two-model comparison before publishing it, so a tie or a dropped requirement is not called both better and cheaper.",
+    "limitations": "Deterministic local checks over one supplied pair and the listed requirements; not a guarantee of source truth.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-plan-quote",
+    "kind": "skill",
+    "name": "Plan-quote hygiene",
+    "description": "Keep unverified subscription quotes out of a USD monthly ceiling. A source sentence is not a price.",
+    "version": "1.0.1",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-plan-quote",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "plans",
+      "quotes",
+      "currency",
+      "pricing"
+    ],
+    "whenToUse": "Keep unverified subscription quotes out of a USD monthly ceiling. A source sentence is not a price.",
+    "limitations": "Deterministic local checks over a supplied plan table; not a guarantee that a vendor page still matches.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-licence-boundary",
+    "kind": "skill",
+    "name": "Licence-boundary audit",
+    "description": "Check a redistribution claim against the licence evidence you recorded. A public page is not a licence.",
+    "version": "1.0.1",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-licence-boundary",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "licensing",
+      "redistribution",
+      "attribution",
+      "curation"
+    ],
+    "whenToUse": "Check a redistribution claim against the licence evidence you recorded. A public page is not a licence.",
+    "limitations": "Deterministic consistency check of a filled licence note; it does not interpret licence text or fetch the licence.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-context-tier",
+    "kind": "skill",
+    "name": "Context-tier ladder audit",
+    "description": "Check a past-this-length price multiple against every rung, so the dearest rung is not applied at the first boundary.",
+    "version": "1.0.1",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "skills/undominated-context-tier",
+    "entrypoint": "SKILL.md",
+    "category": "evaluation",
+    "tags": [
+      "pricing",
+      "context",
+      "tiers",
+      "claims"
+    ],
+    "whenToUse": "A headline says a model becomes N times dearer past one input length.",
+    "limitations": "Deterministic local check of a supplied ladder; it does not fetch vendor prices or model marginal block billing.",
+    "permissions": [
+      "read:user-selected-local-file"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-comparison-editor",
+    "kind": "agent",
+    "name": "Comparison editor",
+    "description": "Edit model-comparison copy so ties, same-seller tiers and dropped requirements are not published as dominance.",
+    "version": "1.0.1",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "agents/undominated-comparison-editor",
+    "entrypoint": "AGENT.md",
+    "category": "engineering",
+    "tags": [
+      "comparison",
+      "wording",
+      "pricing",
+      "dominance"
+    ],
+    "whenToUse": "A headline, table caption, FAQ or badge is about to say one model is better and cheaper, or that a price spread measures competition.",
+    "limitations": "Portable profile; manually load or adapt to a native agent format. No automatic subagent registration or permission grants.",
+    "permissions": [
+      "read:assigned-sources",
+      "write:assigned-workspace"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-pricing-source-reviewer",
+    "kind": "agent",
+    "name": "Pricing source reviewer",
+    "description": "Review a provider price feed before any rate is admitted, including units, currency, tiers and prose quotes that are not USD.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "agents/undominated-pricing-source-reviewer",
+    "entrypoint": "AGENT.md",
+    "category": "engineering",
+    "tags": [
+      "pricing",
+      "providers",
+      "provenance",
+      "plans"
+    ],
+    "whenToUse": "A new provider catalogue, a changed billing page, or a subscription total is proposed for publication.",
+    "limitations": "Portable profile; manually load or adapt to a native agent format. No automatic subagent registration or permission grants.",
+    "permissions": [
+      "read:assigned-sources",
+      "write:assigned-workspace"
+    ],
+    "status": "fixture-tested"
+  },
+  {
+    "id": "undominated-mcp",
+    "kind": "mcp-server",
+    "name": "Undominated MCP server",
+    "description": "Read-only local MCP server for published model verdicts and resource discovery.",
+    "version": "0.1.0",
+    "license": "MIT",
+    "author": "Undominated.ai",
+    "path": "packages/undominated-mcp",
+    "entrypoint": "bin/undominated-mcp.mjs",
+    "permissions": [
+      "network:https://undominated.ai"
+    ],
+    "limitations": "Host configuration import is manual; installing does not run or register the server. Data tool availability depends on published endpoints.",
+    "status": "fixture-tested"
+  }
+]

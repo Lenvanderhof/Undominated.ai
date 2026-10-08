@@ -1,0 +1,8 @@
+{
+  "model": "synthetic/model-v1",
+  "servingMode": null,
+  "claimSubject": "mode",
+  "modelScore": null,
+  "modeScore": "100",
+  "claimedScore": "100"
+}

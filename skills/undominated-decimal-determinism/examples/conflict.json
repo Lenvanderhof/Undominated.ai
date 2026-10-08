@@ -1,0 +1,15 @@
+{
+  "note": "Synthetic conflict fixture. Not a vendor quote, not a market measurement. Invented to exercise the review path.",
+  "currency": "USD",
+  "quantity": "3",
+  "rates": {
+    "inputPerMillion": "1.005",
+    "outputPerMillion": "23.075",
+    "cachedInputPerMillion": 0.15
+  },
+  "billed": {
+    "inputPerMillion": "3.01",
+    "outputPerMillion": "69.23",
+    "cachedInputPerMillion": "0.450"
+  }
+}

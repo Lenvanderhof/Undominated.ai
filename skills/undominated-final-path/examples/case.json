@@ -1,0 +1,10 @@
+{
+  "label": "case is a different path",
+  "responses": [
+    {
+      "id": "case",
+      "requestedPath": "/Pricing",
+      "finalPath": "/pricing"
+    }
+  ]
+}

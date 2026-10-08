@@ -1,0 +1,14 @@
+{
+  "claim": "Synthetic sample completion rate",
+  "population": "The four synthetic cases listed in evidence.txt",
+  "sourceUrl": "https://example.org/synthetic-only",
+  "observedAt": "2026-01-01",
+  "evidenceFile": "evidence.txt",
+  "sha256": "330a572a31d72f39fb96ea124574c11905676d71ed8302f13dd131c4aafe54d7",
+  "excerpt": "3 of 4 synthetic cases completed.",
+  "operation": "percent",
+  "numerator": "3",
+  "denominator": "4",
+  "expected": "75",
+  "tolerance": "0"
+}

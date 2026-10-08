@@ -1,0 +1,12 @@
+{
+  "label": "an amount is not a unit",
+  "headerUnit": "per_million_tokens",
+  "rows": [
+    {
+      "id": "amount",
+      "claimedUnit": "per_token",
+      "rowUnit": "per_token",
+      "amount": "1"
+    }
+  ]
+}

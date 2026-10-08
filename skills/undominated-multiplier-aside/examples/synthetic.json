@@ -1,0 +1,20 @@
+{
+  "label": "synthetic excerpts, not a vendor quote",
+  "claims": [
+    {
+      "id": "on-demand",
+      "role": "base",
+      "excerpt": "The listed rate is the on-demand token rate."
+    },
+    {
+      "id": "named-factor",
+      "role": "component",
+      "excerpt": "Priority is a multiplier on the on-demand rate."
+    },
+    {
+      "id": "vendor-name",
+      "role": "base",
+      "excerpt": "The xAI on-demand rate is one rate."
+    }
+  ]
+}

@@ -10,12 +10,10 @@
  * most prominent wrong claim the project makes.
  *
  * WHAT IT DRAWS. Every rated, priced model as one dot: quality up, effective
- * price right (log). The frontier is the staircase: nothing scores at least as
- * high as those models for less, or higher for the same price. Everything below
- * and right of it has an alternative no worse on either axis and better on one
- * (weak Pareto dominance, as the site computes it; a tie on one axis counts, so
- * "better AND cheaper" would overstate it). That shape IS the thesis: you cannot
- * argue with a scatter plot of published prices.
+ * price right (log). The frontier is the staircase: no other model scores at
+ * least as high for less, or higher for the same price. For each off-frontier
+ * point, another point improves at least one axis without worsening the other;
+ * capability requirements must still be checked separately.
  *
  * No axis is invented and no dot is placed by hand. If /data/frontier.json and
  * /data/catalogue.json disagree with this image, the image is regenerated.
@@ -50,6 +48,8 @@ const check = process.argv.includes('--check')
  * outer coordinate system.
  */
 async function providerMark(vendor) {
+  // OpenRouter uses meta-llama; the website serves Meta's mark under meta.
+  vendor = ({ 'meta-llama': 'meta' })[vendor] ?? vendor
   const res = await fetch(`${ORIGIN}/providers/${vendor}.svg`)
   if (!res.ok) return null
   const raw = await res.text()
@@ -197,16 +197,16 @@ const asOf = String(s.updatedAt ?? '').slice(0, 10)
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${
   n(s.dominatedCount)
-} of ${n(s.ratedPriced ?? s.rated)} rated, priced models have an alternative with a higher score or a lower price, with neither dimension worse. ${
+} of ${n(s.ratedPriced ?? s.rated)} rated, priced models are off the score-price frontier. ${
   frontier.members.length
-} are not.">
+} are on it. Capability requirements are separate.">
   <rect width="${W}" height="${H}" fill="${GROUND}"/>
   <text x="${PAD.left}" y="52" fill="${WITNESS}" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="600">${
     n(s.dominatedCount)
-  } of ${n(s.ratedPriced ?? s.rated)} models have a better deal on the board.</text>
-  <text x="${PAD.left}" y="78" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="15">Something scores at least as high <tspan font-style="italic">and</tspan> costs no more, and is better on one of the two. ${
+  } of ${n(s.ratedPriced ?? s.rated)} models sit outside the score-price frontier.</text>
+  <text x="${PAD.left}" y="78" fill="${MUTED}" font-family="system-ui, sans-serif" font-size="15">No lower score, no higher cost, with one strict gain. Check capabilities separately. ${
     frontier.members.length
-  } are not — that staircase is the value frontier.</text>
+  } models form the frontier.</text>
   <path d="${dominatedPath}" fill="${MUTED}" fill-opacity="0.55"/>
   <path d="${stair}" fill="none" stroke="${EVIDENCE}" stroke-width="1.5" stroke-opacity="0.5"/>
   ${markLayer}

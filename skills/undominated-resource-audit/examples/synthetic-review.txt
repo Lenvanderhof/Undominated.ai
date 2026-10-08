@@ -1,0 +1,1 @@
+Synthetic intake example only. Source identity, license, permissions, installation review and functional test entries illustrate the schema; no third-party resource was assessed.

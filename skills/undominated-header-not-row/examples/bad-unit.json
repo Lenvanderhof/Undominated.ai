@@ -1,0 +1,11 @@
+{
+  "label": "per M is not an allowlisted unit",
+  "headerUnit": "per_1m",
+  "rows": [
+    {
+      "id": "bad",
+      "claimedUnit": "per_token",
+      "rowUnit": "per_token"
+    }
+  ]
+}

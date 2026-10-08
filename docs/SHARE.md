@@ -4,11 +4,11 @@ Do not quote a number from memory. The board moves. Use a surface that carries a
 
 ## Short, and still true tomorrow
 
-> Most rated, priced models are a strictly worse deal than something else on the same page. A handful are not. That set is the value frontier.
+> Compare AI models by measured capability and published price. Inspect the benchmark, workload, seller and source before deciding.
 >
 > https://undominated.ai
 
-> Unrated is not zero. Missing is not free. Cheaper is cheaper — a strict upgrade is a capability superset that also costs less.
+> Unrated is not zero. Missing is not free. A proposed replacement needs evidence that it preserves the capabilities your task requires.
 >
 > https://undominated.ai/methodology/
 
@@ -22,7 +22,7 @@ Cite a **dated stamp**, not the live `catalogue.json`:
 
 - Frontier stamp: https://undominated.ai/now/
 - Citable snapshot: https://undominated.ai/data/citation.json
-- This week's dump: https://github.com/Lenvanderhof/Undominated.ai/releases
+- Dated releases: https://github.com/Lenvanderhof/Undominated.ai/releases
 
 A screenshot of the board is an observation. A `/now/` stamp has a date and a hash.
 

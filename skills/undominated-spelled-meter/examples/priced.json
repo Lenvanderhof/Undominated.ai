@@ -1,0 +1,12 @@
+{
+  "label": "an amount field is invalid",
+  "claims": [
+    {
+      "id": "priced",
+      "currency": "GBP",
+      "unit": "thousand",
+      "excerpt": "Prices are in GBP per thousand tokens.",
+      "amount": "1.00"
+    }
+  ]
+}

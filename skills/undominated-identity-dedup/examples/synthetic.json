@@ -1,0 +1,10 @@
+{
+  "note": "Synthetic fixture. Not a vendor quote, not a market measurement. Identities are invented and all distinct.",
+  "unit": "model",
+  "rows": [
+    { "id": "synthetic/model-alpha", "price": "0.15" },
+    { "id": "synthetic/model-beta", "price": "1.20" },
+    { "id": "synthetic/model-gamma", "price": "3.75" },
+    { "id": "synthetic/model-delta", "price": "8.115" }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "evaluatedAt": "2026-09-11",
+  "sources": [
+    {
+      "id": "openrouter-models",
+      "fetchedAt": "2026-09-11",
+      "budgetDays": 1,
+      "observed": ["9f2c17a4b0d3", "4be71c085af9"]
+    },
+    {
+      "id": "per-seller-endpoints",
+      "fetchedAt": "2026-09-10",
+      "budgetDays": 1,
+      "observed": ["a31d5c9e7702", "cc60ba1d38ef"]
+    },
+    {
+      "id": "arena-snapshot",
+      "fetchedAt": "2026-09-08",
+      "budgetDays": 7,
+      "observed": null
+    }
+  ]
+}

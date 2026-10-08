@@ -1,0 +1,11 @@
+{
+  "label": "a claim that follows the header against the row is review",
+  "headerUnit": "per_million_tokens",
+  "rows": [
+    {
+      "id": "mixed",
+      "claimedUnit": "per_million_tokens",
+      "rowUnit": "per_thousand_tokens"
+    }
+  ]
+}

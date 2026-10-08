@@ -1,0 +1,11 @@
+{
+  "note": "Synthetic conflict fixture. Not a vendor quote, not a market measurement. Invented to exercise the review path: one identity repeated with conflicting prices, one identity repeated at one price, one seller on several rows.",
+  "unit": "seller",
+  "rows": [
+    { "id": "synthetic/model-alpha", "seller": "Synthetic Vendor One", "price": "0.15" },
+    { "id": "Synthetic/Model-Alpha", "seller": "SYNTHETIC vendor one", "price": "0.12" },
+    { "id": "synthetic/model-alpha:free", "seller": "Synthetic Vendor One", "price": "0.00" },
+    { "id": "synthetic/model-beta", "seller": "Synthetic Vendor Two", "price": "1.20" },
+    { "id": "Synthetic/Model-Beta ", "seller": "synthetic vendor two", "price": "1.20" }
+  ]
+}

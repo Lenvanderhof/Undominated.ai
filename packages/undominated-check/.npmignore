@@ -1,0 +1,3 @@
+# Keep npm from inheriting this package's .gitignore when the repository root
+# packages it as a nested CLI. The package.json files allowlists define exports;
+# the generated resources directory must be included in both package shapes.

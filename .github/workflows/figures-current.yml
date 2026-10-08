@@ -1,6 +1,6 @@
 name: figures current
 
-# Every figure on the README and in the hero image is generated from the live
+# Generated figures in the platform guide and in the hero image is generated from the live
 # board. This proves they still agree with it.
 #
 # It exists because on 2026-09-04 the README stated eleven undominated models,
@@ -37,9 +37,12 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
 
+      - name: Staged figure checks preserve coverage and fail closed
+        run: node --test scripts/refresh-readme.test.mjs
+
       # Both read https://undominated.ai/data/*.json — public, unauthenticated,
       # no secret. Neither writes anything in --check mode.
-      - name: README figures match the published catalogue
+      - name: Platform guide figures match the published catalogue
         run: node scripts/refresh-readme.mjs --check
 
       - name: The hero image matches the published catalogue
@@ -52,5 +55,5 @@ jobs:
       # thing that can be checked: that somebody has looked recently, and that
       # no shot sits in docs/shots/ unlisted. Added after every shot went ten
       # days stale with alt text claiming "63% unrated" against a live 68%.
-      - name: The README screenshots are recent and all accounted for
+      - name: Repository screenshots are recent and all accounted for
         run: node scripts/shots-current.mjs --check

@@ -1,0 +1,11 @@
+{
+  "label": "an amount field is invalid",
+  "claims": [
+    {
+      "id": "priced",
+      "role": "single-base",
+      "excerpt": "One on-demand rate is listed.",
+      "price": "1.00"
+    }
+  ]
+}

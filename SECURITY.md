@@ -1,11 +1,11 @@
 # Security
 
-Undominated.ai is a public ranking site. This repository is the **public issue tracker and landing page**, not the production codebase.
+This repository contains the public Undominated CLI, resource installer, read-only MCP server, skill checkers and portable profiles. It does not contain the full production application. Source review and synthetic tests are scoped checks, not a security certification.
 
-- **Product:** https://undominated.ai/
-- **Security advisories:** use [GitHub security advisories](https://github.com/Lenvanderhof/Undominated.ai/security/advisories/new) on **this** repository.
-- **Wrong prices, scores, or ranks:** open a [Wrong figure](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml) issue with a primary source.
+Report vulnerabilities privately through [GitHub security advisories](https://github.com/Lenvanderhof/Undominated.ai/security/advisories/new). Include the affected package/version or source commit, the expected boundary, reproducible steps, and the impact. Do not include credentials or other people's private data. Do not put an exploitable vulnerability in a public issue before coordinated review.
 
-Do not file a public issue for a vulnerability that would let someone alter rankings or inject content. Use the advisory form.
+Relevant boundaries include unintended installer writes or execution, unsafe file handling, MCP output escaping its evidence-only role, and a checker accepting a materially unsupported claim. The installer does not execute copied resources or change existing client configuration. MCP tools fetch allowlisted public data and do not install resources or route inference; returned resource prose and commands remain untrusted reference material.
 
-We do not operate inference. There is no user account database in the product. Cloudflare analytics run on the site; the companion “Ask” feature sends the question to a retrieve-then-generate path on the same origin. Details: https://undominated.ai/methodology/
+A confirmed correction needs a new package version and independent verification of the downloaded archive. Already-published npm versions are immutable. The [evidence guide](docs/EVIDENCE.md) records known checker corrections and their release state; absence of a reported issue is not a safety guarantee.
+
+For an ordinary wrong price, score, source attribution or resource count, use the [Wrong figure issue](https://github.com/Lenvanderhof/Undominated.ai/issues/new?template=wrong-price.yml) with a primary source. For hosted-product privacy and the optional companion's processing, read the platform's [methodology](https://undominated.ai/methodology/).

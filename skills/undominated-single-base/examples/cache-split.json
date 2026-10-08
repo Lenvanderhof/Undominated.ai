@@ -1,0 +1,10 @@
+{
+  "label": "cache hit and cache miss are not one base",
+  "claims": [
+    {
+      "id": "collapsed",
+      "role": "single-base",
+      "excerpt": "The table lists cache hit and cache miss on separate rows."
+    }
+  ]
+}

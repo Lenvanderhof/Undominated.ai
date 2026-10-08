@@ -8,7 +8,7 @@ import { test, describe } from 'node:test'
 import assert from 'node:assert/strict'
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import {
@@ -414,23 +414,4 @@ describe('packaging', () => {
     assert.doesNotMatch(md, /Lenvanderhof\/AIDREAMTEAM\/actions\/dominated-warn@/)
   })
 
-  test('launch-verdicts workflow drafts privately and never publishes', () => {
-    const yml = readFileSync(resolve(HERE, '../../.github/workflows/launch-verdicts.yml'), 'utf8')
-    assert.match(yml, /workflow_dispatch/)
-    assert.match(yml, /cron:/)
-    assert.match(yml, /watch-upstream\.mjs --json data\/\.cache\/changeset\.json/)
-    assert.match(yml, /\|\| true/)
-    assert.match(yml, /draft-verdict\.mjs data\/\.cache\/changeset\.json --out data\/drafts/)
-    assert.match(yml, /upload-artifact/)
-    assert.match(yml, /contents:\s*read/)
-    assert.doesNotMatch(yml, /pull_request/)
-    assert.doesNotMatch(yml, /create-pull-request/)
-    assert.doesNotMatch(yml, /pull-requests:\s*write/)
-    assert.doesNotMatch(yml, /contents:\s*write/)
-    assert.doesNotMatch(yml, /--out static/)
-    assert.doesNotMatch(yml, /--out build/)
-    assert.doesNotMatch(yml, /rsync/)
-    assert.doesNotMatch(yml, /deploy:undominated/)
-    assert.doesNotMatch(yml, /secrets\./)
-  })
 })

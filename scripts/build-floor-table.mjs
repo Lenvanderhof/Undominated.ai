@@ -19,7 +19,7 @@
  * dearer over the observation window. That finding is the section's whole point,
  * and it is the opposite of what the market says.
  *
- *   node scripts/build-floor-table.mjs          # rewrite the table in README.md
+ *   node scripts/build-floor-table.mjs          # rewrite the table in docs/PLATFORM.md
  *   node scripts/build-floor-table.mjs --check  # exit 1 if stale
  */
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -27,7 +27,7 @@ import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const README = resolve(ROOT, 'README.md')
+const README = resolve(ROOT, 'docs/PLATFORM.md')
 const ORIGIN = 'https://undominated.ai'
 const START = '<!--floors-->'
 const END = '<!--/floors-->'
@@ -73,7 +73,7 @@ const table = [
 
 const source = readFileSync(README, 'utf8')
 const pattern = new RegExp(`${START}[\\s\\S]*?${END}`)
-if (!pattern.test(source)) throw new Error(`README has no ${START} … ${END} block`)
+if (!pattern.test(source)) throw new Error(`Platform guide has no ${START} … ${END} block`)
 const next = source.replace(pattern, table)
 
 if (check) {

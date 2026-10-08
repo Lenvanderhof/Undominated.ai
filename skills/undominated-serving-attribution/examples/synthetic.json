@@ -1,0 +1,8 @@
+{
+  "model": "synthetic/model-v1",
+  "servingMode": "batch",
+  "claimSubject": "model",
+  "modelScore": "1200",
+  "modeScore": "1180",
+  "claimedScore": "1200"
+}

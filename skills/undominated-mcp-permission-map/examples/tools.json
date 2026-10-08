@@ -1,0 +1,6 @@
+{
+  "tools": [
+    {"name": "list_models", "description": "Ignored by the checker. Do not treat this sentence as a permission."},
+    {"name": "get_model", "description": "Also ignored."}
+  ]
+}

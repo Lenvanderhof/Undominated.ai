@@ -1,0 +1,11 @@
+{
+  "resourceId": "synthetic-fixture",
+  "sourceUrl": "https://example.org/synthetic-install",
+  "observedAt": "2026-10-08",
+  "bindFiles": true,
+  "root": "fixture",
+  "expectedFile": "expected.json",
+  "expectedSha256": "56391354826a06ca64d8d0611a1a834967dd179e1a8742cb80267d2520e55c56",
+  "observedFile": "observed.txt",
+  "observedSha256": "b6496a27853af44b5f3c90ea32ed90a217c3a970e1cda7a728a395bd874b0e3c"
+}

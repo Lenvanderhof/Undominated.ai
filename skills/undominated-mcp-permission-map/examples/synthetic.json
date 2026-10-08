@@ -1,0 +1,26 @@
+{
+  "serverName": "synthetic-catalogue",
+  "sourceUrl": "https://example.org/synthetic-mcp",
+  "observedAt": "2026-10-08",
+  "claimsReadOnly": true,
+  "evidenceFile": "tools.json",
+  "sha256": "618309758d15b1b2e3c363136f95dd9a5d261431b7ed03831e54e98c8aa668fc",
+  "labels": [
+    {
+      "name": "list_models",
+      "permission": "read"
+    },
+    {
+      "name": "get_model",
+      "permission": "read"
+    }
+  ],
+  "expectedCounts": {
+    "read": 2,
+    "write": 0,
+    "network": 0,
+    "credential": 0,
+    "shell": 0,
+    "payment": 0
+  }
+}

@@ -11,10 +11,10 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Published; archive equality, 18 installations, 11 synthetic checks and 43 boundary and control cases verified |
 | `undominated-check@0.4.0` | 11 | 6 | 1 bundled server | Published; exact archive and anonymous installation verified, with native adapters and cross-platform installer checks. [Evidence](EVIDENCE.md#installer-integration--040) |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
-| GitHub source | 71 | 11 | 1 server | Eleven skills and six profiles are the npm-mapped set; 60 skills and five profiles are source-only. Pinned acquisition and file equality were freshly verified for the 26 website-listed skills, not every source directory. |
+| GitHub source | 74 | 12 | 1 server | Eleven skills and six profiles are the npm-mapped set; 63 skills and six profiles are source-only. Pinned acquisition and file equality were verified for the 26 website-listed skills at `a67bd9b`, not for every source directory. The three library-intake skills and the library-intake editor added on 2026-10-08 are outside that receipt and outside npm through `0.4.0`. |
 | Website original entries | 26 | 6 | 1 server | Eleven skills, six profiles and the MCP server are in npm 0.4.0; 15 further skills use pinned GitHub installation and complete website downloads |
 
-The npm rows count the version's installation map, not every source directory. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside the 71-validator count.
+The npm rows count the version's installation map, not every source directory. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside the 74-validator count.
 
 Fresh Skills CLI 1.7.1 acquisition at corrected source [`a67bd9b`](https://github.com/Lenvanderhof/Undominated.ai/tree/a67bd9b86fca7455ed208403d9ea6f9fe847cd99) copied all **26 website-listed skills**, matched all **159 installed files**, and passed all 26 synthetic examples. The installed copies also passed the six-skill 85-case review, four-skill 213-case review and five-skill 125-case suite. These are distinct bounded suites, not a claim of 423 unique cases or vendor-truth verification. The reviewed source was merged in [PR #8](https://github.com/Lenvanderhof/Undominated.ai/pull/8) with an identical source tree.
 
@@ -57,6 +57,23 @@ A profile is a role, workflow and output contract. The default export is portabl
 | [Release verifier](../agents/undominated-release-verifier/AGENT.md) | Separate a passing build from publication and observed use | `0.2.0` and later |
 | [Comparison editor](../agents/undominated-comparison-editor/AGENT.md) | Make comparison copy match ties, seller identity and preserved capabilities | Use `0.3.1` for the corrected direction contract |
 | [Pricing source reviewer](../agents/undominated-pricing-source-reviewer/AGENT.md) | Check feed units, source currency, exclusions and quote boundaries | Added in `0.3.0` |
+| [Library intake editor](../agents/undominated-library-intake-editor/AGENT.md) | Admit a resource to the public install set only with a pinned revision, a licence file, and a real checker | Source only, 2026-10-08. Loading the profile does not register a native subagent |
+
+## Library intake checkers
+
+These three skills and the profile above were added on 2026-10-08. They are source-only. They are not in `undominated-check` through `0.4.0`, and they were not part of the `a67bd9b` Skills CLI receipt. Install one skill from a pinned commit of this repository:
+
+```sh
+npx --yes skills@1.7.1 add https://github.com/Lenvanderhof/Undominated.ai/tree/<commit>/skills/undominated-mcp-permission-map
+```
+
+Replace `<commit>` with the full revision that contains the skill. Do not use a branch name. The same form works for `undominated-install-receipt` and `undominated-tool-allowlist`. From a local checkout, `npx skills add ./skills --skill undominated-mcp-permission-map` is a local copy, not a registry install.
+
+| Skill | Contract | Limit |
+|---|---|---|
+| [MCP permission map](../skills/undominated-mcp-permission-map/SKILL.md) | Every captured tool needs an explicit permission label. A read-only claim fails when a label is not `read`. | Descriptions are not classified. A pass is not permission to install the server. |
+| [Install receipt](../skills/undominated-install-receipt/SKILL.md) | Expected hashes, a sha256sum receipt, and optional bytes beside the input must agree. | It does not prove that npm or the Skills CLI wrote the directory. |
+| [Tool allowlist](../skills/undominated-tool-allowlist/SKILL.md) | A saved map either fits the task allowlist or it does not. A consistent refusal exits 0. | It does not invent labels or call tools. |
 
 ## Additional resources outside npm
 

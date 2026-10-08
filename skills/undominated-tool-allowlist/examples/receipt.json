@@ -1,0 +1,6 @@
+{
+  "tools": [
+    {"name": "list_models", "permission": "read"},
+    {"name": "fetch_quote", "permission": "network"}
+  ]
+}

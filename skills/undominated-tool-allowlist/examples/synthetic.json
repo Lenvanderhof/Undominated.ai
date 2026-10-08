@@ -1,0 +1,11 @@
+{
+  "task": "Quote a published model page without calling the network.",
+  "sourceUrl": "https://example.org/synthetic-allowlist",
+  "observedAt": "2026-10-08",
+  "receiptFile": "receipt.json",
+  "sha256": "8fb5c760f5683865a2837e9b6adf33e988223a1d1ec2bfbe9ba3d55e7feb9f0a",
+  "allow": [
+    "read"
+  ],
+  "expectedDecision": "refuse"
+}

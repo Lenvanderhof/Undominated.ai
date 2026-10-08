@@ -140,6 +140,24 @@ The following commit adds snippet-not-inherited, resolve-not-host-header, reload
 
 The public boundary suite contains 269 cases after adding 75 controls. All 269 cases passed locally in 10.948 seconds, as did all 71 source synthetic examples. A duplicate JSON key on zero-base-undefined returned exit 2 with empty stderr. These checks use supplied labels. They do not run nginx, open a session, fetch a page, embed text, read a secret, or emit a quotient.
 
+## Three library-intake checkers — 2026-10-08
+
+The following commit adds `undominated-mcp-permission-map`, `undominated-install-receipt`, and `undominated-tool-allowlist`, plus the portable profile `undominated-library-intake-editor`. The source inventory moves from 71 to 74 validator skills and from 11 to 12 profiles. The legacy skill and the MCP server are unchanged. These three skills are outside the `a67bd9b` Skills CLI receipt, the public boundary suite, and the npm map through `0.4.0`. Seventy-four validator skills are not the published `0.3.1` figure of 43 boundary cases.
+
+Local runs on 2026-10-08, each from the skill directory with Python 3:
+
+| Input | Exit | Result |
+|---|---:|---|
+| `undominated-mcp-permission-map` `examples/synthetic.json` | 0 | Two tools labeled `read`; read-only claim stands |
+| `undominated-mcp-permission-map` `examples/contradiction.json` | 1 | A `write` label contradicts `claimsReadOnly: true` |
+| `undominated-mcp-permission-map` `examples/broken.json` | 2 | Invalid input |
+| `undominated-install-receipt` `examples/synthetic.json` | 0 | Manifest, receipt, and bound fixture bytes agree |
+| `undominated-install-receipt` `examples/mismatch.json` | 1 | `LICENSE` hash mismatch |
+| `undominated-tool-allowlist` `examples/synthetic.json` | 0 | Decision `refuse` matches the expected refusal |
+| `undominated-tool-allowlist` `examples/wrong-expectation.json` | 1 | Expected `allow` does not match the refusal |
+
+The same three synthetic examples passed again after the files were copied into this repository. These checks use supplied JSON. They do not start an MCP server, call a tool, contact a registry, or certify an install.
+
 ## Catalogue figures and comparison wording
 
 The older [PR #4](https://github.com/Lenvanderhof/Undominated.ai/pull/4) identified two distinct errors: counting unscored service listings as unmeasured models, and describing weak Pareto dominance as requiring both a higher score and a lower price. Current hero wording preserves ties: no lower score, no higher cost, with at least one strict gain. Recorded capability requirements remain a separate check.

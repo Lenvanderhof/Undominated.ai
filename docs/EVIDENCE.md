@@ -134,6 +134,12 @@ The following commit adds ladder-not-flattened, marginal-not-whole, rollback-not
 
 The public boundary suite contains 194 cases after adding 21 controls, including a flattened ladder, an added rung, a marginal billing mode, a rolled-back deploy recorded as the baseline, and a load return labelled catalogue. All 194 cases passed locally in 14.178 seconds, as did all 56 source synthetic examples. These checks use supplied JSON. They do not read a price, price a marginal block, contact a host, or fetch a page.
 
+## Fifteen operational-boundary checkers — 2026-10-08
+
+The following commit adds snippet-not-inherited, resolve-not-host-header, reload-not-restart, sudo-not-stdin, loopback-not-browser, models-list-not-chat, query-not-passage, topk-not-dump, slash-not-post, public-not-secret, generated-not-commit, force-not-master, zero-base-undefined, aa-not-public, and arena-not-scrape. The source inventory moves from 56 to 71 validator skills. The 11 profiles, the legacy skill, and the MCP server are unchanged. These fifteen supply synthetic passes and refusal or invalid examples. They are outside the `a67bd9b` Skills CLI receipt and the npm map through `0.4.0`. The published `0.3.1` figure of 43 boundary and control cases remains the npm bundle's case count. Seventy-one validator skills are not that figure.
+
+The public boundary suite contains 269 cases after adding 75 controls. All 269 cases passed locally in 10.948 seconds, as did all 71 source synthetic examples. A duplicate JSON key on zero-base-undefined returned exit 2 with empty stderr. These checks use supplied labels. They do not run nginx, open a session, fetch a page, embed text, read a secret, or emit a quotient.
+
 ## Catalogue figures and comparison wording
 
 The older [PR #4](https://github.com/Lenvanderhof/Undominated.ai/pull/4) identified two distinct errors: counting unscored service listings as unmeasured models, and describing weak Pareto dominance as requiring both a higher score and a lower price. Current hero wording preserves ties: no lower score, no higher cost, with at least one strict gain. Recorded capability requirements remain a separate check.

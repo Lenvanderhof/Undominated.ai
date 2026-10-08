@@ -4849,6 +4849,1079 @@
         "invalid"
       ]
     }
-
+,
+    {
+      "id": "snippet-quiet",
+      "skill": "undominated-snippet-not-inherited",
+      "why": "A location that sets no header does not discard inherited headers.",
+      "input": {
+        "addHeader": false,
+        "snippetIncluded": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "discardsInherited": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "snippet-kept",
+      "skill": "undominated-snippet-not-inherited",
+      "why": "A location that sets a header and includes the snippet can pass.",
+      "input": {
+        "addHeader": true,
+        "snippetIncluded": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "discardsInherited": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "snippet-missing",
+      "skill": "undominated-snippet-not-inherited",
+      "why": "add_header without the shared snippet discards inherited headers.",
+      "input": {
+        "addHeader": true,
+        "snippetIncluded": false
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "discardsInherited": true,
+        "issues": [
+          "an nginx add_header discards inherited headers"
+        ]
+      }
+    },
+    {
+      "id": "snippet-number",
+      "skill": "undominated-snippet-not-inherited",
+      "why": "A JSON number is not a boolean.",
+      "input": {
+        "addHeader": 1,
+        "snippetIncluded": true
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "snippet-string",
+      "skill": "undominated-snippet-not-inherited",
+      "why": "A string is not a boolean.",
+      "input": {
+        "addHeader": "yes",
+        "snippetIncluded": false
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "resolve-loopback",
+      "skill": "undominated-resolve-not-host-header",
+      "why": "curl --resolve against loopback can pass.",
+      "input": {
+        "method": "resolve",
+        "target": "loopback"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "blind": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "resolve-named",
+      "skill": "undominated-resolve-not-host-header",
+      "why": "curl --resolve against a named host can pass.",
+      "input": {
+        "method": "resolve",
+        "target": "named-host"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "blind": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "host-loopback",
+      "skill": "undominated-resolve-not-host-header",
+      "why": "A Host header against loopback sends no SNI.",
+      "input": {
+        "method": "host-header",
+        "target": "loopback"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "blind": true,
+        "issues": [
+          "a Host header against loopback sends no SNI"
+        ]
+      }
+    },
+    {
+      "id": "host-named",
+      "skill": "undominated-resolve-not-host-header",
+      "why": "A Host header against a named host is outside this trap.",
+      "input": {
+        "method": "host-header",
+        "target": "named-host"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "blind": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "resolve-other",
+      "skill": "undominated-resolve-not-host-header",
+      "why": "An unnamed method is invalid.",
+      "input": {
+        "method": "get",
+        "target": "loopback"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "nginx-tested",
+      "skill": "undominated-reload-not-restart",
+      "why": "A reload after nginx -t can pass.",
+      "input": {
+        "action": "reload",
+        "configTested": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "nginx-quiet",
+      "skill": "undominated-reload-not-restart",
+      "why": "No nginx action can pass.",
+      "input": {
+        "action": "none",
+        "configTested": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "nginx-restart",
+      "skill": "undominated-reload-not-restart",
+      "why": "nginx is reloaded, not restarted.",
+      "input": {
+        "action": "restart",
+        "configTested": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "nginx is reloaded, not restarted"
+        ]
+      }
+    },
+    {
+      "id": "nginx-untested",
+      "skill": "undominated-reload-not-restart",
+      "why": "A reload without nginx -t is review.",
+      "input": {
+        "action": "reload",
+        "configTested": false
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "nginx -t runs before a reload"
+        ]
+      }
+    },
+    {
+      "id": "nginx-number",
+      "skill": "undominated-reload-not-restart",
+      "why": "A JSON number is not a boolean.",
+      "input": {
+        "action": "reload",
+        "configTested": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "sudo-lc",
+      "skill": "undominated-sudo-not-stdin",
+      "why": "sudo -n bash -lc can pass.",
+      "input": {
+        "invocation": "bash-lc"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "sudo-heredoc",
+      "skill": "undominated-sudo-not-stdin",
+      "why": "A heredoc on sudo bash -s is read as the password prompt.",
+      "input": {
+        "invocation": "bash-s-heredoc"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "a heredoc on sudo bash -s is read as the password prompt"
+        ]
+      }
+    },
+    {
+      "id": "sudo-other",
+      "skill": "undominated-sudo-not-stdin",
+      "why": "An unnamed invocation is invalid.",
+      "input": {
+        "invocation": "bash-s"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "sudo-bool",
+      "skill": "undominated-sudo-not-stdin",
+      "why": "A boolean is not an invocation.",
+      "input": {
+        "invocation": true
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "sudo-number",
+      "skill": "undominated-sudo-not-stdin",
+      "why": "A JSON number is not an invocation.",
+      "input": {
+        "invocation": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "loop-server",
+      "skill": "undominated-loopback-not-browser",
+      "why": "A server sidecar may name loopback.",
+      "input": {
+        "surface": "server",
+        "namesLoopback": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "callsVisitor": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "loop-quiet",
+      "skill": "undominated-loopback-not-browser",
+      "why": "A browser script that does not name loopback can pass.",
+      "input": {
+        "surface": "browser",
+        "namesLoopback": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "callsVisitor": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "loop-browser",
+      "skill": "undominated-loopback-not-browser",
+      "why": "A browser script that names 127.0.0.1 calls the visitor.",
+      "input": {
+        "surface": "browser",
+        "namesLoopback": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "callsVisitor": true,
+        "issues": [
+          "a browser script that names 127.0.0.1 calls the visitor's machine"
+        ]
+      }
+    },
+    {
+      "id": "loop-number",
+      "skill": "undominated-loopback-not-browser",
+      "why": "A JSON number is not a boolean.",
+      "input": {
+        "surface": "server",
+        "namesLoopback": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "loop-other",
+      "skill": "undominated-loopback-not-browser",
+      "why": "An unnamed surface is invalid.",
+      "input": {
+        "surface": "worker",
+        "namesLoopback": false
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "models-other",
+      "skill": "undominated-models-list-not-chat",
+      "why": "Evidence outside a models list can pass, and chat stays unestablished.",
+      "input": {
+        "evidence": "other",
+        "claimedChat": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "established": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "models-unclaimed",
+      "skill": "undominated-models-list-not-chat",
+      "why": "A models list with no chat claim can pass.",
+      "input": {
+        "evidence": "models-list",
+        "claimedChat": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "established": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "models-claim",
+      "skill": "undominated-models-list-not-chat",
+      "why": "A models list does not establish that chat works.",
+      "input": {
+        "evidence": "models-list",
+        "claimedChat": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "established": false,
+        "issues": [
+          "a models list does not establish that chat works"
+        ]
+      }
+    },
+    {
+      "id": "models-number",
+      "skill": "undominated-models-list-not-chat",
+      "why": "A JSON number is not a boolean.",
+      "input": {
+        "evidence": "other",
+        "claimedChat": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "models-bad",
+      "skill": "undominated-models-list-not-chat",
+      "why": "An unnamed evidence label is invalid.",
+      "input": {
+        "evidence": "catalog",
+        "claimedChat": false
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "embed-query",
+      "skill": "undominated-query-not-passage",
+      "why": "A query sent as a query can pass.",
+      "input": {
+        "role": "query",
+        "sent": "query"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "embed-passage",
+      "skill": "undominated-query-not-passage",
+      "why": "A passage sent as a passage can pass.",
+      "input": {
+        "role": "passage",
+        "sent": "passage"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "embed-swap",
+      "skill": "undominated-query-not-passage",
+      "why": "A query sent as a passage is a different input type.",
+      "input": {
+        "role": "query",
+        "sent": "passage"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "an embedding query and a passage are different input types"
+        ]
+      }
+    },
+    {
+      "id": "embed-reverse",
+      "skill": "undominated-query-not-passage",
+      "why": "A passage sent as a query is a different input type.",
+      "input": {
+        "role": "passage",
+        "sent": "query"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "an embedding query and a passage are different input types"
+        ]
+      }
+    },
+    {
+      "id": "embed-other",
+      "skill": "undominated-query-not-passage",
+      "why": "An unnamed role is invalid.",
+      "input": {
+        "role": "document",
+        "sent": "query"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "prompt-topk",
+      "skill": "undominated-topk-not-dump",
+      "why": "A top-k scope can pass.",
+      "input": {
+        "scope": "topk"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "scopeLabel": "topk",
+        "issues": []
+      }
+    },
+    {
+      "id": "prompt-catalogue",
+      "skill": "undominated-topk-not-dump",
+      "why": "A prompt does not contain the whole catalogue.",
+      "input": {
+        "scope": "catalogue"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "scopeLabel": "catalogue",
+        "issues": [
+          "a prompt does not contain the whole catalogue"
+        ]
+      }
+    },
+    {
+      "id": "prompt-other",
+      "skill": "undominated-topk-not-dump",
+      "why": "An unnamed scope is invalid.",
+      "input": {
+        "scope": "all"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "prompt-bool",
+      "skill": "undominated-topk-not-dump",
+      "why": "A boolean is not a scope.",
+      "input": {
+        "scope": false
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "prompt-number",
+      "skill": "undominated-topk-not-dump",
+      "why": "A JSON number is not a scope.",
+      "input": {
+        "scope": 10
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "slash-dev",
+      "skill": "undominated-slash-not-post",
+      "why": "A dev POST with a trailing slash can pass.",
+      "input": {
+        "environment": "dev",
+        "trailingSlash": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "slash-prod",
+      "skill": "undominated-slash-not-post",
+      "why": "A production path without a slash is outside this trap.",
+      "input": {
+        "environment": "prod",
+        "trailingSlash": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "slash-bare",
+      "skill": "undominated-slash-not-post",
+      "why": "A dev POST without a trailing slash is review.",
+      "input": {
+        "environment": "dev",
+        "trailingSlash": false
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "a dev POST keeps the trailing slash"
+        ]
+      }
+    },
+    {
+      "id": "slash-number",
+      "skill": "undominated-slash-not-post",
+      "why": "A JSON number is not a boolean.",
+      "input": {
+        "environment": "prod",
+        "trailingSlash": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "slash-other",
+      "skill": "undominated-slash-not-post",
+      "why": "An unnamed environment is invalid.",
+      "input": {
+        "environment": "preview",
+        "trailingSlash": true
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "token-server",
+      "skill": "undominated-public-not-secret",
+      "why": "A server environment is outside this refusal.",
+      "input": {
+        "placement": "server-env",
+        "holdsToken": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "token-empty",
+      "skill": "undominated-public-not-secret",
+      "why": "A PUBLIC_ name that holds no token can pass.",
+      "input": {
+        "placement": "public-prefix",
+        "holdsToken": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "token-public",
+      "skill": "undominated-public-not-secret",
+      "why": "A provider token is not a PUBLIC_ variable.",
+      "input": {
+        "placement": "public-prefix",
+        "holdsToken": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "a provider token is not a PUBLIC_ variable"
+        ]
+      }
+    },
+    {
+      "id": "token-browser",
+      "skill": "undominated-public-not-secret",
+      "why": "A provider token does not go to the browser.",
+      "input": {
+        "placement": "browser",
+        "holdsToken": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "a provider token does not go to the browser"
+        ]
+      }
+    },
+    {
+      "id": "token-number",
+      "skill": "undominated-public-not-secret",
+      "why": "A JSON number is not a boolean.",
+      "input": {
+        "placement": "browser",
+        "holdsToken": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "commit-source",
+      "skill": "undominated-generated-not-commit",
+      "why": "A source label can pass.",
+      "input": {
+        "pathClass": "source"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "commit-generated",
+      "skill": "undominated-generated-not-commit",
+      "why": "Generated artefacts are not committed.",
+      "input": {
+        "pathClass": "generated"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "generated artefacts are not committed"
+        ]
+      }
+    },
+    {
+      "id": "commit-other",
+      "skill": "undominated-generated-not-commit",
+      "why": "An unnamed path class is invalid.",
+      "input": {
+        "pathClass": "vendor"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "commit-bool",
+      "skill": "undominated-generated-not-commit",
+      "why": "A boolean is not a path class.",
+      "input": {
+        "pathClass": true
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "commit-number",
+      "skill": "undominated-generated-not-commit",
+      "why": "A JSON number is not a path class.",
+      "input": {
+        "pathClass": 0
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "force-quiet",
+      "skill": "undominated-force-not-master",
+      "why": "A push that is not a force push can pass.",
+      "input": {
+        "force": false,
+        "branch": "master"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "force-other",
+      "skill": "undominated-force-not-master",
+      "why": "Another branch is outside this refusal.",
+      "input": {
+        "force": true,
+        "branch": "other"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "force-master",
+      "skill": "undominated-force-not-master",
+      "why": "master is not force-pushed.",
+      "input": {
+        "force": true,
+        "branch": "master"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "master is not force-pushed"
+        ]
+      }
+    },
+    {
+      "id": "force-number",
+      "skill": "undominated-force-not-master",
+      "why": "A JSON number is not a boolean.",
+      "input": {
+        "force": 1,
+        "branch": "other"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "force-name",
+      "skill": "undominated-force-not-master",
+      "why": "An unnamed branch label is invalid.",
+      "input": {
+        "force": false,
+        "branch": "main"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "base-one",
+      "skill": "undominated-zero-base-undefined",
+      "why": "A positive base can pass, and the multiple stays undefined here.",
+      "input": {
+        "base": "1"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "defined": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "base-tiny",
+      "skill": "undominated-zero-base-undefined",
+      "why": "A small positive base can pass, and no quotient is emitted.",
+      "input": {
+        "base": "0.01"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "defined": false,
+        "issues": []
+      }
+    },
+    {
+      "id": "base-zero",
+      "skill": "undominated-zero-base-undefined",
+      "why": "A zero base makes the multiple undefined.",
+      "input": {
+        "base": "0"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "defined": false,
+        "issues": [
+          "a zero base makes the multiple undefined"
+        ]
+      }
+    },
+    {
+      "id": "base-cents",
+      "skill": "undominated-zero-base-undefined",
+      "why": "A zero written 0.00 is still zero.",
+      "input": {
+        "base": "0.00"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "defined": false,
+        "issues": [
+          "a zero base makes the multiple undefined"
+        ]
+      }
+    },
+    {
+      "id": "base-number",
+      "skill": "undominated-zero-base-undefined",
+      "why": "A JSON number is not a decimal string.",
+      "input": {
+        "base": 0
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "aa-held",
+      "skill": "undominated-aa-not-public",
+      "why": "Artificial Analysis left unreprinted can pass.",
+      "input": {
+        "source": "artificial-analysis",
+        "redistribute": false
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "aa-other",
+      "skill": "undominated-aa-not-public",
+      "why": "Another source is outside this withhold and is not approved by the pass.",
+      "input": {
+        "source": "other",
+        "redistribute": true
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "aa-public",
+      "skill": "undominated-aa-not-public",
+      "why": "Artificial Analysis is not republished.",
+      "input": {
+        "source": "artificial-analysis",
+        "redistribute": true
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "Artificial Analysis is not republished"
+        ]
+      }
+    },
+    {
+      "id": "aa-number",
+      "skill": "undominated-aa-not-public",
+      "why": "A JSON number is not a boolean.",
+      "input": {
+        "source": "other",
+        "redistribute": 1
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "aa-name",
+      "skill": "undominated-aa-not-public",
+      "why": "An unnamed source label is invalid.",
+      "input": {
+        "source": "aa",
+        "redistribute": false
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "arena-hf",
+      "skill": "undominated-arena-not-scrape",
+      "why": "A Hugging Face dataset label can pass.",
+      "input": {
+        "origin": "huggingface-dataset"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "arena-other",
+      "skill": "undominated-arena-not-scrape",
+      "why": "Another origin is outside this refusal and is not approved by the pass.",
+      "input": {
+        "origin": "other"
+      },
+      "expectedStatuses": [
+        "pass"
+      ],
+      "expectedFields": {
+        "issues": []
+      }
+    },
+    {
+      "id": "arena-scrape",
+      "skill": "undominated-arena-not-scrape",
+      "why": "arena.ai is not scraped.",
+      "input": {
+        "origin": "arena-scrape"
+      },
+      "expectedStatuses": [
+        "review"
+      ],
+      "expectedFields": {
+        "issues": [
+          "arena.ai is not scraped"
+        ]
+      }
+    },
+    {
+      "id": "arena-bool",
+      "skill": "undominated-arena-not-scrape",
+      "why": "A boolean is not an origin.",
+      "input": {
+        "origin": false
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "arena-name",
+      "skill": "undominated-arena-not-scrape",
+      "why": "An unnamed origin is invalid.",
+      "input": {
+        "origin": "arena.ai"
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    }
   ]
 }

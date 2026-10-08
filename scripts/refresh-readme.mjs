@@ -22,6 +22,8 @@
  *
  *   node scripts/refresh-readme.mjs          # rewrite docs/PLATFORM.md in place
  *   node scripts/refresh-readme.mjs --check  # exit 1 if any figure is stale
+ *   node scripts/refresh-readme.mjs --check --origin http://localhost:4173
+ *                                            # inspect a staged release
  *
  * `--check` is what CI runs, so a stale README fails a pull request rather than
  * being noticed by a reader.
@@ -32,9 +34,29 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const README = resolve(ROOT, 'docs/PLATFORM.md')
-const ORIGIN = 'https://undominated.ai'
-
-const check = process.argv.includes('--check')
+let ORIGIN = 'https://undominated.ai'
+let check = false
+let originSeen = false
+const argv = process.argv.slice(2)
+for (let i = 0; i < argv.length; i += 1) {
+  if (argv[i] === '--check') {
+    check = true
+  } else if (argv[i] === '--origin') {
+    if (originSeen) throw new Error('--origin may be specified only once')
+    originSeen = true
+    const value = argv[++i]
+    if (!value || value.startsWith('--')) throw new Error('--origin requires an HTTP(S) origin')
+    let url
+    try { url = new URL(value) } catch { throw new Error('--origin requires an HTTP(S) origin') }
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password ||
+        url.pathname !== '/' || url.search || url.hash) {
+      throw new Error('--origin must be an HTTP(S) origin without credentials, a path, query or fragment')
+    }
+    ORIGIN = url.origin
+  } else {
+    throw new Error(`unknown argument: ${argv[i]}`)
+  }
+}
 
 async function json(path) {
   const res = await fetch(`${ORIGIN}${path}`, { headers: { accept: 'application/json' } })

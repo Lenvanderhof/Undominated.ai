@@ -28,7 +28,7 @@
   "scripts": {
     "prepare": "node packages/undominated-check/scripts/build-resources.mjs",
     "prepublishOnly": "node -e \"console.error('Root package is a GitHub installation wrapper. Publish only from the dedicated packages directory after the documented human release gate.'); process.exit(1)\"",
-    "test": "npm test --prefix packages/undominated-check && npm test --prefix packages/undominated-mcp && node --test actions/dominated-warn/index.test.mjs && python3 -B scripts/source-skill-boundaries.test.py && python3 -B scripts/five-original-boundaries.test.py",
+    "test": "node --test scripts/refresh-readme.test.mjs && npm test --prefix packages/undominated-check && npm test --prefix packages/undominated-mcp && node --test actions/dominated-warn/index.test.mjs && python3 -B scripts/source-skill-boundaries.test.py && python3 -B scripts/five-original-boundaries.test.py",
     "check": "node --check packages/undominated-check/src/cli.mjs && node --check packages/undominated-check/src/resources.mjs && node --check packages/undominated-mcp/src/server.mjs",
     "build": "node packages/undominated-check/scripts/build-resources.mjs"
   }

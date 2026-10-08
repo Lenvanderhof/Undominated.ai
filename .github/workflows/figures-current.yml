@@ -37,6 +37,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
 
+      - name: Staged figure checks preserve coverage and fail closed
+        run: node --test scripts/refresh-readme.test.mjs
+
       # Both read https://undominated.ai/data/*.json — public, unauthenticated,
       # no secret. Neither writes anything in --check mode.
       - name: Platform guide figures match the published catalogue

@@ -10,9 +10,20 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | `undominated-check@0.3.0` | 11 | 6 | 1 bundled server | Published; later review identified checker correctness defects. Use the corrected `0.3.1` release. |
 | `undominated-check@0.3.1` | 11 | 6 | 1 bundled server | Published; archive equality, 18 installations, 11 synthetic checks and 43 boundary and control cases verified |
 | `undominated-check@0.4.0` | 11 | 6 | 1 bundled server | Published; exact archive and anonymous installation verified, with native adapters and cross-platform installer checks. [Evidence](EVIDENCE.md#installer-integration--040) |
+| `undominated-check@0.5.0` | 11 | 6 | 1 bundled server | Published and anonymously verified 2026-10-09; guided client and project/global choices, preview and cancellation. Same 18-resource bundle and 69 source hashes as 0.4.0. [Evidence](EVIDENCE.md#guided-installer--050-verified-2026-10-09) |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
 | GitHub source | 74 | 12 | 1 server | Eleven skills and six profiles are the npm-mapped set; 63 skills and six profiles are source-only. Pinned acquisition and file equality were verified for the 26 website-listed skills at `a67bd9b`, not for every source directory. The three library-intake skills and the library-intake editor added on 2026-10-08 are outside that receipt and outside npm through `0.4.0`. |
 | Website original entries | 26 | 6 | 1 server | Eleven skills, six profiles and the MCP server are in npm 0.4.0; 15 further skills use pinned GitHub installation and complete website downloads |
+
+For guided setup of the bundled resources, run this in your terminal:
+
+```sh
+npx undominated-check install
+# Or choose a bundled resource first:
+npx undominated-check install undominated-evidence-audit
+```
+
+The current `0.5.0` release lets you choose supported clients and project/global scope before confirming the destination preview. It does not add later source-only skills or profiles to npm. For a skill outside that 18-resource bundle, use its standard Skills CLI command or source instructions. [Installer choices and limits](INSTALLER.md).
 
 The npm rows count the version's installation map, not every source directory. A separate legacy [`undominated`](../skills/undominated/SKILL.md) skill quotes published model evidence; it has no Python validator and is outside the 74-validator count.
 

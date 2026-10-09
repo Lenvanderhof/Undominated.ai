@@ -1,6 +1,7 @@
 /** Offline resource discovery and explicit project-local installation. */
 import { createHash, timingSafeEqual } from 'node:crypto'
-import { lstat, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { lstat, mkdir, readFile, unlink, rmdir, open } from 'node:fs/promises'
+import { homedir } from 'node:os'
 import { dirname, isAbsolute, join, parse, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -11,13 +12,21 @@ export const RESOURCE_USAGE = `undominated-check resources / install — bundled
 
   resources list [--json]
   resources inspect <id> [--json]
-  resources install <id> --project <existing-absolute-directory>
-                    [--target <target>] [--dry-run] [--json]
-  install <id> --project <existing-absolute-directory> [same options]
+  install [id]                    Guided setup in your terminal
+  resources install [id]          Same guided setup
+  install <id> --project <existing-absolute-directory>
+          [--target <target>] [--dry-run] [--json]
+  install <id> --global [--target <target>] [--dry-run] [--json]
+  install [id] --interactive       Explicit guided setup; never with --json
+
+Guided setup lets you choose multiple clients, project/global scope, and review
+every destination before confirmation. Cancelling before confirmation writes nothing.
+Explicit --project/--global commands preserve non-interactive operation.
 
 Both --project=PATH and --target=NAME are accepted.
 Skills: universal/codex -> .agents/skills/<id>; claude -> .claude/skills/<id>;
-        github -> .github/skills/<id>; undominated -> .undominated/skills/<id>.
+        github -> .github/skills/<id> (.copilot/skills globally);
+        cursor -> .cursor/skills/<id>; undominated -> .undominated/skills/<id>.
 Profiles: universal/undominated -> .undominated/agents/<id> (portable original).
           claude additionally writes .claude/agents/<id>.md;
           github additionally writes .github/agents/<id>.agent.md.
@@ -25,11 +34,14 @@ Native adapters inherit the host's tools, model and permission policy. Reload th
 client and verify discovery; the installer does not start or invoke an agent.
 MCP: .undominated/mcp/<id> plus mcp-config.json and manual setup helpers.
      Targets: universal, undominated, claude, codex, cursor, vscode.
-     Claude helper uses project scope; Codex helper changes user config if run.
+     Claude helper matches project/user scope; Codex changes user config if run.
+Global scope uses your home directory. Global GitHub profiles and VS Code MCP
+helpers are not supported; use project scope. Global exports stay on this machine.
 
 Install copies verified bundled files only. No downloads, dependency installs,
 execution, credentials or existing-config changes. Existing destinations and
-symlinks are rejected. --dry-run creates nothing. --project is mandatory.
+symlinks are rejected. --dry-run creates nothing. Scripts must select an explicit
+--project or --global scope. No prompts when output is piped or CI is enabled.
 Shell helpers are labelled POSIX sh or PowerShell; not Windows cmd.exe.`
 
 function safeRelative(value) {
@@ -48,14 +60,18 @@ async function statOrNull(path) {
 }
 
 // Walk from the filesystem root so a symlink in an ancestor cannot hide behind resolve().
-async function assertDirectories(path, { create = false } = {}) {
+async function assertDirectories(path, { create = false, created = [] } = {}) {
   const absolute = resolve(path)
   let current = parse(absolute).root
   for (const component of absolute.slice(current.length).split(sep).filter(Boolean)) {
     current = join(current, component)
     let stat = await statOrNull(current)
     if (!stat && create) {
-      try { await mkdir(current, { mode: 0o755 }) } catch (error) { if (error.code !== 'EEXIST') throw error }
+      try {
+        await mkdir(current, { mode: 0o755 })
+        const owner = await lstat(current)
+        created.push({ path: current, dev: owner.dev, ino: owner.ino })
+      } catch (error) { if (error.code !== 'EEXIST') throw error }
       stat = await lstat(current)
     }
     if (!stat || !stat.isDirectory() || stat.isSymbolicLink()) throw new Error(`directory missing or symlink not allowed: ${current}`)
@@ -121,8 +137,8 @@ export async function inspectResource(id, { root = RESOURCE_ROOT } = {}) {
   return { item, content }
 }
 
-const TARGETS = {
-  skill: ['universal', 'claude', 'codex', 'github', 'undominated'],
+export const TARGETS = {
+  skill: ['universal', 'claude', 'codex', 'github', 'cursor', 'undominated'],
   agent: ['universal', 'undominated', 'claude', 'github'],
   'mcp-server': ['universal', 'undominated', 'claude', 'codex', 'cursor', 'vscode'],
 }
@@ -149,7 +165,7 @@ function shellHelper(command, args, scope) {
   }
 }
 
-function mcpHelpers(project, destination, item, target) {
+function mcpHelpers(project, destination, item, target, scope) {
   const entrypoint = join(destination, item.entrypoint)
   // JSON escaping does not stop a client from interpreting its own ${variable} syntax.
   if ([entrypoint, process.execPath].some(value => value.includes('${') || CONTROL.test(value))) {
@@ -160,19 +176,17 @@ function mcpHelpers(project, destination, item, target) {
   const all = target === 'universal' || target === 'undominated'
   const clients = {}
   if (all || target === 'claude') clients.claude = {
-    ...shellHelper('claude', ['mcp', 'add', '--scope', 'project', '--transport', 'stdio', 'undominated', '--', process.execPath, entrypoint], 'project'),
-    cwd: project,
-    configPath: join(project, '.mcp.json'),
-    config: portableConfig,
+    ...shellHelper('claude', ['mcp', 'add', '--scope', scope === 'global' ? 'user' : 'project', '--transport', 'stdio', 'undominated', '--', process.execPath, entrypoint], scope === 'global' ? 'user' : 'project'),
+    ...(scope === 'project' ? { cwd: project, configPath: join(project, '.mcp.json'), config: portableConfig } : {}),
   }
   if (all || target === 'codex') clients.codex = {
     ...shellHelper('codex', ['mcp', 'add', 'undominated', '--', process.execPath, entrypoint], 'user'),
     note: 'Running this command changes Codex user configuration, not a project-only configuration.',
   }
   if (all || target === 'cursor') clients.cursor = {
-    scope: 'project', configPath: join(project, '.cursor', 'mcp.json'), config: portableConfig,
+    scope: scope === 'global' ? 'user' : 'project', configPath: join(project, '.cursor', 'mcp.json'), config: portableConfig,
   }
-  if (all || target === 'vscode') clients.vscode = {
+  if ((all || target === 'vscode') && scope === 'project') clients.vscode = {
     scope: 'project', configPath: join(project, '.mcp.json'), config: portableConfig,
     legacyConfigPath: join(project, '.vscode', 'mcp.json'),
     legacyConfig: { servers: { undominated: server } },
@@ -209,7 +223,12 @@ function nativeAgent(item, content, project, destination, target) {
   }
 }
 
-export async function installResource(id, { project, target = 'universal', dryRun = false, root = RESOURCE_ROOT } = {}) {
+async function prepareResource(id, { project, target = 'universal', dryRun = false, root = RESOURCE_ROOT, scope = 'project', home = homedir() } = {}) {
+  if (!['project', 'global'].includes(scope)) throw new Error('scope must be project or global')
+  if (scope === 'global') {
+    if (project !== undefined) throw new Error('--global and --project cannot be combined')
+    project = home
+  }
   if (typeof project !== 'string' || !project || !isAbsolute(project) || project.split(/[\\/]/).includes('..') || CONTROL.test(project)) {
     throw new Error('--project must be an existing absolute directory without parent traversal or control characters')
   }
@@ -219,14 +238,15 @@ export async function installResource(id, { project, target = 'universal', dryRu
   const projectRoot = resolve(project)
   const { item, content } = await inspectResource(id, { root })
   if (!TARGETS[item.kind].includes(target)) throw new Error(`--target ${target} is not supported for ${item.kind}; choose ${TARGETS[item.kind].join(', ')}`)
-  const skillFolder = { universal: '.agents', codex: '.agents', claude: '.claude', github: '.github', undominated: '.undominated' }
+  if (scope === 'global' && !supportsGlobal(item.kind, target)) throw new Error(`Global installation is not supported for ${item.kind}/${target}; use project scope`)
+  const skillFolder = { universal: '.agents', codex: '.agents', claude: '.claude', github: scope === 'global' ? '.copilot' : '.github', cursor: '.cursor', undominated: '.undominated' }
   const parent = item.kind === 'skill'
     ? join(projectRoot, skillFolder[target], 'skills')
     : join(projectRoot, '.undominated', item.kind === 'agent' ? 'agents' : 'mcp')
   const destination = join(parent, item.id)
   let helpers, adapter
   if (item.kind === 'mcp-server') {
-    helpers = mcpHelpers(projectRoot, destination, item, target)
+    helpers = mcpHelpers(projectRoot, destination, item, target, scope)
     const config = { mcpServers: { undominated: helpers.server } }
     content.push({ path: 'mcp-config.json', body: Buffer.from(`${JSON.stringify(config, null, 2)}\n`) })
   }
@@ -240,35 +260,99 @@ export async function installResource(id, { project, target = 'universal', dryRu
       ? 'Server export and manual setup helpers prepared. No client configuration changed; server not started.'
       : target === 'undominated' ? 'Skill exported to an Undominated directory; load it manually.' : 'Skill copied to the selected client directory. Verify discovery in the client.'
   const result = {
-    id, kind: item.kind, target, destination, dryRun,
+    id, kind: item.kind, target, scope, destination, dryRun,
     files: content.map(file => file.path), note,
     ...(helpers ? { helpers } : {}), ...(adapter ? { adapter: adapter.info } : {}),
   }
-  if (dryRun) {
-    result.note = `Preview only; no files written. ${item.kind === 'agent' && adapter ? 'Native adapter would inherit host tools, model and permission policy.' : 'No client configuration changed or resource executed.'}`
-    if (result.adapter) result.adapter.note = 'Native adapter would be written; client discovery has not been checked.'
-    return result
-  }
-  await assertDirectories(parent, { create: true })
-  // mkdir is exclusive: existing empty directories are also protected against replacement.
-  await mkdir(destination, { mode: 0o755 })
-  for (const file of content) {
-    const output = join(destination, safeRelative(file.path))
-    await assertDirectories(dirname(output), { create: true })
-    await writeFile(output, file.body, { flag: 'wx', mode: 0o644 })
-  }
-  if (adapter) {
-    await assertDirectories(dirname(adapter.path), { create: true })
-    await writeFile(adapter.path, adapter.body, { flag: 'wx', mode: 0o644 })
-  }
+  const outputs = content.map(file => ({ path: join(destination, safeRelative(file.path)), body: file.body }))
+  if (adapter) outputs.push({ path: adapter.path, body: adapter.body })
   const generatedFiles = []
   if (helpers) generatedFiles.push({ path: helpers.configPath, sha256: createHash('sha256').update(content.find(file => file.path === 'mcp-config.json').body).digest('hex') })
   if (adapter) generatedFiles.push({ path: adapter.path, sha256: createHash('sha256').update(adapter.body).digest('hex') })
-  await writeFile(join(destination, '.undominated-install.json'), `${JSON.stringify({ schemaVersion: 1, id, version: item.version, target, files: item.files, generatedFiles }, null, 2)}\n`, { flag: 'wx', mode: 0o644 })
-  return result
+  return { result, outputs, metadata: { schemaVersion: 1, id, version: item.version, target, scope, files: item.files, generatedFiles } }
 }
 
-export async function resourceMain(argv, { root = RESOURCE_ROOT } = {}) {
+export function supportsGlobal(kind, target) {
+  // GitHub profile global discovery and VS Code user config differ across products.
+  // Offer only the global paths whose native format we actually support.
+  return !(kind === 'agent' && target === 'github') && !(kind === 'mcp-server' && target === 'vscode')
+}
+
+export async function installResources(id, { targets = ['universal'], dryRun = false, ...options } = {}) {
+  if (!Array.isArray(targets) || !targets.length || targets.some(target => typeof target !== 'string')) throw new Error('choose at least one target')
+  if (typeof dryRun !== 'boolean') throw new Error('dryRun must be a boolean')
+  const plans = []
+  for (const target of new Set(targets)) plans.push(await prepareResource(id, { ...options, target, dryRun }))
+  const files = new Map(), directories = new Map()
+  for (const plan of plans) {
+    const existing = directories.get(plan.result.destination)
+    if (existing) {
+      existing.targets.push(plan.result.target)
+      existing.metadata.generatedFiles.push(...plan.metadata.generatedFiles.filter(file => !existing.metadata.generatedFiles.some(old => old.path === file.path)))
+    } else directories.set(plan.result.destination, { targets: [plan.result.target], metadata: plan.metadata })
+    for (const file of plan.outputs) {
+      if (files.has(file.path) && !files.get(file.path).equals(file.body)) throw new Error(`conflicting generated output: ${file.path}`)
+      files.set(file.path, file.body)
+    }
+  }
+  for (const [destination, entry] of directories) files.set(join(destination, '.undominated-install.json'), Buffer.from(`${JSON.stringify({ ...entry.metadata, targets: entry.targets }, null, 2)}\n`))
+  // All target conflicts, hashes, symlinks and existing destinations are checked before the first write.
+  for (const file of files.keys()) await assertNewDestination(file)
+  const results = plans.map(plan => {
+    if (!dryRun) return plan.result
+    const result = { ...plan.result, note: 'Preview only; no files written. No client configuration changed or resource executed.' }
+    if (result.adapter) result.adapter = { ...result.adapter, note: 'Native adapter would be written; client discovery has not been checked.' }
+    return result
+  })
+  if (dryRun) return { id, dryRun, results, destinations: [...directories.keys()], fileCount: files.size }
+  const createdFiles = [], createdDirectories = []
+  try {
+    for (const destination of directories.keys()) {
+      await assertDirectories(dirname(destination), { create: true, created: createdDirectories })
+      await mkdir(destination, { mode: 0o755 })
+      const owner = await lstat(destination)
+      createdDirectories.push({ path: destination, dev: owner.dev, ino: owner.ino })
+    }
+    for (const [path, body] of files) {
+      await assertDirectories(dirname(path), { create: true, created: createdDirectories })
+      const handle = await open(path, 'wx', 0o644)
+      const owner = await handle.stat()
+      createdFiles.push({ path, dev: owner.dev, ino: owner.ino, sha256: createHash('sha256').update(body).digest('hex') })
+      try { await handle.writeFile(body) } finally { await handle.close() }
+    }
+  } catch (error) {
+    // A path is not ownership: another process may have replaced or edited it.
+    // Keep changed/partial files and never recursively remove a directory tree.
+    const retained = []
+    for (const owner of createdFiles.reverse()) {
+      try {
+        const before = await statOrNull(owner.path)
+        if (!before) continue
+        if (!before.isFile() || before.isSymbolicLink() || before.dev !== owner.dev || before.ino !== owner.ino) { retained.push(owner.path); continue }
+        const digest = createHash('sha256').update(await readFile(owner.path)).digest('hex')
+        const after = await lstat(owner.path)
+        if (digest !== owner.sha256 || after.dev !== owner.dev || after.ino !== owner.ino || after.mtimeMs !== before.mtimeMs || after.ctimeMs !== before.ctimeMs) { retained.push(owner.path); continue }
+        await unlink(owner.path)
+      } catch { retained.push(owner.path) }
+    }
+    for (const owner of createdDirectories.reverse()) {
+      try {
+        const current = await statOrNull(owner.path)
+        if (current?.isDirectory() && !current.isSymbolicLink() && current.dev === owner.dev && current.ino === owner.ino) await rmdir(owner.path)
+      } catch { /* Keep nonempty or concurrently changed directories. */ }
+    }
+    if (retained.length) error.message += `\nCleanup retained ${retained.length} changed or partial file(s); inspect the installation destinations before retrying.`
+    throw error
+  }
+  return { id, dryRun, results, destinations: [...directories.keys()], fileCount: files.size }
+}
+
+export async function installResource(id, { target = 'universal', ...options } = {}) {
+  return (await installResources(id, { ...options, targets: [target] })).results[0]
+}
+
+export async function resourceMain(argv, deps = {}) {
+  const { root = RESOURCE_ROOT } = deps
   try {
     if (!argv.length || (argv.length === 1 && ['--help', '-h'].includes(argv[0]))) return { code: 0, out: `${RESOURCE_USAGE}\n`, err: '' }
     const command = argv[0], positional = [], options = { root }, seen = new Set()
@@ -276,7 +360,7 @@ export async function resourceMain(argv, { root = RESOURCE_ROOT } = {}) {
     let json = false, help = false
     for (let i = 1; i < argv.length; i++) {
       const arg = argv[i], equal = arg.indexOf('='), name = equal < 0 ? arg : arg.slice(0, equal)
-      if (['--json', '--dry-run', '--help', '-h', '--project', '--target'].includes(name)) {
+      if (['--json', '--dry-run', '--help', '-h', '--project', '--target', '--interactive', '--global'].includes(name)) {
         const key = name === '-h' ? '--help' : name
         if (seen.has(key)) throw new Error(`duplicate option: ${key}`)
         seen.add(key)
@@ -288,17 +372,29 @@ export async function resourceMain(argv, { root = RESOURCE_ROOT } = {}) {
           if (equal >= 0) throw new Error(`${name} does not accept a value`)
           if (name === '--json') json = true
           else if (name === '--dry-run') options.dryRun = true
+          else if (name === '--global') options.scope = 'global'
+          else if (name === '--interactive') options.interactive = true
           else help = true
         }
       } else if (arg.startsWith('-')) throw new Error(`unknown option: ${arg}`)
       else positional.push(arg)
     }
-    if (command !== 'install' && ['--project', '--target', '--dry-run'].some(name => seen.has(name))) throw new Error('project, target and dry-run options are only valid for install')
+    if (command !== 'install' && ['--project', '--target', '--dry-run', '--global', '--interactive'].some(name => seen.has(name))) throw new Error('project, target and dry-run options are only valid for install')
     if (help) return { code: 0, out: `${RESOURCE_USAGE}\n`, err: '' }
     if (command === 'list' && !positional.length) {
       const resources = await loadResources(root)
       const out = json ? JSON.stringify(resources, null, 2) : resources.map(item => `${item.id}\t${item.kind}\t${item.description}`).join('\n')
       return { code: 0, out: `${out}\n`, err: '' }
+    }
+    if (options.scope === 'global' && options.project !== undefined) throw new Error('--global and --project cannot be combined')
+    const input = deps.input ?? process.stdin, output = deps.output ?? process.stderr
+    const terminal = deps.interactiveTTY ?? Boolean(input.isTTY && process.stdout.isTTY && output.isTTY && !deps.env?.CI && !process.env.CI)
+    if (command === 'install' && (options.interactive || (terminal && !options.project && !options.scope && !json))) {
+      if (json) throw new Error('--interactive cannot be combined with --json')
+      if (!terminal) throw new Error('Interactive setup requires a terminal. Use --project /absolute/path or --global with --target for scripted installation.')
+      if (positional.length > 1) throw new Error('expected at most one resource id for interactive install')
+      const { installWizard, terminalPrompts } = await import('./install-wizard.mjs')
+      return installWizard({ id: positional[0], ...options, ...(deps.cwd ? { cwd: deps.cwd } : {}), ...(deps.home ? { home: deps.home } : {}), ui: deps.ui ?? terminalPrompts(input, output) })
     }
     if (positional.length !== 1 || command === 'list') throw new Error('expected exactly one resource id for inspect or install, and none for list')
     if (command === 'inspect') {
@@ -307,7 +403,7 @@ export async function resourceMain(argv, { root = RESOURCE_ROOT } = {}) {
       const out = json ? JSON.stringify({ ...item, content: entry }, null, 2) : `${item.name} (${item.id})\nLicense: ${item.license}\nFiles verified: ${item.files.length}\n\n${entry}`
       return { code: 0, out: `${out}\n`, err: '' }
     }
-    const result = await installResource(positional[0], options)
+    const result = await installResource(positional[0], { ...options, ...(deps.home ? { home: deps.home } : {}) })
     const lines = [`${result.dryRun ? 'Would install' : 'Installed'} ${result.id}`, result.destination, result.note]
     if (result.adapter) lines.push(`Native adapter: ${result.adapter.path}`, 'Tools, model and permission policy: inherited from the host; no permission bypass configured.')
     if (result.helpers) {

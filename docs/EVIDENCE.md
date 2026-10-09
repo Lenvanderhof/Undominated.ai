@@ -1,6 +1,6 @@
 # Evidence, licences and release state
 
-A source file, a passing example, a public package and an observed installation prove different things. This page keeps those boundaries explicit. Observations below were checked on 2026-10-07.
+A source file, a passing example, a public package and an observed installation prove different things. This page keeps those boundaries explicit. Observations below were checked on 2026-10-07 unless a section records a later verification date.
 
 ## What has been verified
 
@@ -11,6 +11,7 @@ A source file, a passing example, a public package and an observed installation 
 | [`undominated-check@0.3.0`](https://registry.npmjs.org/undominated-check/0.3.0) | Archive identity and expanded source/installation checks verified; later adverse cases found correctness defects in added checkers, described below |
 | [`undominated-check@0.3.1`](https://registry.npmjs.org/undominated-check/0.3.1) | Anonymous registry archive matched the candidate; clean npx, 18 installed resources, 69 file hashes, 11 synthetic checks, 43 boundary and control cases with structured results, exported MCP tools and live plain-text frontier verified |
 | [`undominated-check@0.4.0`](https://registry.npmjs.org/undominated-check/0.4.0) | Exact registry archive matched; fresh anonymous npx and all 18 installs, 69 hashes, eleven skill checks, 43 checker boundary/control cases, both native adapters and five MCP tools passed |
+| [`undominated-check@0.5.0`](https://registry.npmjs.org/undominated-check/0.5.0) | Verified 2026-10-09: anonymous archive identity, fresh npx entrypoint, all 18 installs / 69 hashes, eleven fixtures, MCP initialization, four-client global setup and real-terminal install/cancellation/preview checks |
 | [`undominated-mcp@0.1.0`](https://registry.npmjs.org/undominated-mcp/0.1.0) | Archive matched the tested candidate; clean-cache installation, stdio initialization, five tool definitions and a live frontier response verified |
 | Corrected GitHub skills at [`bf1c18e`](https://github.com/Lenvanderhof/Undominated.ai/tree/bf1c18ed2468d1015c727909806937b4aeb60412) | Skills CLI 1.7.1 discovered and copied 31 directories (30 validators plus the legacy skill); all 139 installed files matched source; all 30 installed synthetic examples passed |
 | Website skill source at [`a67bd9b`](https://github.com/Lenvanderhof/Undominated.ai/tree/a67bd9b86fca7455ed208403d9ea6f9fe847cd99) | Fresh Skills CLI 1.7.1 acquisition of 26 skills; all 159 files matched, 26 synthetic examples passed, and installed six/four/five suites passed 85/213/125 cases respectively |
@@ -24,6 +25,7 @@ For a registry release, these SHA-256 values identify the downloaded `.tgz` byte
 | `undominated-check@0.3.0` | `05f17f7578b02309b60b12d97b6a42fe82345731ed5b8ee85e5330657022741e` |
 | `undominated-check@0.3.1` | `a4550da5d0e5749b62217a96659f0d8ab91b1ab0a656e1cecd7115a983fe940b` |
 | `undominated-check@0.4.0` | `260ab6679d4068f0e9ea01c6890b09eedad13b5097eb38dc2389c8b784e9a49b` |
+| `undominated-check@0.5.0` | `1e197ca6a9ede5eea19ceaf11f09c47c51ee98b0531c9690e33fc427330f7a24` |
 | `undominated-mcp@0.1.0` | `d4783712da445075026883811b238de7485fe7a101e6a95a3853a1f6974a0c46` |
 
 ```sh
@@ -44,6 +46,18 @@ All **179 files** for the website's **32 skill/profile source directories and MC
 Source review and installation checks do not establish external service runtime, authentication success or general effectiveness. Each resource retains its prerequisites and untested scope. Drafts with failed boundary cases and pricing-source acquisitions that lack deterministic rate extraction remain outside these releases.
 
 The public [skills index](https://undominated.ai/data/resources/skills.json), [agents index](https://undominated.ai/data/resources/agents.json) and [MCP index](https://undominated.ai/data/resources/mcp-servers.json) expose the reviewed website entries separately from the npm installation map.
+
+## Guided installer — 0.5.0, verified 2026-10-09
+
+`npx undominated-check install [id]` now offers a terminal resource picker, multiple client choices, project/global scope, a destination preview and confirmation. Explicit scripted flags retain their behavior. The immutable package still contains **eleven skills, six profiles and one MCP server**; all **69 bundled source hashes** match `0.4.0`. Later GitHub-only resources have not silently entered this npm release.
+
+A new anonymous request to the exact registry version and tarball verified SHA-256 **`1e197ca6a9ede5eea19ceaf11f09c47c51ee98b0531c9690e33fc427330f7a24`** and the registry's SHA-512 integrity against the tested candidate. A fresh npm cache with empty, isolated npm configuration resolved the package and listed all 18 resources. A separate consumer of the freshly downloaded registry archive installed all 18 resources, matched every declared source hash, ran the eleven installed synthetic examples, initialized the exported MCP server, and completed four-client global skill setup in a test home.
+
+The actual registry entrypoint also passed five pseudo-terminal flows: multi-client project installation, declining confirmation, Ctrl+C, EOF and preview-only `--dry-run`. The latter four wrote no resource files. The final source suite passed **101 package tests**, including prompt aliases, multi-target deduplication, unsupported global scopes, config preservation and conflict checks. The public repository checks also passed five README tests, 32 MCP tests, 22 Action tests, 269 source-boundary tests and 125 five-checker cases. These suites differ in scope and are not a claim of independent accuracy samples.
+
+Independent review rejected the first unpublished candidate's path-only cleanup: a later write error could delete a file another process had replaced. The corrected candidate checks opened-file identity and expected content before cleanup, preserves changed or partial files with a warning, and checks directory identity before removing an empty directory. The same reproduction retained the replacement; four fault-injection regressions cover replacement, same-inode edits, partial writes and ordinary cleanup. The rejected archive was never published.
+
+This verification was performed on Linux. It does not renew `0.4.0`'s historical macOS/Windows or native-client discovery results for new global paths. Global GitHub agent adapters and global VS Code MCP helpers remain unsupported. MCP registration stays manual; the server process remains protocol-only. Custom client-directory environment overrides are not inferred, and copying files does not establish native discovery or model quality. [Setup choices and limits](INSTALLER.md).
 
 ## Installer integration — 0.4.0
 

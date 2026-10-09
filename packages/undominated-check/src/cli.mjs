@@ -1,8 +1,8 @@
 /**
  * Argument parsing and the run loop, kept out of bin/ so both can be tested
  * without spawning a process. `main` never calls process.exit itself — it
- * returns a code and the strings it would have written, so a test can assert on
- * the exact bytes a user sees.
+ * returns a code and result strings. Interactive resource setup additionally uses
+ * an injectable terminal interface; scripted/model output remains testable.
  */
 
 import { readFile } from 'node:fs/promises'
@@ -27,6 +27,7 @@ Usage
   npx undominated-check <model-slug>
   npx undominated-check --frontier
   npx undominated-check resources --help
+  npx undominated-check install [resource-id]   Guided setup in a terminal
   npx undominated-check install <resource-id> --project <existing-absolute-directory>
 
 Options
@@ -59,7 +60,8 @@ Exit codes
   eventually approve a swap no evidence supports.
 
 Model-check commands are read-only: they fetch published JSON and store nothing.
-The separate resources install command copies bundled files to an explicit project. It is not a router: it does not pick a model, hold keys, or execute
+The separate install command offers guided client and scope choices in a terminal.
+Explicit --project or --global flags keep scripts non-interactive. It is not a router: it does not pick a model, hold keys, or execute
 inference. Without --exit-code it is warn-never-fail — a printed verdict exits 0.
 Every figure it prints carries the lens, the workload and the date the snapshot
 was taken.`
@@ -154,8 +156,8 @@ async function load({ source, local }, fetchImpl) {
  * @returns {Promise<{ code: number, out: string, err: string }>}
  */
 export async function main(argv, deps = {}) {
-  if (argv[0] === 'resources') return resourceMain(argv.slice(1))
-  if (argv[0] === 'install') return resourceMain(['install', ...argv.slice(1)])
+  if (argv[0] === 'resources') return resourceMain(argv.slice(1), deps)
+  if (argv[0] === 'install') return resourceMain(['install', ...argv.slice(1)], deps)
   const fetchImpl = deps.fetch ?? globalThis.fetch
   const opts = parseArgs(argv)
   const chrome = wantsChrome(opts, { tty: deps.tty, env: deps.env ?? {} })

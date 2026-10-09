@@ -34,21 +34,21 @@ The website directories contain **131 skills, 101 agent definitions and 128 MCP 
 
 ## Use a skill
 
-From your project directory, install the evidence-audit skill with the standard Skills CLI:
+Run this in your terminal. The Skills CLI lets you choose your AI tools, project or global scope, and installation method:
 
 ```sh
-npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
+npx skills add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
 ```
 
-Or use the published Undominated installer to inspect the bundled resource first:
+Our own installer also offers guided setup:
 
 ```sh
-npx --yes undominated-check@0.4.0 resources list
-npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+npx undominated-check install
+# Or open setup for one bundled resource:
+npx undominated-check install undominated-evidence-audit
 ```
 
-Replace the path with an existing project and remove `--dry-run` to install. This pinned version bundles eleven original skills, six portable agent profiles and the MCP server. It checks file hashes and refuses to overwrite an existing installation. [Client targets, native agent adapters and MCP setup helpers](docs/INSTALLER.md) are available in this release. Node.js **22.12+** is required; offline skill checks use **Python 3.10+**.
+Choose one or more supported tools and project/global scope, review the destinations, then confirm. Cancel before confirmation to leave files untouched. Version **0.5.0** bundles eleven original skills, six agent profiles and the MCP server; it verifies file hashes and refuses existing destinations. Explicit flags remain available for scripts, and MCP registration remains a separate manual step. [Supported targets and scope](docs/INSTALLER.md). Node.js **22.12+** is required; offline skill checks use **Python 3.10+**.
 
 [Installation, examples and troubleshooting →](docs/GETTING-STARTED.md)
 
@@ -57,7 +57,7 @@ Replace the path with an existing project and remove `--dry-run` to install. Thi
 Quote a published model verdict:
 
 ```sh
-npx --yes undominated-check@0.4.0 google/gemini-3.7-flash --json
+npx undominated-check@0.5.0 google/gemini-3.7-flash --json
 ```
 
 For an MCP client, use `npx` with arguments `["--yes", "undominated-mcp@0.1.0"]`. Its five read-only tools retrieve model details, verdicts, the frontier and resource reviews. It does not install resources or route inference. [MCP setup and examples →](docs/GETTING-STARTED.md#mcp-server)

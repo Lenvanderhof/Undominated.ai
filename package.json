@@ -1,6 +1,6 @@
 {
   "name": "undominated-check",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": false,
   "description": "Quote published AI model evidence and inspect or install original Undominated resources.",
   "license": "SEE LICENSE IN LICENSE",

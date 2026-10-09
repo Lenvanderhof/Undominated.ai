@@ -1,15 +1,27 @@
 # Install into your coding assistant
 
-`undominated-check@0.4.0` adds a short `install` command, explicit client targets, native agent adapters and MCP setup helpers. It keeps the same eleven skills, six profiles and read-only MCP server as `0.3.1`, including the corrected checkers. It does not change the website catalogue or bundle the later source-only resources.
+`undominated-check@0.5.0` adds guided resource selection, multiple client choices, project/global scope and a destination preview before confirmation. It keeps the same eleven original skills, six profiles and read-only MCP server; later source-only resources are still outside this bundle.
 
-You need Node.js 22.12+, npm and an existing project directory. Offline skill checks also need Python 3.10+. Replace `/absolute/path/to/project` in these commands with that project's path.
+You need Node.js 22.12+ and npm. Offline skill checks also need Python 3.10+.
+
+## Guided setup
+
+```sh
+npx undominated-check install
+npx undominated-check install undominated-evidence-audit
+npx undominated-check install undominated-mcp
+```
+
+Run in your terminal. Enter one or more tool numbers or names, select scope and review the proposed directories. Confirm only when they are right. Cancel, Ctrl+C or EOF before confirmation leaves files untouched. Shared destinations are written once. Piped/JSON/CI commands do not open prompts; explicit project/global flags keep scripted use predictable.
+
+MCP setup exports the server and selected registration instructions. It does not edit existing client configuration or start the server. The standalone `undominated-mcp` package remains a stdio protocol server, with no prompts in protocol output.
 
 ## Choose a destination
 
 ```sh
-npx --yes undominated-check@0.4.0 resources list
-npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project /absolute/path/to/project --target codex --dry-run
+npx undominated-check@0.5.0 resources list
+npx undominated-check@0.5.0 resources inspect undominated-evidence-audit
+npx undominated-check@0.5.0 install undominated-evidence-audit --project /absolute/path/to/project --target codex --dry-run
 ```
 
 Remove `--dry-run` after checking the destination. `resources install` remains available, and `--project=/absolute/path/to/project` and `--target=codex` are equivalent forms. `--json` returns structured results.
@@ -18,7 +30,8 @@ Remove `--dry-run` after checking the destination. `resources install` remains a
 |---|---|---|
 | Skill | `universal` (default), `codex` | `.agents/skills/<id>/` |
 | Skill | `claude` | `.claude/skills/<id>/` |
-| Skill | `github` | `.github/skills/<id>/` |
+| Skill | `github` | `.github/skills/<id>/` in a project; `~/.copilot/skills/<id>/` globally |
+| Skill | `cursor` | `.cursor/skills/<id>/` |
 | Skill | `undominated` | `.undominated/skills/<id>/`; manual loading |
 | Profile | `universal` (default), `undominated` | `.undominated/agents/<id>/`; portable instructions |
 | Profile | `claude` | Portable export plus `.claude/agents/<id>.md` |
@@ -26,15 +39,15 @@ Remove `--dry-run` after checking the destination. `resources install` remains a
 | MCP | `universal` (default), `undominated` | Server export and all supported setup helpers |
 | MCP | `claude`, `codex`, `cursor`, `vscode` | Same server export; only the selected client's helper |
 
-Unsupported combinations fail explicitly. There is no Codex-native agent adapter in this release. Use the portable profile as task instructions there.
+Global scope resolves supported paths below your home directory. Custom client-directory environment overrides are not inferred; review the displayed destinations before confirming. Global GitHub agent profiles and VS Code MCP helpers are not supported; choose project scope for those. Claude MCP registration uses project or user scope to match the selection. Unsupported combinations fail explicitly. There is no Codex-native agent adapter in this release. Use the portable profile as task instructions there.
 
 Default destinations are unchanged from `0.3.1`. Existing destinations are refused, including empty directories and native adapter files. To compare an update, install into a fresh project and review the difference. There is no overwrite or automatic migration mode.
 
 ## Native agent adapters
 
 ```sh
-npx --yes undominated-check@0.4.0 install undominated-evidence-reviewer --project /absolute/path/to/project --target claude
-npx --yes undominated-check@0.4.0 install undominated-comparison-editor --project /absolute/path/to/project --target github
+npx undominated-check@0.5.0 install undominated-evidence-reviewer --project /absolute/path/to/project --target claude
+npx undominated-check@0.5.0 install undominated-comparison-editor --project /absolute/path/to/project --target github
 ```
 
 These explicit targets write the host's native Markdown filename and `name`/`description` frontmatter. The original profile and MIT licence stay in `.undominated/agents/<id>/`. The generated adapter retains the profile body and records its source. Reload the client and confirm discovery before selecting it.
@@ -44,7 +57,7 @@ The adapter inherits the host's model, available tools and permission policy. It
 ## MCP setup
 
 ```sh
-npx --yes undominated-check@0.4.0 install undominated-mcp --project /absolute/path/to/project --target claude --json
+npx undominated-check@0.5.0 install undominated-mcp --project /absolute/path/to/project --target claude --json
 ```
 
 The server is copied to `.undominated/mcp/undominated-mcp/`. `mcp-config.json` contains the absolute Node executable and server path. JSON output includes `helpers.clients`, with separate command/argument values, configuration snippets and scope. Review the helper before running or importing it.
@@ -63,6 +76,8 @@ Commands are provided separately for POSIX shells and PowerShell. They quote eve
 After registration, confirm the client sees `get_model`, `get_verdict`, `get_frontier`, `search_resources` and `get_resource`. These tools retrieve public Undominated evidence; they do not route inference, install resources or execute returned commands.
 
 ## Compatibility evidence
+
+The client-discovery table below is retained **0.4.0 evidence from 2026-10-07**, not a new 0.5.0 host-discovery run. Guided setup and filesystem behavior have separate release checks.
 
 The [portable installer CI](https://github.com/Lenvanderhof/Undominated.ai/actions/runs/37680109407) passed Linux, macOS and Windows, including actual PowerShell argument parsing.
 

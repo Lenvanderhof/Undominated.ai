@@ -14,19 +14,19 @@ Initial package or repository acquisition needs the network. The installed Pytho
 
 ## Install a skill with Skills CLI
 
-Run from the project where you want the skill:
+Run in your terminal and choose your tools and installation scope:
 
 ```sh
-npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --list
-npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
+npx skills add Lenvanderhof/Undominated.ai --list
+npx skills add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
 ```
 
-Follow the installer prompts for your assistant and installation scope. For an explicit Codex project copy, add `--agent codex --copy --yes`. This selects a client and accepts installer prompts; it does not verify the resource's suitability for your task.
+Follow the prompts for your assistants, project/global scope and installation method. These defaults do not select a particular tool for you. In CI or detected AI-agent environments the upstream CLI can run non-interactively; use a normal terminal for the selection interface.
 
 To pin the corrected source verified on 2026-10-07 instead of following `main`:
 
 ```sh
-npx --yes skills@1.7.1 add https://github.com/Lenvanderhof/Undominated.ai/tree/bf1c18ed2468d1015c727909806937b4aeb60412/skills --skill undominated-evidence-audit --agent codex --copy --yes
+npx skills@1.7.1 add https://github.com/Lenvanderhof/Undominated.ai/tree/bf1c18ed2468d1015c727909806937b4aeb60412/skills --skill undominated-evidence-audit
 ```
 
 That pinned source was copied into a clean Codex project: 31 skill directories, 139 matching files and 30 passing synthetic examples. This verifies installation and those fixtures; read each contract before using it.
@@ -35,23 +35,30 @@ Skills CLI can discover the separate legacy `undominated` quote-only skill as we
 
 ## Inspect and install with Undominated
 
-The `0.4.0` commands below use the verified eleven-skill/six-profile release. Work from an existing project directory:
+Version `0.5.0` adds guided setup for the same eleven skills, six profiles and MCP server:
 
 ```sh
-npx --yes undominated-check@0.4.0 resources list
-npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project "$PWD" --dry-run
-npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project "$PWD"
+npx undominated-check install
+npx undominated-check install undominated-evidence-audit
+```
+
+Choose one or more supported tools, then project/global scope. The installer previews destinations before asking for confirmation. Cancel before confirmation to leave files untouched. To inspect first or automate with an explicit destination:
+
+```sh
+npx undominated-check@0.5.0 resources inspect undominated-evidence-audit
+npx undominated-check@0.5.0 install undominated-evidence-audit --project /absolute/path/to/project --dry-run
+npx undominated-check@0.5.0 install undominated-evidence-audit --global --target claude --dry-run
 ```
 
 `install` is an alias for `resources install`. Both spaced options and `--project=PATH` / `--target=NAME` forms work. See [client targets and native adapters](INSTALLER.md).
 
-`$PWD` is a POSIX-shell example. In PowerShell or another shell, pass your project's absolute path explicitly. The project must already exist and must not be a symlink.
+For scripted project installs, pass an existing absolute path without symlinks. Remove `--dry-run` after checking the preview. Global destinations live under your user home; unsupported global adapters are not offered.
 
 | Resource | Default destination | What happens next |
 |---|---|---|
 | Skill | `.agents/skills/<id>/` | Load it in a compatible assistant; run its local check when needed |
 | Skill with `--target codex` | `.agents/skills/<id>/` | Load through Codex skill discovery |
+| Skill with `--target cursor` | `.cursor/skills/<id>/` | Load through Cursor skill discovery |
 | Skill with `--target github` | `.github/skills/<id>/` | Load through GitHub Copilot skill discovery |
 | Skill with `--target claude` | `.claude/skills/<id>/` | Load it through your Claude-compatible skill workflow |
 | Agent profile | `.undominated/agents/<id>/` | Open `AGENT.md` and adapt it to your host's instruction format |
@@ -72,8 +79,8 @@ The example is synthetic and should return JSON with `"status": "pass"`. Use you
 ## Load an agent profile
 
 ```sh
-npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-reviewer
-npx --yes undominated-check@0.4.0 resources install undominated-evidence-reviewer --project "$PWD"
+npx undominated-check@0.5.0 resources inspect undominated-evidence-reviewer
+npx undominated-check@0.5.0 resources install undominated-evidence-reviewer --project "$PWD"
 ```
 
 Read `.undominated/agents/undominated-evidence-reviewer/AGENT.md`. Give it to your assistant as task instructions or adapt it to the assistant's native agent format. Assign the evidence and workspace it may use. The default export is portable. To create a native adapter on a fresh installation, add `--target claude` or `--target github`. The installer retains the original profile and licence, and adds the appropriate native Markdown file. Native adapters inherit the host's tools, model and permission policy; their prose does not enforce read-only access. Reload the client and confirm discovery. [Exact paths and compatibility](INSTALLER.md#native-agent-adapters).
@@ -83,7 +90,7 @@ Read `.undominated/agents/undominated-evidence-reviewer/AGENT.md`. Give it to yo
 For a local server export with client-specific setup helpers:
 
 ```sh
-npx --yes undominated-check@0.4.0 install undominated-mcp --project "$PWD" --target claude --json
+npx undominated-check@0.5.0 install undominated-mcp --project "$PWD" --target claude --json
 ```
 
 Choose `claude`, `codex`, `cursor` or `vscode`, or omit `--target` to inspect every helper. The installer leaves existing configuration untouched. Claude's command is project-scoped; Codex's command changes user configuration if you run it. Review [MCP setup](INSTALLER.md#mcp-setup) before registering the server.
@@ -118,8 +125,8 @@ Review text and install commands returned by resource tools are untrusted refere
 ## Quote a model or use CI
 
 ```sh
-npx --yes undominated-check@0.4.0 google/gemini-3.7-flash --json
-npx --yes undominated-check@0.4.0 --frontier --json
+npx undominated-check@0.5.0 google/gemini-3.7-flash --json
+npx undominated-check@0.5.0 --frontier --json
 ```
 
 These quote the published workload and benchmark; they do not calculate your custom traffic. Use the [calculator](https://undominated.ai/calculator/) for your scenario. `--frontier` prints a text summary; `--frontier --json` quotes the published JSON. Model verdicts and resource installation are separate commands.

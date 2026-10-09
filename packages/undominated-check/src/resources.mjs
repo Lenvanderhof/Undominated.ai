@@ -67,7 +67,11 @@ async function assertDirectories(path, { create = false, created = [] } = {}) {
     current = join(current, component)
     let stat = await statOrNull(current)
     if (!stat && create) {
-      try { await mkdir(current, { mode: 0o755 }); created.push(current) } catch (error) { if (error.code !== 'EEXIST') throw error }
+      try {
+        await mkdir(current, { mode: 0o755 })
+        const owner = await lstat(current)
+        created.push({ path: current, dev: owner.dev, ino: owner.ino })
+      } catch (error) { if (error.code !== 'EEXIST') throw error }
       stat = await lstat(current)
     }
     if (!stat || !stat.isDirectory() || stat.isSymbolicLink()) throw new Error(`directory missing or symlink not allowed: ${current}`)
@@ -306,18 +310,38 @@ export async function installResources(id, { targets = ['universal'], dryRun = f
     for (const destination of directories.keys()) {
       await assertDirectories(dirname(destination), { create: true, created: createdDirectories })
       await mkdir(destination, { mode: 0o755 })
-      createdDirectories.push(destination)
+      const owner = await lstat(destination)
+      createdDirectories.push({ path: destination, dev: owner.dev, ino: owner.ino })
     }
     for (const [path, body] of files) {
       await assertDirectories(dirname(path), { create: true, created: createdDirectories })
       const handle = await open(path, 'wx', 0o644)
-      createdFiles.push(path)
+      const owner = await handle.stat()
+      createdFiles.push({ path, dev: owner.dev, ino: owner.ino, sha256: createHash('sha256').update(body).digest('hex') })
       try { await handle.writeFile(body) } finally { await handle.close() }
     }
   } catch (error) {
-    // Never recursively delete a tree: concurrent files must survive cleanup.
-    for (const path of createdFiles.reverse()) await unlink(path).catch(() => {})
-    for (const path of createdDirectories.reverse()) await rmdir(path).catch(() => {})
+    // A path is not ownership: another process may have replaced or edited it.
+    // Keep changed/partial files and never recursively remove a directory tree.
+    const retained = []
+    for (const owner of createdFiles.reverse()) {
+      try {
+        const before = await statOrNull(owner.path)
+        if (!before) continue
+        if (!before.isFile() || before.isSymbolicLink() || before.dev !== owner.dev || before.ino !== owner.ino) { retained.push(owner.path); continue }
+        const digest = createHash('sha256').update(await readFile(owner.path)).digest('hex')
+        const after = await lstat(owner.path)
+        if (digest !== owner.sha256 || after.dev !== owner.dev || after.ino !== owner.ino || after.mtimeMs !== before.mtimeMs || after.ctimeMs !== before.ctimeMs) { retained.push(owner.path); continue }
+        await unlink(owner.path)
+      } catch { retained.push(owner.path) }
+    }
+    for (const owner of createdDirectories.reverse()) {
+      try {
+        const current = await statOrNull(owner.path)
+        if (current?.isDirectory() && !current.isSymbolicLink() && current.dev === owner.dev && current.ino === owner.ino) await rmdir(owner.path)
+      } catch { /* Keep nonempty or concurrently changed directories. */ }
+    }
+    if (retained.length) error.message += `\nCleanup retained ${retained.length} changed or partial file(s); inspect the installation destinations before retrying.`
     throw error
   }
   return { id, dryRun, results, destinations: [...directories.keys()], fileCount: files.size }

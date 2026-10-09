@@ -1,14 +1,14 @@
 # undominated-check
 
-Quote published AI model evidence, inspect original Undominated resources, and install the resources you choose into an explicit project.
+Quote published AI model evidence, inspect original Undominated resources, and install the resources you choose with choices for your tools and installation scope.
 
 Requires **Node.js 22.12+**. The offline skill checks additionally require **Python 3.10+**; they use only the standard library. No inference API key is required.
 
 ## Quote a published result
 
 ```sh
-npx --yes undominated-check@0.4.0 google/gemini-3.7-flash --json
-npx --yes undominated-check@0.4.0 --frontier --json
+npx --yes undominated-check@0.5.0 google/gemini-3.7-flash --json
+npx --yes undominated-check@0.5.0 --frontier --json
 ```
 
 Model commands retrieve public JSON from [Undominated.ai](https://undominated.ai/). They do not send model prompts or inference credentials, route inference, or switch providers. The requested model identifier is part of the HTTP request. Inspect the returned benchmark, workload, date, source and recorded capability losses before applying a comparison to your own task.
@@ -17,35 +17,54 @@ The CLI quotes a published verdict; it does not recompute the frontier or price 
 
 ## Inspect and install an original resource
 
-Version **0.4.0** bundles **11 skills, six portable agent profiles and one MCP server**. The earlier `0.2.0` bundle contains six skills, four profiles and the same server. Consult the [version and availability map](https://github.com/Lenvanderhof/Undominated.ai/blob/main/docs/RESOURCES.md) for release verification and the corrections to `0.3.0` checkers.
+Version **0.5.0** bundles **11 skills, six portable agent profiles and one MCP server**. The earlier `0.2.0` bundle contains six skills, four profiles and the same server. Consult the [version and availability map](https://github.com/Lenvanderhof/Undominated.ai/blob/main/docs/RESOURCES.md) for release verification and the corrections to `0.3.0` checkers.
+
+Run this in your terminal for guided setup:
 
 ```sh
-npx --yes undominated-check@0.4.0 resources list
-npx --yes undominated-check@0.4.0 resources inspect undominated-evidence-audit
-npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project /absolute/path/to/project --dry-run
-npx --yes undominated-check@0.4.0 install undominated-evidence-audit --project /absolute/path/to/project
+npx undominated-check install
+# Or select a resource first:
+npx undominated-check install undominated-evidence-audit
 ```
 
-Replace the path with an existing project. Inspect the dry-run before installing. `install` is an alias for `resources install`; both `--project /path` and `--project=/path` forms work. Use `--json` for structured resource output. Bundled `status: fixture-tested` describes validation scope, not registry availability or production certification.
+Choose one or more tools by name or number, choose **project** or **global** scope, then review the exact paths and confirm. Nothing is preselected for Codex. Shared destinations are written once. Enter `cancel`, press Ctrl+C or close input before confirmation to leave files unchanged. Global means this user account on this machine; it does not configure cloud agents.
+
+The wizard works for skills, agent profiles and the bundled MCP server. MCP setup exports the server and prints the selected clients' registration instructions; it does not edit your configuration or start the server. `undominated-mcp` itself remains a stdio server, so an interactive installer never contaminates its protocol output.
+
+For scripts or a pinned, reproducible package version:
+
+```sh
+npx undominated-check@0.5.0 resources list
+npx undominated-check@0.5.0 resources inspect undominated-evidence-audit
+npx undominated-check@0.5.0 install undominated-evidence-audit --project /absolute/path/to/project --target claude --dry-run
+npx undominated-check@0.5.0 install undominated-evidence-audit --global --target cursor --dry-run
+```
+
+Replace the path with an existing project and remove `--dry-run` after reviewing the output. Explicit `--project` or `--global` keeps the command non-interactive. `install` is an alias for `resources install`; `--project=/path` and `--target=claude` work too. Use `--json` for structured output. `--interactive` explicitly requests the wizard, including when a project path is already supplied. Piped output, non-terminal input and CI do not prompt; `--interactive --json` is rejected.
+
+Bundled `status: fixture-tested` describes validation scope, not registry availability or production certification.
 
 | Resource / target | Destination | Next step |
 |---|---|---|
 | Skill, default or `--target codex` | `.agents/skills/<id>/` | Load through the client's skill workflow |
 | Skill, `--target claude` | `.claude/skills/<id>/` | Load through Claude Code's skill workflow |
-| Skill, `--target github` | `.github/skills/<id>/` | Load through GitHub Copilot's skill workflow |
+| Skill, `--target github` | `.github/skills/<id>/`; globally `~/.copilot/skills/<id>/` | Load through GitHub Copilot's skill workflow |
+| Skill, `--target cursor` | `.cursor/skills/<id>/` | Reload Cursor and inspect Skills |
 | Agent profile, default | `.undominated/agents/<id>/AGENT.md` | Load as portable task instructions |
 | Agent profile, `--target claude` | Original export plus `.claude/agents/<id>.md` | Reload Claude Code and inspect the native agent |
 | Agent profile, `--target github` | Original export plus `.github/agents/<id>.agent.md` | Select the custom agent in a compatible Copilot client |
 | MCP server | `.undominated/mcp/undominated-mcp/` | Review the generated client setup, then register it |
 
+Except for GitHub skills, global scope uses the same relative paths under your home directory. Global GitHub agent adapters and global VS Code MCP helpers are not supported; those selections offer project scope only. Claude global MCP helpers use user scope; Codex helpers always use user scope, even when the server is exported into a project. Existing custom client-directory environment overrides are not interpreted: review the shown destination, or use the client’s own installer for a custom setup.
+
 Use `resources --help` for the resource-specific target list. Unsupported resource/target combinations fail before writing files. Existing default paths are preserved from `0.3.1`.
 
 ```sh
-npx --yes undominated-check@0.4.0 install undominated-evidence-reviewer --project /absolute/path/to/project --target claude
-npx --yes undominated-check@0.4.0 install undominated-mcp --project /absolute/path/to/project --json
+npx --yes undominated-check@0.5.0 install undominated-evidence-reviewer --project /absolute/path/to/project --target claude
+npx --yes undominated-check@0.5.0 install undominated-mcp --project /absolute/path/to/project --json
 ```
 
-Installation verifies bundled SHA-256 hashes, rejects traversal and symlink paths, and refuses existing destinations, including native adapter files. It never overwrites client configuration. Package acquisition through `npx` uses the network; copying bundled resources does not. A write failure can leave a partial new destination: inspect it before removing it and retrying. Do not install into a directory concurrently controlled by an untrusted process.
+Installation verifies bundled SHA-256 hashes, rejects traversal and symlink paths, and refuses existing destinations, including native adapter files. It never overwrites client configuration. Package acquisition through `npx` uses the network; copying bundled resources does not. Every selected destination is checked before writing. On a write error, cleanup removes only files and empty directories created by this operation; interrupted processes or cleanup failures can still leave partial output, so inspect it before retrying. Do not install into a directory concurrently controlled by an untrusted process.
 
 The default `AGENT.md` export remains portable. Explicit Claude/GitHub targets additionally create a native adapter that preserves the profile's body and retains the original licensed export. Native adapters inherit the host's model, available tools and permission rules; the profile's prose does not enforce a sandbox or read-only access. The installer does not invoke an agent or grant a permission bypass.
 
@@ -64,9 +83,11 @@ Every skill includes an MIT licence, a scoped input contract and synthetic examp
 The source skills follow the [Agent Skills specification](https://agentskills.io/specification) and support the [Skills CLI](https://github.com/vercel-labs/skills):
 
 ```sh
-npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --list
-npx --yes skills@1.7.1 add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit --agent codex --copy --yes
+npx skills add Lenvanderhof/Undominated.ai --list
+npx skills add Lenvanderhof/Undominated.ai --skill undominated-evidence-audit
 ```
+
+In a normal terminal, Skills lets you choose supported tools and project/global scope. Running inside an AI agent can trigger its automatic non-interactive mode. No client, scope, copy mode or confirmation-skipping flags are forced by these examples. This route supports more clients than the bundled installer.
 
 Repository discovery is separate from a skills.sh marketplace listing. This route also discovers the separate legacy quote-only `undominated` skill, which is outside the 18-resource bundle.
 
@@ -107,6 +128,10 @@ source node_modules/undominated-check/completions/undominated-check.bash
 ```
 
 For a global installation, use `source "$(npm root -g)/undominated-check/completions/undominated-check.bash"`. Completion suggests commands, resource IDs and install flags for the `undominated-check` executable. Resource completion reads the installed bundle without fetching website data. The installer does not edit your shell profile.
+
+## Client path references
+
+The added scope paths follow [Claude skills](https://code.claude.com/docs/en/skills), [Cursor skills](https://cursor.com/docs/skills), [Copilot CLI skills](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills), and [Claude MCP scopes](https://code.claude.com/docs/en/mcp). Client discovery depends on the installed host and its configuration; copying a file is not proof that the host has loaded or executed it.
 
 ## Evidence and support
 

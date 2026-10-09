@@ -1,5 +1,7 @@
 # Publishing `undominated-check`
 
+**Prepared source candidate: 0.5.0.** Adds terminal-guided resource, multi-client and project/global selection with a destination preview and confirmation. Existing scripted flags remain supported. The resource bundle remains eleven skills, six profiles and one MCP server. This line is not a publication receipt; verify the registry and exact tested archive before announcing availability.
+
 **Current release, published and independently verified 2026-10-07:** [`undominated-check@0.4.0`](https://registry.npmjs.org/undominated-check/0.4.0). Exact archive SHA-256: `260ab6679d4068f0e9ea01c6890b09eedad13b5097eb38dc2389c8b784e9a49b`. Fresh anonymous acquisition verified all 18 resource installs, 69 source hashes, eleven synthetic checks, 43 checker boundary/control cases, native adapter generation, MCP initialization and the live frontier. A separate 71-case installer audit passed against the same archive. Actual native discovery and Linux/macOS/Windows results are in [Installer](../../docs/INSTALLER.md) and [Evidence](../../docs/EVIDENCE.md#installer-integration--040). **Do not republish 0.4.0.**
 
 **Published and independently verified 2026-10-07:** [`undominated-check@0.3.1`](https://registry.npmjs.org/undominated-check/0.3.1) is available. The registry archive SHA-256 is `a4550da5d0e5749b62217a96659f0d8ab91b1ab0a656e1cecd7115a983fe940b`. An anonymous fresh-cache consumer listed and installed all 18 resources, matched 69 file hashes, passed 11 installed synthetic checks and 43 boundary and control cases with structured-result validation, initialized the exported MCP server's five tools, and retrieved the live plain-text frontier. Version 0.3.1 corrects the five added checkers and uses `fixture-tested` for validation metadata; that label itself does not establish publication. **Do not republish 0.3.1.**
@@ -40,6 +42,8 @@ npm pack --pack-destination /absolute/path/to/release-directory
 ```
 
 Confirm the account and package ownership, and query the proposed new version before uploading: a 404 is expected only for an unpublished name or version. Stop if that version already exists. The repository-root package is a GitHub installation wrapper, not the npm release entry point.
+
+Test the packed wizard in an actual terminal: selection, multiple clients, project/global paths, final decline, Ctrl+C, EOF and dry-run. Confirm piped and JSON commands never prompt. Check shared destinations are deduplicated, a conflict in the last target blocks every write, and no existing client configuration is edited. Unsupported global GitHub agent and VS Code MCP adapters must be refused.
 
 Inspect the packed archive and install that exact file into a fresh temporary project. List and inspect resources, exercise a dry-run, install all bundled resources into a fresh temporary project, compare every installed file hash and run the installed Python validators against their synthetic examples. Keep the archive SHA-256 and npm integrity with the test receipt. Do not rebuild or publish from a mutable shared source tree after validating an archive: newly edited files could enter a different package.
 

@@ -14,7 +14,7 @@ _undominated_check_complete() {
       ;;
     *)
       if [[ "${COMP_WORDS[1]}" == install || "${COMP_WORDS[1]}" == resources ]]; then
-        words='--project --target --dry-run --json --help'
+        words='--project --global --interactive --target --dry-run --json --help'
       fi
       ;;
   esac

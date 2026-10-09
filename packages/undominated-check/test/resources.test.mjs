@@ -463,7 +463,7 @@ for (const target of ['claude', 'github']) {
 
 test('targets are validated per resource kind instead of silently ignored', async t => {
   const project = await temporary(t)
-  for (const [id, target] of [[skill, 'cursor'], [skill, 'vscode'], ['undominated-evidence-reviewer', 'codex'], ['undominated-evidence-reviewer', 'cursor'], ['undominated-mcp', 'github'], ['undominated-mcp', 'agents']]) {
+  for (const [id, target] of [[skill, 'vscode'], [skill, 'vscode'], ['undominated-evidence-reviewer', 'codex'], ['undominated-evidence-reviewer', 'cursor'], ['undominated-mcp', 'github'], ['undominated-mcp', 'agents']]) {
     await assert.rejects(installResource(id, { project, target }), /--target/)
     assert.deepEqual(await readdir(project), [])
   }

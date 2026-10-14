@@ -45,6 +45,13 @@ jobs:
       - name: Platform guide figures match the published catalogue
         run: node scripts/refresh-readme.mjs --check
 
+      - name: Resource-count checks fail closed
+        run: node --test scripts/refresh-resource-counts.test.mjs
+
+      # Reads https://undominated.ai/data/resources/{skills,agents,mcp-servers}.json.
+      - name: README and docs/RESOURCES.md resource counts match the live directories
+        run: node scripts/refresh-resource-counts.mjs --check
+
       - name: The hero image matches the published catalogue
         run: node scripts/build-hero.mjs --check
 

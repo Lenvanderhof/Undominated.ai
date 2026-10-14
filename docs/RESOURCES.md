@@ -1,6 +1,6 @@
 # Original resource library
 
-Choose a resource for a concrete task, read its contract, and check its installation coverage below. These are Undominated-authored instructions and tools. The website's [131 skills](https://undominated.ai/skills/), [101 agents](https://undominated.ai/agents/) and [128 MCP servers](https://undominated.ai/mcp-servers/) are a broader reviewed directory, including third-party projects; counts were checked on 2026-10-07.
+Choose a resource for a concrete task, read its contract, and check its installation coverage below. These are Undominated-authored instructions and tools. The website's [<!--res:skills-->257<!--/res--> skills](https://undominated.ai/skills/), [<!--res:agents-->178<!--/res--> agents](https://undominated.ai/agents/) and [<!--res:mcpServers-->199<!--/res--> MCP servers](https://undominated.ai/mcp-servers/) are a broader reviewed directory, including third-party projects; counts were checked on <!--res:reviewedAt-->2026-10-13<!--/res-->.
 
 ## Version and availability map
 

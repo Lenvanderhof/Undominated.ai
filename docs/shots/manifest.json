@@ -1,6 +1,6 @@
 {
-  "capturedOn": "2026-09-21",
-  "catalogueAsOf": "2026-09-19",
+  "capturedOn": "2026-10-15",
+  "catalogueAsOf": "2026-10-15",
   "viewport": {
     "desktop": [
       1440,
@@ -21,12 +21,26 @@
     {
       "file": "mobile.png",
       "url": "https://undominated.ai/",
-      "viewport": "mobile"
+      "viewport": [
+        390,
+        760
+      ],
+      "note": "Top 760 px of a 390 x 844 capture."
     },
     {
       "file": "frontier.png",
       "url": "https://undominated.ai/frontier/",
-      "viewport": "desktop"
+      "viewport": [
+        1440,
+        2200
+      ],
+      "crop": {
+        "x": 0,
+        "y": 600,
+        "width": 1440,
+        "height": 900
+      },
+      "note": "Cropped to the workload controls and the frontier chart."
     },
     {
       "file": "check.png",
@@ -54,6 +68,11 @@
       "viewport": "desktop"
     },
     {
+      "file": "skills.png",
+      "url": "https://undominated.ai/skills/",
+      "viewport": "desktop"
+    },
+    {
       "file": "skills-2026-10-07.png",
       "url": "https://undominated.ai/skills/",
       "viewport": [
@@ -63,5 +82,6 @@
       "capturedOn": "2026-10-07",
       "catalogueAsOf": "2026-10-06"
     }
-  ]
+  ],
+  "method": "Headless Chrome 155 at device scale factor 1, --virtual-time-budget=12000, against the live site."
 }

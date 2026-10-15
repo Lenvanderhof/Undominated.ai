@@ -15,7 +15,7 @@ const published = {
 const markers = '<!--fig:standardModels-->10<!--/fig--> / <!--fig:unrated-->4<!--/fig--> / ' +
   '<!--fig:unratedPct-->40%<!--/fig--> / <!--fig:variantRows-->5<!--/fig-->'
 
-async function fixture(t, content = markers, catalogue = published) {
+async function fixture(t, content = markers, catalogue = published, { readme = 'Keep the current resource overview.\n', extra = {} } = {}) {
   const root = await mkdtemp(join(tmpdir(), 'undominated-figures-'))
   t.after(() => rm(root, { recursive: true, force: true }))
   await mkdir(join(root, 'scripts'))
@@ -24,12 +24,12 @@ async function fixture(t, content = markers, catalogue = published) {
   await copyFile(new URL('./refresh-readme.mjs', import.meta.url), script)
   const guide = join(root, 'docs/PLATFORM.md')
   await writeFile(guide, content)
-  await writeFile(join(root, 'README.md'), 'Keep the current resource overview.\n')
+  await writeFile(join(root, 'README.md'), readme)
   const requests = []
   const server = createServer((req, res) => {
     requests.push(req.url)
     const data = req.url === '/data/catalogue.json' ? catalogue :
-      req.url === '/data/frontier.json' ? { members: [] } : null
+      req.url === '/data/frontier.json' ? { members: [] } : extra[req.url] ?? null
     res.writeHead(data ? 200 : 404, { 'content-type': 'application/json' })
     res.end(JSON.stringify(data))
   })
@@ -101,5 +101,30 @@ test('invalid options stop before fetching or modifying files', async (t) => {
     })
   }
   assert.deepEqual(f.requests, [])
+  assert.equal(await readFile(f.guide, 'utf8'), markers)
+})
+
+test('README figures, resource counts included, are checked and refreshed in the README itself', async (t) => {
+  const readme = 'Skills <!--fig:skills-->1<!--/fig-->, workflows <!--fig:workflows-->1<!--/fig-->, ' +
+    'reviewed <!--fig:resourcesAsOf-->x<!--/fig-->.\n'
+  const index = (n, reviewedAt) => ({ reviewedAt, records: Array.from({ length: n }, (_, i) => ({ id: `r${i}` })) })
+  const extra = {
+    '/data/resources/skills.json': index(3, '2026-01-02'),
+    '/data/resources/agents.json': index(2, '2026-01-02'),
+    '/data/resources/mcp-servers.json': index(1, '2026-01-01'),
+    '/data/resources/workflows.json': { reviewedAt: '2026-01-02', recipes: [{ id: 'w' }, { id: 'v' }] },
+  }
+  const f = await fixture(t, markers, published, { readme, extra })
+  await assert.rejects(f.run(['--check', '--origin', f.origin]), (error) => {
+    assert.match(error.stderr, /skills: README says "1", the site says "3"/)
+    // Indexes reviewed on different days are stated as a range, never as one date.
+    assert.match(error.stderr, /resourcesAsOf: README says "x", the site says "2026-01-01 to 2026-01-02"/)
+    return true
+  })
+  assert.equal(await readFile(join(f.root, 'README.md'), 'utf8'), readme)
+  await f.run(['--origin', f.origin])
+  assert.equal(await readFile(join(f.root, 'README.md'), 'utf8'),
+    'Skills <!--fig:skills-->3<!--/fig-->, workflows <!--fig:workflows-->2<!--/fig-->, ' +
+    'reviewed <!--fig:resourcesAsOf-->2026-01-01 to 2026-01-02<!--/fig-->.\n')
   assert.equal(await readFile(f.guide, 'utf8'), markers)
 })

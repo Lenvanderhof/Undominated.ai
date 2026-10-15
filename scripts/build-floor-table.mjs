@@ -19,15 +19,16 @@
  * dearer over the observation window. That finding is the section's whole point,
  * and it is the opposite of what the market says.
  *
- *   node scripts/build-floor-table.mjs          # rewrite the table in docs/PLATFORM.md
+ *   node scripts/build-floor-table.mjs          # rewrite the table in README.md and docs/PLATFORM.md
  *   node scripts/build-floor-table.mjs --check  # exit 1 if stale
  */
-import { readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const README = resolve(ROOT, 'docs/PLATFORM.md')
+// The same generated table, in every document that carries the block.
+const DOCUMENTS = ['README.md', 'docs/PLATFORM.md'].map((name) => ({ name, path: resolve(ROOT, name) }))
 const ORIGIN = 'https://undominated.ai'
 const START = '<!--floors-->'
 const END = '<!--/floors-->'
@@ -71,19 +72,22 @@ const table = [
   END,
 ].join('\n')
 
-const source = readFileSync(README, 'utf8')
 const pattern = new RegExp(`${START}[\\s\\S]*?${END}`)
-if (!pattern.test(source)) throw new Error(`Platform guide has no ${START} … ${END} block`)
-const next = source.replace(pattern, table)
+const docs = DOCUMENTS.filter((d) => existsSync(d.path))
+  .map((d) => ({ ...d, source: readFileSync(d.path, 'utf8') }))
+  .filter((d) => pattern.test(d.source))
+if (!docs.length) throw new Error(`no ${START} … ${END} block in ${DOCUMENTS.map((d) => d.name).join(' or ')}`)
+for (const d of docs) d.next = d.source.replace(pattern, table)
 
 if (check) {
-  if (next !== source) {
-    console.error('the floor table is stale — run: node scripts/build-floor-table.mjs')
+  const stale = docs.filter((d) => d.next !== d.source)
+  if (stale.length) {
+    console.error(`the floor table is stale in ${stale.map((d) => d.name).join(', ')} — run: node scripts/build-floor-table.mjs`)
     process.exit(1)
   }
-  console.log(`floor table agrees with ${ORIGIN} (${rows.length} floors, ${dates.length} snapshots)`)
+  console.log(`floor table agrees with ${ORIGIN} in ${docs.map((d) => d.name).join(', ')} (${rows.length} floors, ${dates.length} snapshots)`)
   process.exit(0)
 }
 
-writeFileSync(README, next)
-console.log(`floor table written: ${rows.length} floors across ${dates.length} snapshots (${dates[0]} → ${dates[dates.length - 1]})`)
+for (const d of docs) if (d.next !== d.source) writeFileSync(d.path, d.next)
+console.log(`floor table written to ${docs.map((d) => d.name).join(', ')}: ${rows.length} floors across ${dates.length} snapshots (${dates[0]} → ${dates[dates.length - 1]})`)

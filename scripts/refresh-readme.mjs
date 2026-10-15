@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Keep every figure in docs/PLATFORM.md equal to what undominated.ai publishes.
+ * Keep every figure in README.md, docs/PLATFORM.md and docs/RESOURCES.md equal to
+ * what undominated.ai publishes.
  *
  * WHY THIS EXISTS. On 2026-09-04 the README stated eleven undominated models,
  * "97 of 108" dominated, 409 in the catalogue and 63% unrated. The live figures
@@ -20,7 +21,7 @@
  * rather than deriving one, because a second implementation of a published
  * number is a second thing that can drift.
  *
- *   node scripts/refresh-readme.mjs          # rewrite docs/PLATFORM.md in place
+ *   node scripts/refresh-readme.mjs          # rewrite every document below in place
  *   node scripts/refresh-readme.mjs --check  # exit 1 if any figure is stale
  *   node scripts/refresh-readme.mjs --check --origin http://localhost:4173
  *                                            # inspect a staged release
@@ -28,12 +29,19 @@
  * `--check` is what CI runs, so a stale README fails a pull request rather than
  * being noticed by a reader.
  */
-import { readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const README = resolve(ROOT, 'docs/PLATFORM.md')
+// Each document is checked on its own. One without markers is left alone, so the
+// figures can live wherever a reader meets them, but the run as a whole refuses
+// to pass with none at all.
+const DOCUMENTS = [
+  ['README.md', 'README'],
+  ['docs/PLATFORM.md', 'Platform guide'],
+  ['docs/RESOURCES.md', 'Resource library'],
+].map(([path, label]) => ({ path: resolve(ROOT, path), name: path, label }))
 let ORIGIN = 'https://undominated.ai'
 let check = false
 let originSeen = false
@@ -64,6 +72,10 @@ async function json(path) {
   return res.json()
 }
 
+const sources = DOCUMENTS.filter((d) => existsSync(d.path)).map((d) => ({ ...d, text: readFileSync(d.path, 'utf8') }))
+const MARKER = /<!--fig:([a-zA-Z]+)-->([\s\S]*?)<!--\/fig-->/g
+const used = new Set(sources.flatMap((d) => [...d.text.matchAll(MARKER)].map((m) => m[1])))
+
 const [catalogue, frontier] = await Promise.all([
   json('/data/catalogue.json'),
   json('/data/frontier.json'),
@@ -71,6 +83,16 @@ const [catalogue, frontier] = await Promise.all([
 const s = catalogue.stats ?? {}
 // Listing rows include service variants; they cannot supply a model-coverage denominator.
 const coverage = catalogue.integrity?.coverage
+const ranks = catalogue.integrity?.rankResolution
+
+// The reviewed resource indexes are fetched only when a document states one of
+// their figures, so a document about prices never depends on them.
+const RESOURCE_KINDS = { skills: 'skills', agents: 'agents', mcpServers: 'mcp-servers', workflows: 'workflows' }
+const resourceKeys = [...Object.keys(RESOURCE_KINDS), 'resourcesAsOf']
+const resources = resourceKeys.some((k) => used.has(k))
+  ? Object.fromEntries(await Promise.all(Object.entries(RESOURCE_KINDS).map(async ([key, kind]) =>
+      [key, await json(`/data/resources/${kind}.json`)])))
+  : {}
 
 /**
  * One entry per marker. Each returns a STRING exactly as it should read, or
@@ -110,23 +132,39 @@ const FIGURES = {
    */
   spread: () => `${need(s.priceSpread, 'stats.priceSpread').toLocaleString('en-US')}×`,
   tiered: () => String(need(s.tieredContext, 'stats.tieredContext')),
+  /** What a dominated model costs against the cheapest alternative that beats it, as the site states it. */
+  overpayMedian: () => `${need(s.overpayMedian, 'stats.overpayMedian')}×`,
+  /** Ranks the published confidence intervals can separate, out of rendered positions. */
+  distinctRanks: () => String(need(ranks?.distinctRanks, 'integrity.rankResolution.distinctRanks')),
+  rankPositions: () => String(need(ranks?.positions, 'integrity.rankResolution.positions')),
   asOf: () => String(need(s.updatedAt, 'stats.updatedAt')).slice(0, 10),
+  /** Listed records in each reviewed resource index; the same counts the directory pages state. */
+  skills: () => String(need(resources.skills?.records?.length, '/data/resources/skills.json records')),
+  agents: () => String(need(resources.agents?.records?.length, '/data/resources/agents.json records')),
+  mcpServers: () => String(need(resources.mcpServers?.records?.length, '/data/resources/mcp-servers.json records')),
+  workflows: () => String(need(resources.workflows?.recipes?.length, '/data/resources/workflows.json recipes')),
+  /** The review date each index publishes; a range when they differ, never a guess. */
+  resourcesAsOf: () => {
+    const dates = Object.keys(RESOURCE_KINDS).map((k) => need(resources[k]?.reviewedAt, `${k} reviewedAt`)).sort()
+    return dates[0] === dates[dates.length - 1] ? dates[0] : `${dates[0]} to ${dates[dates.length - 1]}`
+  },
 }
 
-const source = readFileSync(README, 'utf8')
 const seen = new Set()
 const stale = []
 let occurrences = 0
 
-const next = source.replace(/<!--fig:([a-zA-Z]+)-->([\s\S]*?)<!--\/fig-->/g, (whole, key, current) => {
-  const render = FIGURES[key]
-  if (!render) throw new Error(`Platform guide names an unknown figure: ${key}`)
-  seen.add(key)
-  occurrences += 1
-  const value = render()
-  if (current !== value) stale.push({ key, current, value })
-  return `<!--fig:${key}-->${value}<!--/fig-->`
-})
+for (const doc of sources) {
+  doc.next = doc.text.replace(MARKER, (whole, key, current) => {
+    const render = FIGURES[key]
+    if (!render) throw new Error(`${doc.label} names an unknown figure: ${key}`)
+    seen.add(key)
+    occurrences += 1
+    const value = render()
+    if (current !== value) stale.push({ key, current, value, label: doc.label })
+    return `<!--fig:${key}-->${value}<!--/fig-->`
+  })
+}
 
 /**
  * One line per DISTINCT wrong reading, with a count of where it appears.
@@ -146,19 +184,21 @@ const next = source.replace(/<!--fig:([a-zA-Z]+)-->([\s\S]*?)<!--\/fig-->/g, (wh
 const report = (rows) => {
   const byReading = new Map()
   for (const row of rows) {
-    const id = `${row.key}\u0000${row.current}`
+    const id = `${row.label}\u0000${row.key}\u0000${row.current}`
     const hit = byReading.get(id) ?? { ...row, count: 0 }
     hit.count += 1
     byReading.set(id, hit)
   }
   return [...byReading.values()].map(
     (r) =>
-      `${r.key}: Platform guide says "${r.current}", the site says "${r.value}"` +
+      `${r.key}: ${r.label} says "${r.current}", the site says "${r.value}"` +
       (r.count > 1 ? ` — in ${r.count} places` : ''),
   )
 }
 
-if (!occurrences) throw new Error('platform guide has no figure markers — refusing an empty freshness check')
+if (!occurrences) {
+  throw new Error(`no figure markers in ${DOCUMENTS.map((d) => d.name).join(', ')} — refusing an empty freshness check`)
+}
 
 const unused = Object.keys(FIGURES).filter((k) => !seen.has(k))
 
@@ -169,22 +209,22 @@ const counted = `${seen.size} figure${seen.size === 1 ? '' : 's'}` +
 
 if (check) {
   if (stale.length) {
-    console.error('Platform guide figures are stale:')
+    console.error('Generated figures are stale:')
     for (const line of report(stale)) console.error(`  ${line}`)
     console.error('\nRun: node scripts/refresh-readme.mjs')
     process.exit(1)
   }
-  console.log(`Platform guide figures agree with ${ORIGIN} (${counted} checked, as of ${FIGURES.asOf()})`)
+  console.log(`Figures agree with ${ORIGIN} (${counted} checked, as of ${FIGURES.asOf()})`)
   if (unused.length) console.log(`  unused figures available: ${unused.join(', ')}`)
   process.exit(0)
 }
 
-writeFileSync(README, next)
+for (const doc of sources) if (doc.next !== doc.text) writeFileSync(doc.path, doc.next)
 console.log(
   stale.length
-    ? `Platform guide updated — ${stale.length} of ${occurrences} statements rewritten:\n` +
+    ? `Figures updated — ${stale.length} of ${occurrences} statements rewritten:\n` +
       report(stale)
         .map((l) => `  ${l}`)
         .join('\n')
-    : `Platform guide already current (${counted}, as of ${FIGURES.asOf()})`,
+    : `Figures already current (${counted}, as of ${FIGURES.asOf()})`,
 )

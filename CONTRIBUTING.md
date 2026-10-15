@@ -46,7 +46,7 @@ node scripts/build-hero.mjs --check
 node scripts/shots-current.mjs --check
 ```
 
-The figure/table markers live in [the platform guide](docs/PLATFORM.md). These commands fetch public website data; they do not rebuild or deploy the production website. Date screenshots and register any file under `docs/shots/` in its manifest. Do not present historical screenshots as current price evidence.
+The figure/table markers live in [the README](README.md), [the platform guide](docs/PLATFORM.md) and [the resource library](docs/RESOURCES.md). These commands fetch public website data; they do not rebuild or deploy the production website. Date screenshots and register any file under `docs/shots/` in its manifest. Do not present historical screenshots as current price evidence.
 
 ## Keep the boundary clear
 

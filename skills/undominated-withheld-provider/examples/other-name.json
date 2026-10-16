@@ -1,4 +1,8 @@
 {
   "name": "ExampleProvider",
-  "publishable": true
+  "publishable": true,
+  "withheldNames": [
+    "ExampleWithheldA",
+    "ExampleWithheldB"
+  ]
 }

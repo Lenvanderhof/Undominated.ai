@@ -14,11 +14,14 @@ import { fileURLToPath } from 'node:url'
 import {
   COMMENT_MARKER,
   DEFAULT_ORIGIN,
+  DENIED_PROVIDER_DIGESTS,
   extractSlugsFromText,
   fileSlug,
+  isDeniedSlug,
   isStrictlyDominated,
   logRun,
   looksLikeSecret,
+  providerDigest,
   renderComment,
   run,
   scanWorkspace,
@@ -303,13 +306,16 @@ describe('run', () => {
   })
 
   test('skips denied providers even if a consumer declared them', async () => {
-    const root = workspace({ '.env.example': 'MODEL=stealth/ox-alpha\nOTHER=fakeprovider/demo\n' })
+    // Invented providers stand in for the withheld ones; the shipped list holds digests only.
+    const denied = [providerDigest('exampledenied'), providerDigest('exampleblocked')]
+    const root = workspace({ '.env.example': 'MODEL=exampledenied/ox-alpha\nOTHER=ExampleBlocked/demo\n' })
     const result = await run({
       workspace: root,
       origin: DEFAULT_ORIGIN,
+      denied,
       fetchImpl: fetchCatalogue({
         docs: {
-          'stealth/ox-alpha': verdict({ slug: 'stealth/ox-alpha', status: 'dominated', by: 'x' }),
+          'exampledenied/ox-alpha': verdict({ slug: 'exampledenied/ox-alpha', status: 'dominated', by: 'x' }),
         },
       }),
       commentImpl: async () => {
@@ -318,6 +324,21 @@ describe('run', () => {
     })
     assert.equal(result.exitCode, 0)
     assert.deepEqual(result.findings, [])
+  })
+
+  test('denies by the whole provider segment, case-insensitively', () => {
+    const denied = [providerDigest('exampledenied')]
+    assert.equal(isDeniedSlug('ExampleDenied/model', denied), true)
+    assert.equal(isDeniedSlug('exampledenied-two/model', denied), false)
+    assert.equal(isDeniedSlug('other/exampledenied', denied), false)
+    assert.equal(isDeniedSlug('exampledenied', denied), false)
+    assert.deepEqual(extractSlugsFromText('a = "exampledenied/m"\nb = "openai/gpt-5"\n', denied), ['openai/gpt-5'])
+  })
+
+  test('the shipped deny list is two SHA-256 digests and names no provider', () => {
+    assert.equal(DENIED_PROVIDER_DIGESTS.length, 2)
+    for (const d of DENIED_PROVIDER_DIGESTS) assert.match(d, /^[0-9a-f]{64}$/)
+    assert.equal(isDeniedSlug('openai/gpt-5'), false)
   })
 
   test('a comment failure still returns findings and exits 0', async () => {

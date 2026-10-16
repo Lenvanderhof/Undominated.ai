@@ -1,6 +1,6 @@
 ---
 name: undominated-withheld-provider
-description: Refuse publication of the literal provider names FakeProvider and Stealth. Any other name is outside this withhold, and a pass does not approve it.
+description: Check a supplied publication denylist by exact provider-name matching. A pass does not approve a provider or establish that the supplied list is complete.
 license: MIT
 metadata:
   author: Undominated.ai
@@ -9,22 +9,22 @@ metadata:
 
 # Withheld provider names
 
-Use before a provider registry row is marked publishable. Two literal names stay unpublished: `FakeProvider` and `Stealth`.
+Use before a provider registry row is marked publishable. Supply the current authoritative denylist as `withheldNames` in a private local input file; the published examples use invented names only.
 
-1. Compare the name exactly. `stealth` and `Fakeprovider` are not those names.
-2. A withheld name with `publishable` true is a review.
-3. A withheld name with `publishable` false passes.
-4. Any other name passes this checker whether or not it is marked publishable. That pass does not approve the provider, its prices, or its privacy policy.
+1. Compare the name exactly against the supplied list. Matching is case-sensitive.
+2. A listed name with `publishable` true requires review.
+3. A listed name with `publishable` false passes.
+4. Any unlisted name passes this bounded check whether or not it is marked publishable. That pass does not approve the provider, its prices, or its privacy policy.
 
 ## Input contract
 
-`name` is non-empty text without surrounding whitespace or ASCII control characters, at most 512 characters. `publishable` is a boolean. The JSON number 1 is not true.
+`name` is non-empty text without surrounding whitespace or ASCII control characters, at most 512 characters. `publishable` is a boolean. The JSON number 1 is not true. `withheldNames` is a required array of 1 to 1024 unique names obeying the same text rules. Missing or empty lists are invalid.
 
 ## Deliverable and limits
 
-Return the name, whether it is one of the two withheld literals, and the boolean you supplied. This checker does not fetch a registry or read a price.
+Return the name, whether it belongs to the supplied list, and the boolean you supplied. This checker does not fetch a registry, read a price, load the site's private policy, or establish that the list is complete or authoritative. Obtain and validate the relevant policy before using the result.
 
-`examples/synthetic.json` passes for `Stealth` left unpublished. The publish examples require review.
+`examples/synthetic.json` passes for the invented `ExampleWithheldB` left unpublished. The synthetic publish example requires review.
 
 ## Run the local check
 

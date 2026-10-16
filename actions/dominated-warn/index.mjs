@@ -5,13 +5,23 @@
  * as of a dated snapshot. Always exits 0.
  */
 
+import { createHash } from 'node:crypto'
 import { appendFileSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 export const COMMENT_MARKER = '<!-- undominated-dominated-warn -->'
 export const DEFAULT_ORIGIN = 'https://undominated.ai'
 
-const DENY_PREFIXES = ['stealth/', 'fakeprovider/']
+// Two upstream registry entries are not real sellers and are never published.
+// They are matched by a SHA-256 digest of the lowercased provider segment so this
+// public file does not name them; a digest is compared, never reversed.
+export const DENIED_PROVIDER_DIGESTS = Object.freeze([
+  '2d998cb471a020c0c58428d556cb5125365cac15eba3508faf2301e94bd88429',
+  '1760499ae3ee0d8858da1a96eb235cf27274980596ef07d096e2054fdee3e7db',
+])
+
+export const providerDigest = (provider) =>
+  createHash('sha256').update(String(provider).toLowerCase()).digest('hex')
 const MIME_OR_PATH_HEADS = new Set([
   'application',
   'audio',
@@ -42,12 +52,13 @@ export function looksLikeSecret(value) {
   return /\bsk-/.test(s) || /\bghp_/.test(s) || /\bgithub_pat_/.test(s) || /\bBearer\s+/.test(s)
 }
 
-export function isDeniedSlug(slug) {
-  const s = String(slug ?? '').toLowerCase()
-  return DENY_PREFIXES.some((p) => s.startsWith(p))
+export function isDeniedSlug(slug, denied = DENIED_PROVIDER_DIGESTS) {
+  const s = String(slug ?? '')
+  const cut = s.indexOf('/')
+  return cut > 0 && denied.includes(providerDigest(s.slice(0, cut)))
 }
 
-export function extractSlugsFromText(text) {
+export function extractSlugsFromText(text, denied = DENIED_PROVIDER_DIGESTS) {
   const found = []
   const seen = new Set()
   for (const line of String(text ?? '').split(/\r?\n/)) {
@@ -61,7 +72,7 @@ export function extractSlugsFromText(text) {
       const head = m[1].toLowerCase()
       if (MIME_OR_PATH_HEADS.has(head)) continue
       const slug = `${m[1]}/${m[2]}`
-      if (looksLikeSecret(slug) || isDeniedSlug(slug)) continue
+      if (looksLikeSecret(slug) || isDeniedSlug(slug, denied)) continue
       if (seen.has(slug)) continue
       seen.add(slug)
       found.push(slug)
@@ -87,15 +98,15 @@ function collectStrings(value, out) {
   }
 }
 
-function addSlugs(text, slugs, seen) {
-  for (const slug of extractSlugsFromText(text)) {
+function addSlugs(text, slugs, seen, denied) {
+  for (const slug of extractSlugsFromText(text, denied)) {
     if (seen.has(slug)) continue
     seen.add(slug)
     slugs.push(slug)
   }
 }
 
-export function scanWorkspace(root) {
+export function scanWorkspace(root, denied = DENIED_PROVIDER_DIGESTS) {
   const files = []
   const slugs = []
   const seen = new Set()
@@ -116,13 +127,13 @@ export function scanWorkspace(root) {
       try {
         const strings = []
         collectStrings(JSON.parse(text), strings)
-        for (const s of strings) addSlugs(s, slugs, seen)
+        for (const s of strings) addSlugs(s, slugs, seen, denied)
       } catch {
         /* invalid package.json is not a ranking event */
       }
       return
     }
-    addSlugs(text, slugs, seen)
+    addSlugs(text, slugs, seen, denied)
   }
 
   addFile('.env.example')
@@ -242,11 +253,12 @@ export async function run({
   event,
   fetchImpl = fetch,
   commentImpl,
+  denied = DENIED_PROVIDER_DIGESTS,
 } = {}) {
   const base = String(origin ?? DEFAULT_ORIGIN).replace(/\/$/, '')
   try {
-    const { slugs } = scanWorkspace(workspace)
-    const declared = slugs.filter((s) => !isDeniedSlug(s))
+    const { slugs } = scanWorkspace(workspace, denied)
+    const declared = slugs.filter((s) => !isDeniedSlug(s, denied))
     const frontierRes = await fetchImpl(`${base}/data/frontier.json`)
     if (!frontierRes?.ok) {
       return {

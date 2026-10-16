@@ -1,4 +1,8 @@
 {
-  "name": "Stealth",
-  "publishable": false
+  "name": "ExampleWithheldB",
+  "publishable": false,
+  "withheldNames": [
+    "ExampleWithheldA",
+    "ExampleWithheldB"
+  ]
 }

@@ -1,4 +1,8 @@
 {
-  "name": "FakeProvider",
-  "publishable": true
+  "name": "ExampleWithheldA",
+  "publishable": true,
+  "withheldNames": [
+    "ExampleWithheldA",
+    "ExampleWithheldB"
+  ]
 }

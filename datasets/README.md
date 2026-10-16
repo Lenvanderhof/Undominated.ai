@@ -36,7 +36,7 @@ Files in the release:
 
 - **Artificial Analysis fields.** Free-tier terms are internal-use-only. The export uses an allowlist, so a new AA field upstream is excluded by default.
 - **Model descriptions.** Prose is somebody's copyright in a way a list price is not.
-- **`FakeProvider` and `Stealth`.** Not real sellers.
+- **Two upstream provider entries that are not real sellers.** They are never exported.
 
 `null` on a quality field means *not stated here*. It is not a score of zero. Some rows are unmeasured; some were measured and the score is withheld because we may not redistribute it. Those two absences are not interchangeable.
 

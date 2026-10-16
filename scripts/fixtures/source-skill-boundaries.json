@@ -4256,12 +4256,16 @@
       ]
     },
     {
-      "id": "withheld-stealth-off",
+      "id": "withheld-listed-off",
       "skill": "undominated-withheld-provider",
-      "why": "Stealth left unpublished passes.",
+      "why": "A listed name left unpublished passes.",
       "input": {
-        "name": "Stealth",
-        "publishable": false
+        "name": "ExampleWithheldB",
+        "publishable": false,
+        "withheldNames": [
+          "ExampleWithheldA",
+          "ExampleWithheldB"
+        ]
       },
       "expectedStatuses": [
         "pass"
@@ -4272,12 +4276,16 @@
       }
     },
     {
-      "id": "withheld-fake-on",
+      "id": "withheld-listed-on-first",
       "skill": "undominated-withheld-provider",
-      "why": "FakeProvider marked publishable is a review.",
+      "why": "The first listed name marked publishable is a review.",
       "input": {
-        "name": "FakeProvider",
-        "publishable": true
+        "name": "ExampleWithheldA",
+        "publishable": true,
+        "withheldNames": [
+          "ExampleWithheldA",
+          "ExampleWithheldB"
+        ]
       },
       "expectedStatuses": [
         "review"
@@ -4287,12 +4295,16 @@
       }
     },
     {
-      "id": "withheld-stealth-on",
+      "id": "withheld-listed-on-second",
       "skill": "undominated-withheld-provider",
-      "why": "Stealth marked publishable is a review.",
+      "why": "The second listed name marked publishable is a review.",
       "input": {
-        "name": "Stealth",
-        "publishable": true
+        "name": "ExampleWithheldB",
+        "publishable": true,
+        "withheldNames": [
+          "ExampleWithheldA",
+          "ExampleWithheldB"
+        ]
       },
       "expectedStatuses": [
         "review"
@@ -4304,10 +4316,14 @@
     {
       "id": "withheld-other",
       "skill": "undominated-withheld-provider",
-      "why": "Another literal name is outside this withhold and is not approved by the pass.",
+      "why": "An unlisted name is outside this withhold and is not approved by the pass.",
       "input": {
         "name": "ExampleProvider",
-        "publishable": true
+        "publishable": true,
+        "withheldNames": [
+          "ExampleWithheldA",
+          "ExampleWithheldB"
+        ]
       },
       "expectedStatuses": [
         "pass"
@@ -4320,10 +4336,14 @@
     {
       "id": "withheld-folded",
       "skill": "undominated-withheld-provider",
-      "why": "A different case is not the literal withheld name.",
+      "why": "A different case is not the listed name.",
       "input": {
-        "name": "stealth",
-        "publishable": false
+        "name": "examplewithheldb",
+        "publishable": false,
+        "withheldNames": [
+          "ExampleWithheldA",
+          "ExampleWithheldB"
+        ]
       },
       "expectedStatuses": [
         "pass"
@@ -4337,8 +4357,53 @@
       "skill": "undominated-withheld-provider",
       "why": "The JSON number 1 is not the boolean true.",
       "input": {
-        "name": "Stealth",
-        "publishable": 1
+        "name": "ExampleWithheldB",
+        "publishable": 1,
+        "withheldNames": [
+          "ExampleWithheldA",
+          "ExampleWithheldB"
+        ]
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "withheld-list-missing",
+      "skill": "undominated-withheld-provider",
+      "why": "Without a supplied list there is nothing to check against.",
+      "input": {
+        "name": "ExampleWithheldA",
+        "publishable": true
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "withheld-list-empty",
+      "skill": "undominated-withheld-provider",
+      "why": "An empty list is invalid, not a pass for every name.",
+      "input": {
+        "name": "ExampleWithheldA",
+        "publishable": true,
+        "withheldNames": []
+      },
+      "expectedStatuses": [
+        "invalid"
+      ]
+    },
+    {
+      "id": "withheld-list-duplicate",
+      "skill": "undominated-withheld-provider",
+      "why": "A list naming the same provider twice is invalid.",
+      "input": {
+        "name": "ExampleWithheldA",
+        "publishable": true,
+        "withheldNames": [
+          "ExampleWithheldA",
+          "ExampleWithheldA"
+        ]
       },
       "expectedStatuses": [
         "invalid"

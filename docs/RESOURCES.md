@@ -1,6 +1,6 @@
 # Original resource library
 
-Choose a resource for a concrete task, read its contract, and check its installation coverage below. These are Undominated-authored instructions and tools. The website's [<!--fig:skills-->684<!--/fig--> skills](https://undominated.ai/skills/), [<!--fig:agents-->401<!--/fig--> agents](https://undominated.ai/agents/), [<!--fig:mcpServers-->326<!--/fig--> MCP servers](https://undominated.ai/mcp-servers/) and [<!--fig:workflows-->88<!--/fig--> workflows](https://undominated.ai/workflows/) are a broader reviewed directory, including third-party projects; counts are generated from the published indexes reviewed <!--fig:resourcesAsOf-->2026-10-14<!--/fig-->.
+Choose a resource for a concrete task, read its contract, and check its installation coverage below. These are Undominated-authored instructions and tools. The website's [<!--fig:skills-->685<!--/fig--> skills](https://undominated.ai/skills/), [<!--fig:agents-->401<!--/fig--> agents](https://undominated.ai/agents/), [<!--fig:mcpServers-->332<!--/fig--> MCP servers](https://undominated.ai/mcp-servers/) and [<!--fig:workflows-->88<!--/fig--> workflows](https://undominated.ai/workflows/) are a broader reviewed directory, including third-party projects; counts are generated from the published indexes reviewed <!--fig:resourcesAsOf-->2026-10-14<!--/fig-->.
 
 ## Version and availability map
 
@@ -125,7 +125,7 @@ These 60 skills can be installed from GitHub source with a pinned Skills CLI com
 | [Schema-not-quote audit](../skills/undominated-schema-not-quote/SKILL.md) | Refuse a model-rate claim when the excerpt describes a field or a schema. | Negation is not parsed. It does not read amounts or copy the excerpt. |
 | [Header-not-row audit](../skills/undominated-header-not-row/SKILL.md) | Refuse a unit claim borrowed from a display header the row does not state. | The header is ignored. It does not convert units or read amounts. |
 | [Suggest-not-redirect audit](../skills/undominated-suggest-not-redirect/SKILL.md) | Refuse a language redirect, including when Accept-Language is absent. | Suggestion and no action can pass. It sends no request and does not copy the header. |
-| [Withheld-provider audit](../skills/undominated-withheld-provider/SKILL.md) | Refuse publication of the literal names FakeProvider and Stealth. | Any other name is outside this withhold. A pass does not approve that provider. |
+| [Withheld-provider audit](../skills/undominated-withheld-provider/SKILL.md) | Refuse publication of a provider name on a denylist you supply. | Matching is exact and case-sensitive. A pass does not approve that provider or show that the list is complete. |
 | [Announced-not-safe audit](../skills/undominated-announced-not-safe/SKILL.md) | Refuse a safety claim built from none-announced, unknown, or unrated. | The result never sets established to true. It does not fetch a source. |
 | [Unit-not-scaled audit](../skills/undominated-unit-not-scaled/SKILL.md) | Refuse a scale factor or a restated invoice unit. | A per-thousand row is not rewritten per million. Amounts are not read. |
 | [Ladder-not-flattened audit](../skills/undominated-ladder-not-flattened/SKILL.md) | Refuse a published context-tier ladder whose rung count differs from the source. | Dropping a rung flattens the ladder. Adding a rung invents one. Prices and boundaries are not read. |

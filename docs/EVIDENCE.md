@@ -178,6 +178,10 @@ The older [PR #4](https://github.com/Lenvanderhof/Undominated.ai/pull/4) identif
 
 The hero footer now calls `stats.models` **listings**, matching the platform guide. The unused standard-model/unrated figure helpers require an explicit published `integrity.coverage` population and refuse to substitute listing totals when it is absent. No September counts were copied from that PR. The active guide and hero figures were regenerated or checked against current published JSON; the data date remains 2026-10-06.
 
+## Withheld-provider checker takes a supplied list — 2026-10-16
+
+The withheld-provider checker no longer names the providers it withholds, matching the website's copy corrected on 2026-10-14. It now requires a caller-supplied `withheldNames` list of 1 to 1024 unique names; a missing, empty, duplicate or malformed list is invalid. Its examples and boundary cases use invented names. The public boundary suite contains 272 cases: the six withheld-provider cases were rewritten and three added for a missing, empty and duplicate list. All 272 passed locally in 11.543 seconds. The dominated-warn action still skips the same two providers; it now compares a SHA-256 digest of the lowercased provider segment instead of a literal prefix. A pass from the checker still does not approve a provider or establish that the supplied list is complete.
+
 ## What a source review means
 
 A resource review records the pinned upstream definition, the applicable licence, the requested permissions, why it was selected and what was not tested. Third-party projects can change after a reviewed revision. A source review is not a security certification, an effectiveness benchmark or a promise that every integration works.

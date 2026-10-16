@@ -68,22 +68,28 @@ def main():
 
 
 def check(data):
-    fields(data, ("name", "publishable"))
+    fields(data, ("name", "publishable", "withheldNames"))
     name = identity(data["name"], "name")
     publishable = data["publishable"]
     if not isinstance(publishable, bool):
         raise ValueError("publishable must be a boolean")
-    withheld = name in ("FakeProvider", "Stealth")
+    names = data["withheldNames"]
+    if not isinstance(names, list) or not 1 <= len(names) <= 1024:
+        raise ValueError("withheldNames must be an array of 1 to 1024 unique names")
+    names = [identity(value, "withheldNames entry") for value in names]
+    if len(set(names)) != len(names):
+        raise ValueError("withheldNames must contain unique names")
+    withheld = name in names
     issues = []
     if withheld and publishable:
-        issues.append("this literal provider name is withheld from publication")
+        issues.append("this provider name is withheld by the supplied list")
     return {
         "status": "review" if issues else "pass",
         "name": name,
         "withheld": withheld,
         "publishable": publishable,
         "issues": issues,
-        "scope": "only the literal names FakeProvider and Stealth are withheld; a pass for any other name does not approve publication",
+        "scope": "Only names in the caller-supplied withheldNames list are withheld. The checker does not load or verify a production policy; a pass does not approve publication.",
     }
 
 

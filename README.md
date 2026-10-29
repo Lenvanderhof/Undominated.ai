@@ -49,10 +49,10 @@ Most AI “value” tables invent a score, then sort by it.
 
 Undominated.ai does the opposite. It ranks language models on **independently measured capability first**, then compares what they actually cost across providers. A model is named as dominated when another scores at least as high and costs no more, and is better on one of the two. A model that has not been measured is **unrated**, never zero.
 
-> **<!--fig:dominatedOfRated-->136 of 148<!--/fig-->** rated, priced models have an alternative on the board with a higher score or a lower price, with neither dimension worse. They cost a median **<!--fig:overpayMedian-->6.9×<!--/fig-->** the cheapest such alternative.<br>
+> **<!--fig:dominatedOfRated-->130 of 142<!--/fig-->** rated, priced models have an alternative on the board with a higher score or a lower price, with neither dimension worse. They cost a median **<!--fig:overpayMedian-->6.6×<!--/fig-->** the cheapest such alternative.<br>
 > **<!--fig:frontier-->12<!--/fig-->** are not. That set is the value frontier.
 
-Every catalogue and directory figure on this page is generated from the live site by `scripts/refresh-readme.mjs` and `scripts/build-floor-table.mjs`, last on **<!--fig:asOf-->2026-10-28<!--/fig-->** (<!--fig:models-->444<!--/fig--> catalogue listings, <!--fig:providers-->57<!--/fig--> provider labels). CI checks them, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
+Every catalogue and directory figure on this page is generated from the live site by `scripts/refresh-readme.mjs` and `scripts/build-floor-table.mjs`, last on **<!--fig:asOf-->2026-10-29<!--/fig-->** (<!--fig:models-->437<!--/fig--> catalogue listings, <!--fig:providers-->58<!--/fig--> provider labels). CI checks them, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
 
 <p align="center">
   <a href="https://undominated.ai/">
@@ -108,7 +108,7 @@ Every catalogue and directory figure on this page is generated from the live sit
 
 ## Why a price index that refuses to average
 
-The dearest input price in the catalogue is about **<!--fig:spread-->12,500×<!--/fig-->** the cheapest. That is not a rounding error. It is the reason a “value score” is a marketing instrument: it can hide a worse-and-dearer row behind a single attractive number.
+The dearest input price in the catalogue is about **<!--fig:spread-->3,214×<!--/fig-->** the cheapest. That is not a rounding error. It is the reason a “value score” is a marketing instrument: it can hide a worse-and-dearer row behind a single attractive number.
 
 Undominated.ai publishes the uncomfortable version:
 
@@ -116,9 +116,9 @@ Undominated.ai publishes the uncomfortable version:
 | --- | --- |
 | A blended “value” rank | Capability first, effective price second. Never mixed into one score. |
 | Unrated at the bottom | Unrated is not zero. Models with no score on the benchmark the board ranks on are listed by price and kept out of quality order. [The methodology page states the current share](https://undominated.ai/methodology/). |
-| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank**: today the published confidence intervals leave **<!--fig:distinctRanks-->78<!--/fig--> distinct ranks across <!--fig:rankPositions-->148<!--/fig--> positions**. |
+| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank**: today the published confidence intervals leave **<!--fig:distinctRanks-->73<!--/fig--> distinct ranks across <!--fig:rankPositions-->142<!--/fig--> positions**. |
 | “Cheaper is better” | Cheaper is cheaper. A model is dominated when another scores at least as high and costs no more, and is better on one of the two. The other is a clean replacement only when it keeps every recorded capability: context window, maximum output, input modalities, tool use and reasoning. |
-| Headline $/M | **<!--fig:tiered-->72<!--/fig-->** of the <!--fig:models-->444<!--/fig--> catalogue listings change rate past a context threshold. The board reprices the row when your prompt crosses it. |
+| Headline $/M | **<!--fig:tiered-->72<!--/fig-->** of the <!--fig:models-->437<!--/fig--> catalogue listings change rate past a context threshold. The board reprices the row when your prompt crosses it. |
 | Affiliate “best” lists | **No cut of inference. No affiliate. No paid placement. No gateway.** |
 
 The method, the hedges and the licensing limits: [undominated.ai/methodology](https://undominated.ai/methodology/).
@@ -379,14 +379,14 @@ Everyone publishes today's prices. Nobody publishes what the **cheapest model cl
 
 <!--floors-->
 
-| Capability floor (LMArena) | 2026-08-24 | 2026-10-28 | Move | Cheapest today |
+| Capability floor (LMArena) | 2026-08-24 | 2026-10-29 | Move | Cheapest today |
 |:---|---:|---:|---:|:---|
 | **≥ 1200** | $0.0525 | $0.036 | -31% | `openai/gpt-oss-20b` |
 | **≥ 1350** | $0.0525 | $0.06 | +14% | `openai/gpt-oss-120b` |
 | **≥ 1400** | $0.0611 | $0.1125 | +84% | `deepseek/deepseek-v4-flash` |
 | **≥ 1450** | $0.4961 | $0.145 | -71% | `xiaomi/mimo-v2.6-flash` |
 
-<sub>Effective $/M on the balanced workload, from 27 dated snapshots. Generated by `scripts/build-floor-table.mjs`. The floors are append-only — a threshold is never edited in place, because a moved goalpost turns a series into marketing.</sub>
+<sub>Effective $/M on the balanced workload, from 28 dated snapshots. Generated by `scripts/build-floor-table.mjs`. The floors are append-only — a threshold is never edited in place, because a moved goalpost turns a series into marketing.</sub>
 
 <!--/floors-->
 

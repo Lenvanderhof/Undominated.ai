@@ -1,6 +1,6 @@
 {
-  "capturedOn": "2026-10-15",
-  "catalogueAsOf": "2026-10-15",
+  "capturedOn": "2026-11-25",
+  "catalogueAsOf": "2026-11-25",
   "viewport": {
     "desktop": [
       1440,
@@ -71,17 +71,7 @@
       "file": "skills.png",
       "url": "https://undominated.ai/skills/",
       "viewport": "desktop"
-    },
-    {
-      "file": "skills-2026-10-07.png",
-      "url": "https://undominated.ai/skills/",
-      "viewport": [
-        1280,
-        840
-      ],
-      "capturedOn": "2026-10-07",
-      "catalogueAsOf": "2026-10-06"
     }
   ],
-  "method": "Headless Chrome 155 at device scale factor 1, --virtual-time-budget=12000, against the live site."
+  "method": "Headless Chrome 158 (--headless=new) at device scale factor 1, --virtual-time-budget=12000, against the live site; mobile.png and frontier.png cropped with ImageMagick to the regions noted."
 }

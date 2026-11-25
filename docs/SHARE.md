@@ -12,7 +12,7 @@ Do not quote a number from memory. The board moves. Use a surface that carries a
 >
 > https://undominated.ai/methodology/
 
-> No cut of inference. No affiliate. No gateway. Capability first, then price.
+> Money sits beside the ranking, never in it. No gateway. Capability first, then price.
 >
 > https://undominated.ai/independence/
 

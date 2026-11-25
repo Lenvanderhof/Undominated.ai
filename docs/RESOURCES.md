@@ -13,7 +13,7 @@ Choose a resource for a concrete task, read its contract, and check its installa
 | `undominated-check@0.5.0` | 11 | 6 | 1 bundled server | Published and anonymously verified 2026-10-09; guided client and project/global choices, preview and cancellation. Same 18-resource bundle and 69 source hashes as 0.4.0. [Evidence](EVIDENCE.md#guided-installer--050-verified-2026-10-09) |
 | `undominated-mcp@0.1.0` | — | — | 1 standalone server | Published; five tools, stdio and live-response checks verified |
 | GitHub source | 74 | 12 | 1 server | Eleven skills and six profiles are the npm-mapped set; 63 skills and six profiles are source-only. Pinned acquisition and file equality were verified for the 26 website-listed skills at `a67bd9b`, not for every source directory. The three library-intake skills and the library-intake editor added on 2026-10-08 are outside that receipt and outside npm through `0.4.0`. |
-| Website original entries | 26 | 6 | 1 server | Eleven skills, six profiles and the MCP server are in npm 0.4.0; 15 further skills use pinned GitHub installation and complete website downloads |
+| Website original entries | 222 | 103 | 1 server | Counted 2026-11-25 from the published indexes (publisher `Undominated.ai`). 26 skills, six profiles and the MCP server name this repository at `a67bd9b` as their source; eleven of those skills and the six profiles are in npm `0.5.0`. The other 196 skills and 97 profiles name a download on undominated.ai. 148 of those skills and 91 of those profiles are not in this repository. |
 
 For guided setup of the bundled resources, run this in your terminal:
 

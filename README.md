@@ -49,17 +49,17 @@ Most AI “value” tables invent a score, then sort by it.
 
 Undominated.ai does the opposite. It ranks language models on **independently measured capability first**, then compares what they actually cost across providers. A model is named as dominated when another scores at least as high and costs no more, and is better on one of the two. A model that has not been measured is **unrated**, never zero.
 
-> **<!--fig:dominatedOfRated-->134 of 145<!--/fig-->** rated, priced models have an alternative on the board with a higher score or a lower price, with neither dimension worse. They cost a median **<!--fig:overpayMedian-->6.8×<!--/fig-->** the cheapest such alternative.<br>
+> **<!--fig:dominatedOfRated-->132 of 143<!--/fig-->** rated, priced models have an alternative on the board with a higher score or a lower price, with neither dimension worse. They cost a median **<!--fig:overpayMedian-->7.4×<!--/fig-->** the cheapest such alternative.<br>
 > **<!--fig:frontier-->11<!--/fig-->** are not. That set is the value frontier.
 
-Every catalogue and directory figure on this page is generated from the live site by `scripts/refresh-readme.mjs` and `scripts/build-floor-table.mjs`, last on **<!--fig:asOf-->2026-11-23<!--/fig-->** (<!--fig:models-->456<!--/fig--> catalogue listings, <!--fig:providers-->59<!--/fig--> provider labels). CI checks them, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
+Every catalogue and directory figure on this page is generated from the live site by `scripts/refresh-readme.mjs` and `scripts/build-floor-table.mjs`, last on **<!--fig:asOf-->2026-11-25<!--/fig-->** (<!--fig:models-->453<!--/fig--> catalogue listings, <!--fig:providers-->58<!--/fig--> provider labels). CI checks them, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
 
 <p align="center">
   <a href="https://undominated.ai/">
     <img src="docs/shots/board.png" alt="The leaderboard, ranked by measured quality first and effective price second, with each model's score, 95% interval, effective price, context window, capabilities and a verdict that names a better choice when one exists." width="100%">
   </a>
   <br>
-  <sub>Leaderboard · captured 2026-10-15 · chartreuse is frontier membership, not decoration</sub>
+  <sub>Leaderboard · captured 2026-11-25 · chartreuse is frontier membership, not decoration</sub>
 </p>
 
 <table>
@@ -108,7 +108,7 @@ Every catalogue and directory figure on this page is generated from the live sit
 
 ## Why a price index that refuses to average
 
-The dearest input price in the catalogue is about **<!--fig:spread-->3,214×<!--/fig-->** the cheapest. That is not a rounding error. It is the reason a “value score” is a marketing instrument: it can hide a worse-and-dearer row behind a single attractive number.
+The dearest input price in the catalogue is about **<!--fig:spread-->3,000×<!--/fig-->** the cheapest. That is not a rounding error. It is the reason a “value score” is a marketing instrument: it can hide a worse-and-dearer row behind a single attractive number.
 
 Undominated.ai publishes the uncomfortable version:
 
@@ -116,10 +116,10 @@ Undominated.ai publishes the uncomfortable version:
 | --- | --- |
 | A blended “value” rank | Capability first, effective price second. Never mixed into one score. |
 | Unrated at the bottom | Unrated is not zero. Models with no score on the benchmark the board ranks on are listed by price and kept out of quality order. [The methodology page states the current share](https://undominated.ai/methodology/). |
-| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank**: today the published confidence intervals leave **<!--fig:distinctRanks-->78<!--/fig--> distinct ranks across <!--fig:rankPositions-->145<!--/fig--> positions**. |
+| Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank**: today the published confidence intervals leave **<!--fig:distinctRanks-->76<!--/fig--> distinct ranks across <!--fig:rankPositions-->143<!--/fig--> positions**. |
 | “Cheaper is better” | Cheaper is cheaper. A model is dominated when another scores at least as high and costs no more, and is better on one of the two. The other is a clean replacement only when it keeps every recorded capability: context window, maximum output, input modalities, tool use and reasoning. |
-| Headline $/M | **<!--fig:tiered-->78<!--/fig-->** of the <!--fig:models-->456<!--/fig--> catalogue listings change rate past a context threshold. The board reprices the row when your prompt crosses it. |
-| Affiliate “best” lists | **No cut of inference. No affiliate. No paid placement. No gateway.** |
+| Headline $/M | **<!--fig:tiered-->78<!--/fig-->** of the <!--fig:models-->453<!--/fig--> catalogue listings change rate past a context threshold. The board reprices the row when your prompt crosses it. |
+| Pay-to-rank “best” lists | **No fee buys inclusion, order, a verdict, a badge or a caveat.** Ads and referral links are allowed, labelled, and kept beside the ranked table, never in it. No gateway. |
 
 The method, the hedges and the licensing limits: [undominated.ai/methodology](https://undominated.ai/methodology/).
 
@@ -145,8 +145,9 @@ Every route answers a decision, not a document type.
 | Filter by requirements | [Model finder](https://undominated.ai/finder/) · [Comparisons](https://undominated.ai/compare/) · [Alternatives](https://undominated.ai/alternatives/) |
 | Find the cheapest model above a quality floor | [Cheapest at](https://undominated.ai/cheapest-at/) |
 | Replace a retiring model like for like | [Migration guide](https://undominated.ai/migrate/) · [Deprecations](https://undominated.ai/deprecations/) |
-| Browse every publishable model | [All models](https://undominated.ai/models/) · [New releases](https://undominated.ai/new/) |
+| Browse every publishable model | [All models](https://undominated.ai/models/) · [Families](https://undominated.ai/families/) · [New releases](https://undominated.ai/new/) |
 | Rank image, video or embedding models the same way | [Images](https://undominated.ai/images/) · [Video](https://undominated.ai/video/) · [Embeddings](https://undominated.ai/embeddings/) · [Vision input](https://undominated.ai/vision/) |
+| Read one benchmark's own board, with its source date and intervals | [Rankings by model type](https://undominated.ai/rankings/) |
 
 **Understand the price**
 
@@ -156,7 +157,7 @@ Every route answers a decision, not a document type.
 | Compare subscription plans to API | [Plans](https://undominated.ai/plans/) |
 | See whether shopping around is worth it | [Providers](https://undominated.ai/providers/) · [Spreads](https://undominated.ai/spreads/) · [OpenRouter or direct](https://undominated.ai/openrouter-vs-direct/) |
 | See where a headline rate changes | [Context cliffs](https://undominated.ai/cliffs/) · [Reasoning price](https://undominated.ai/reasoning-price/) · [Reasoning effort](https://undominated.ai/effort/) |
-| Use cheaper delivery conditions | [Batch](https://undominated.ai/batch/) · [Cached input](https://undominated.ai/cache/) · [Off-peak](https://undominated.ai/off-peak/) |
+| Use cheaper delivery conditions | [Batch](https://undominated.ai/batch/) · [Cached input](https://undominated.ai/cache/) · [Off-peak](https://undominated.ai/off-peak/) · [Free routes](https://undominated.ai/free/) (listed unranked) |
 | Follow what moved | [Price changes](https://undominated.ai/price-changes/) · [The wire](https://undominated.ai/wire/) · [Now](https://undominated.ai/now/) |
 | Avoid named pricing failure modes | [Traps](https://undominated.ai/traps/) |
 
@@ -179,8 +180,9 @@ Every route answers a decision, not a document type.
 | You want to | Open |
 | --- | --- |
 | Read how ranking is computed | [Methodology](https://undominated.ai/methodology/) · [Benchmark guide](https://undominated.ai/benchmarks/) · [Glossary](https://undominated.ai/glossary/) |
-| See which adjacent ranks the benchmark cannot separate | [Significance](https://undominated.ai/significance/) · [Blind rank test](https://undominated.ai/blind-rank/) · [Disagreement](https://undominated.ai/disagreement/) |
-| Hold the commercial boundaries | [Independence](https://undominated.ai/independence/) |
+| See which adjacent ranks the benchmark cannot separate | [Significance](https://undominated.ai/significance/) · [Ranges](https://undominated.ai/ranges/) · [Blind rank test](https://undominated.ai/blind-rank/) · [Disagreement](https://undominated.ai/disagreement/) |
+| See how old each source is | [Data freshness](https://undominated.ai/status/) |
+| See how the site is paid, and what money cannot change | [Independence](https://undominated.ai/independence/) · [Workload review](https://undominated.ai/review/) · [Data licence](https://undominated.ai/data-licence/) · [Advertise](https://undominated.ai/advertise/) · [Privacy](https://undominated.ai/privacy/) |
 | See applied corrections, or file one | [Corrections](https://undominated.ai/corrections/) · [Report](https://undominated.ai/report/) |
 | Read the data as JSON, or embed a verdict | [API](https://undominated.ai/api/) · [Badges](https://undominated.ai/badges/) · [Press kit](https://undominated.ai/press/) |
 
@@ -210,7 +212,7 @@ The [Skills](https://undominated.ai/skills/), [Agents](https://undominated.ai/ag
     <img src="docs/shots/skills.png" alt="The Skills directory: selected skills with original review notes, installation guidance and the source material behind each choice, grouped by task." width="100%">
   </a>
   <br>
-  <sub><a href="https://undominated.ai/skills/">Skills</a> · captured 2026-10-15</sub>
+  <sub><a href="https://undominated.ai/skills/">Skills</a> · captured 2026-11-25</sub>
 </p>
 
 ---
@@ -326,6 +328,8 @@ Machine-readable surfaces stay on the origin, where they can carry provenance:
 - [`/data/catalogue.json`](https://undominated.ai/data/catalogue.json): the public catalogue
 - [`/data/frontier.json`](https://undominated.ai/data/frontier.json): the published frontier
 - [`/data/resources/skills.json`](https://undominated.ai/data/resources/skills.json): reviewed resource indexes (also `agents`, `mcp-servers`, `workflows`)
+- [`/data/rankings/index.json`](https://undominated.ai/data/rankings/index.json): the separate ranking boards, each with its publisher and source date
+- [`/data/wire/events.json`](https://undominated.ai/data/wire/events.json) · [`/feed.xml`](https://undominated.ai/feed.xml): material catalogue events (price moves, context cuts, dated corrections)
 - [`/badge/<key>.svg`](https://undominated.ai/badges/): README dominance badge
 - [`/?format=md`](https://undominated.ai/?format=md): any page as Markdown
 - [`/now/`](https://undominated.ai/now/): dated frontier stamp (hash on the page)
@@ -343,6 +347,8 @@ The live board is rebuilt in place. A citation needs bytes that will still be th
 | The same dumps on Hugging Face | [`LPH98/undominated-ai-model-pricing`](https://huggingface.co/datasets/LPH98/undominated-ai-model-pricing) |
 | How to cite | [`CITATION.cff`](CITATION.cff) · [`datasets/README.md`](datasets/README.md) |
 | What is *not* citable | [`catalogue.json` and per-model JSON](https://undominated.ai/data/citation.json): rebuilt on every deploy, no date in the path |
+
+Releases and the Hugging Face copy are cut by hand, not by the daily refresh, so they can trail the live board by weeks. The release badge at the top shows the newest.
 
 LMArena Elo in the dump is **CC BY 4.0** from the official Hugging Face dataset. Vendor list prices are facts the vendor published. Artificial Analysis fields are **not in the file**.
 
@@ -363,13 +369,16 @@ Security reports: [open an advisory on this repository](https://github.com/Lenva
 
 ## Independence, in one screen
 
-- No cut of inference.
-- No affiliate links.
-- No paid placement, badges or “featured” rows.
-- No gateway. We do not sit on the request path.
-- Revenue in v1: none. A later paid feed, if it exists, would sell history and provenance, not a better rank.
+Money sits beside the ranking, never in it.
 
-The charter: [undominated.ai/independence](https://undominated.ai/independence/).
+- No gateway. We do not sell or resell inference, and we do not sit on the request path.
+- No paid rank. No fee buys inclusion, ordering, a verdict, a badge or a caveat.
+- Advertising, sponsorship and referral links have been allowed since 2026-11-18. Each carries an “Ad”, “Sponsored” or “Referral link” label and sits outside the ranked table. The independence page names every sponsor and referral programme in the release that makes it live.
+- Pages where you enter private data, and the pages that hold the site to account (methodology, corrections, independence, reports, the paper), carry no ads and no referral links.
+- Two paid services sit beside the board: [fixed-fee workload reviews](https://undominated.ai/review/), the same fee for any verdict, and a [licence for the dated record](https://undominated.ai/data-licence/) as a bulk feed, which carries no model prices. The licence text is a draft and not yet in force.
+- A test runs the board, the verdicts, the frontier and the hub rankings with an empty and a populated referral list and requires byte-identical output. It covers that code and nothing more; the page says so.
+
+The charter, and what is live today: [undominated.ai/independence](https://undominated.ai/independence/).
 
 ---
 
@@ -379,14 +388,14 @@ Everyone publishes today's prices. Nobody publishes what the **cheapest model cl
 
 <!--floors-->
 
-| Capability floor (LMArena) | 2026-08-24 | 2026-11-23 | Move | Cheapest today |
+| Capability floor (LMArena) | 2026-08-24 | 2026-11-25 | Move | Cheapest today |
 |:---|---:|---:|---:|:---|
 | **≥ 1200** | $0.0525 | $0.0306 | -42% | `openai/gpt-oss-20b` |
 | **≥ 1350** | $0.0525 | $0.06 | +14% | `openai/gpt-oss-120b` |
 | **≥ 1400** | $0.0611 | $0.1125 | +84% | `deepseek/deepseek-v4-flash` |
-| **≥ 1450** | $0.4961 | $0.1482 | -70% | `z-ai/glm-5.3-flash` |
+| **≥ 1450** | $0.4961 | $0.134 | -73% | `z-ai/glm-5.3-flash` |
 
-<sub>Effective $/M on the balanced workload, from 45 dated snapshots. Generated by `scripts/build-floor-table.mjs`. The floors are append-only — a threshold is never edited in place, because a moved goalpost turns a series into marketing.</sub>
+<sub>Effective $/M on the balanced workload, from 47 dated snapshots. Generated by `scripts/build-floor-table.mjs`. The floors are append-only — a threshold is never edited in place, because a moved goalpost turns a series into marketing.</sub>
 
 <!--/floors-->
 

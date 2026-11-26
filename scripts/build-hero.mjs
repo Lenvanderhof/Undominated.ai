@@ -47,10 +47,15 @@ const check = process.argv.includes('--check')
  * own viewport and lets the vendored 24x24 artwork scale without touching the
  * outer coordinate system.
  */
-async function providerMark(vendor) {
-  // OpenRouter uses meta-llama; the website serves Meta's mark under meta.
-  vendor = ({ 'meta-llama': 'meta' })[vendor] ?? vendor
-  const res = await fetch(`${ORIGIN}/providers/${vendor}.svg`)
+async function providerMark(maker) {
+  // The site names each mark after the maker's display name, not the OpenRouter
+  // vendor in the slug: Meta is meta.svg for meta-llama/…, Thinking Machines is
+  // thinking-machines.svg for thinkingmachines/…. A one-entry alias table for
+  // meta-llama stopped this script on 2026-11-26, the day Inkling 2 Mini joined
+  // the frontier. This is providerFileId in the site's src/lib/providers/registry.mjs.
+  const file = String(maker ?? '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  if (!file) return null
+  const res = await fetch(`${ORIGIN}/providers/${file}.svg`)
   if (!res.ok) return null
   const raw = await res.text()
   const viewBox = /viewBox="([^"]+)"/.exec(raw)?.[1] ?? '0 0 24 24'
@@ -100,7 +105,7 @@ const effectivePrice = (r) => (3 * r.i + r.o) / 4
 
 const points = (catalogue.rows ?? [])
   .filter((r) => r.v === 'standard' && r.q != null && r.i != null && r.o != null && effectivePrice(r) > 0)
-  .map((r) => ({ slug: r.s, q: r.q, price: effectivePrice(r) }))
+  .map((r) => ({ slug: r.s, q: r.q, price: effectivePrice(r), maker: catalogue.dict?.providers?.[r.p] }))
 
 if (points.length < 50) throw new Error(`only ${points.length} rated+priced rows — refusing to draw a thin board`)
 
@@ -156,7 +161,7 @@ const members = points.filter((p) => onFrontier.has(p.slug)).sort((a, b) => a.pr
  */
 const MARK = 17
 const marks = await Promise.all(
-  members.map(async (m) => ({ point: m, art: await providerMark(m.slug.split('/')[0]) })),
+  members.map(async (m) => ({ point: m, art: await providerMark(m.maker) })),
 )
 const missing = marks.filter((m) => !m.art).map((m) => m.point.slug)
 if (missing.length) throw new Error(`no provider mark for ${missing.join(', ')} — the frontier would be drawn with holes in it`)

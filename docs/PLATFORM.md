@@ -51,7 +51,7 @@ Quote the source URL and date alongside a value. Do not treat software licensing
 
 ## Dated catalogue snapshot
 
-The following values are generated from the published JSON by `scripts/refresh-readme.mjs`, rather than entered as editorial estimates. As of **<!--fig:asOf-->2026-11-26<!--/fig-->**, the catalogue contains **<!--fig:models-->453<!--/fig--> listings** across **<!--fig:providers-->58<!--/fig--> provider labels**. These are catalogue counts, not the resource-directory counts or canonical seller-owner counts above.
+The following values are generated from the published JSON by `scripts/refresh-readme.mjs`, rather than entered as editorial estimates. As of **<!--fig:asOf-->2026-11-26<!--/fig-->**, the catalogue contains **<!--fig:models-->456<!--/fig--> listings** across **<!--fig:providers-->58<!--/fig--> provider labels**. These are catalogue counts, not the resource-directory counts or canonical seller-owner counts above.
 
 The capability-floor series asks how the cheapest published model clearing a fixed benchmark threshold changed over recorded days. It does not measure the quality of untested models or guarantee suitability for a workload.
 

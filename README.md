@@ -52,7 +52,7 @@ Undominated.ai does the opposite. It ranks language models on **independently me
 > **<!--fig:dominatedOfRated-->132 of 143<!--/fig-->** rated, priced models have an alternative on the board with a higher score or a lower price, with neither dimension worse. They cost a median **<!--fig:overpayMedian-->6.6×<!--/fig-->** the cheapest such alternative.<br>
 > **<!--fig:frontier-->11<!--/fig-->** are not. That set is the value frontier.
 
-Every catalogue and directory figure on this page is generated from the live site by `scripts/refresh-readme.mjs` and `scripts/build-floor-table.mjs`, last on **<!--fig:asOf-->2026-11-26<!--/fig-->** (<!--fig:models-->453<!--/fig--> catalogue listings, <!--fig:providers-->58<!--/fig--> provider labels). CI checks them, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
+Every catalogue and directory figure on this page is generated from the live site by `scripts/refresh-readme.mjs` and `scripts/build-floor-table.mjs`, last on **<!--fig:asOf-->2026-11-26<!--/fig-->** (<!--fig:models-->456<!--/fig--> catalogue listings, <!--fig:providers-->58<!--/fig--> provider labels). CI checks them, because a README that states a number by hand states a wrong one within the week. **[The live board is still the source](https://undominated.ai/).**
 
 <p align="center">
   <a href="https://undominated.ai/">
@@ -118,7 +118,7 @@ Undominated.ai publishes the uncomfortable version:
 | Unrated at the bottom | Unrated is not zero. Models with no score on the benchmark the board ranks on are listed by price and kept out of quality order. [The methodology page states the current share](https://undominated.ai/methodology/). |
 | Integer ranks as fact | Significance ranks. Models the benchmark cannot separate **share a rank**: today the published confidence intervals leave **<!--fig:distinctRanks-->76<!--/fig--> distinct ranks across <!--fig:rankPositions-->143<!--/fig--> positions**. |
 | “Cheaper is better” | Cheaper is cheaper. A model is dominated when another scores at least as high and costs no more, and is better on one of the two. The other is a clean replacement only when it keeps every recorded capability: context window, maximum output, input modalities, tool use and reasoning. |
-| Headline $/M | **<!--fig:tiered-->78<!--/fig-->** of the <!--fig:models-->453<!--/fig--> catalogue listings change rate past a context threshold. The board reprices the row when your prompt crosses it. |
+| Headline $/M | **<!--fig:tiered-->78<!--/fig-->** of the <!--fig:models-->456<!--/fig--> catalogue listings change rate past a context threshold. The board reprices the row when your prompt crosses it. |
 | Pay-to-rank “best” lists | **No fee buys inclusion, order, a verdict, a badge or a caveat.** Ads and referral links are allowed, labelled, and kept beside the ranked table, never in it. No gateway. |
 
 The method, the hedges and the licensing limits: [undominated.ai/methodology](https://undominated.ai/methodology/).

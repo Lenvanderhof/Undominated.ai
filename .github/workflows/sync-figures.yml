@@ -1,0 +1,70 @@
+name: sync figures
+
+# The README, the platform guide, the resource library and the hero image carry figures
+# generated from the live site. The site refreshes every day (usually live by 07:10 UTC, later
+# when a run is restarted), and "figures current" fails on every day they are not regenerated.
+# Until 2026-11-24 a job on the maintainer's machine regenerated them; it stopped and nobody
+# noticed for two days. This runs here, where a failure is visible.
+#
+# It commits only what the generators change, and only files they write. A generator that
+# cannot draw what the site publishes (a frontier maker with no mark, a price that disagrees
+# with the site's own) fails the run and commits nothing: the numbers are never typed in.
+#
+# Screenshots are not synced: they cannot be generated from data, and "figures current" keeps
+# asking for a human look at them. Neither are the package tests: nothing here touches the
+# packages, and "public resource checks" runs them.
+
+on:
+  schedule:
+    - cron: '23 7-23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-figures-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      - name: Regenerate from the live site
+        run: |
+          node scripts/refresh-readme.mjs
+          node scripts/build-floor-table.mjs
+          node scripts/build-hero.mjs
+
+      - name: What was regenerated agrees with the live site
+        run: |
+          node --test scripts/refresh-readme.test.mjs
+          node scripts/refresh-readme.mjs --check
+          node scripts/build-floor-table.mjs --check
+          node scripts/build-hero.mjs --check
+
+      - name: Commit and push what changed
+        run: |
+          generated='README.md docs/PLATFORM.md docs/RESOURCES.md docs/brand/hero.svg'
+          other=$(git status --porcelain --untracked-files=all -- . $(printf ':!%s ' $generated))
+          if [ -n "$other" ]; then
+            echo "::error::a generator wrote outside its files:"; echo "$other"; exit 1
+          fi
+          git add -- $generated
+          if git diff --cached --quiet; then
+            echo "Figures already match the live site."
+            exit 0
+          fi
+          as_of=$(sed -nE 's/.*<!--fig:asOf-->([0-9]{4}-[0-9]{2}-[0-9]{2})<!--\/fig-->.*/\1/p' README.md | head -1)
+          [ -n "$as_of" ] || { echo "::error::README has no asOf figure"; exit 1; }
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "catalogue: figures, hero and floor table for $as_of" \
+                     -m "Regenerated from https://undominated.ai by .github/workflows/sync-figures.yml ($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+          git show --stat --format='%h %s' HEAD
+          # Never force. If someone pushed since checkout, the next run regenerates from theirs.
+          git push origin "HEAD:$GITHUB_REF_NAME"
